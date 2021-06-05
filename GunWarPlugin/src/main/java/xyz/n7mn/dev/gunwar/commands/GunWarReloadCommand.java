@@ -28,7 +28,7 @@ public class GunWarReloadCommand extends Command {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        int required = GunWar.getConfig().getConfig().getInt("permission.command.aboutgunwar", 1);
+        int required = GunWar.getConfig().getConfig().getInt("permission.command.gunwarreload", 1);
         if(sender instanceof Player) {
             Player p = (Player) sender;
             PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
