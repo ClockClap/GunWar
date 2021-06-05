@@ -12,6 +12,7 @@
     <name>GunWarParent</name>
 
     <modules>
+        <module>GunWarAPI</module>
         <module>GunWarPlugin</module>
     </modules>
 
