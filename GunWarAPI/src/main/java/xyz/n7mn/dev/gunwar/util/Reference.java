@@ -19,8 +19,8 @@ public final class Reference {
         component.setText(Reference.PREFIX + " " + Reference.CHAT_COMMAND_PERMISSION_ERROR_PRIVATE + "\n");
         component1.setText(Reference.CHAT_ABOUT);
         component1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{
-                new TextComponent(Reference.CHAT_ABOUT),
-                new TextComponent(ChatColor.GRAY + "あなたの権限: " + ChatColor.GREEN + now),
+                new TextComponent(Reference.CHAT_ABOUT + "\n"),
+                new TextComponent(ChatColor.GRAY + "あなたの権限: " + ChatColor.GREEN + now + "\n"),
                 new TextComponent(ChatColor.GRAY + "必要な権限: " + ChatColor.GREEN + required)
         }));
         component.addExtra(component1);
