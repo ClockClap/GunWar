@@ -16,7 +16,7 @@ public final class Reference {
     public static BaseComponent getChatCommandPermissionError(String required, String now) {
         TextComponent component = new TextComponent();
         TextComponent component1 = new TextComponent();
-        component.setText(Reference.PREFIX + " " + Reference.CHAT_COMMAND_PERMISSION_ERROR_PRIVATE + "\n");
+        component.setText(Reference.PREFIX + " " + Reference.CHAT_COMMAND_PERMISSION_ERROR_PRIVATE + " ");
         component1.setText(Reference.CHAT_ABOUT);
         component1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{
                 new TextComponent(Reference.CHAT_ABOUT + "\n"),
