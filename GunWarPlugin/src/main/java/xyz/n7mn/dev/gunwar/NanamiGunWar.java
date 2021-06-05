@@ -7,6 +7,7 @@ import xyz.n7mn.dev.api.NanamiNetwork;
 import xyz.n7mn.dev.api.Role;
 import xyz.n7mn.dev.api.data.RoleData;
 import xyz.n7mn.dev.gunwar.commands.AboutGunWarCommand;
+import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
 import xyz.n7mn.dev.gunwar.listeners.PlayerListener;
 import xyz.n7mn.dev.gunwar.listeners.ServerListener;
 import xyz.n7mn.dev.gunwar.util.GwUtilities;
@@ -50,6 +51,7 @@ public final class NanamiGunWar extends JavaPlugin {
 
     private void registerCommands() {
         utilities.registerCommand(plugin.getName(), new AboutGunWarCommand());
+        utilities.registerCommand(plugin.getName(), new GunWarReloadCommand());
     }
 
     @Override
