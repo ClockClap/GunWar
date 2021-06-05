@@ -11,6 +11,7 @@ public final class Reference {
 
     public static final String CHAT_ABOUT = ChatColor.DARK_GRAY + "[詳細]";
     private static final String CHAT_COMMAND_PERMISSION_ERROR_PRIVATE = ChatColor.RED + "このコマンドを実行する権限がありません";
+    public static final String CHAT_COMMAND_RELOAD = "設定を再読み込みしました";
 
     public static BaseComponent getChatCommandPermissionError(String required, String now) {
         TextComponent component = new TextComponent();

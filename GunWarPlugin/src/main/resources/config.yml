@@ -1,0 +1,18 @@
+# 銃撃戦プラグイン設定
+## 設定を変更したら必ず /gwreload を実行してください。
+## mysqlの設定を変更した場合はサーバーを再起動してください。
+
+#ここでの数値はななみ鯖のランクレベルです
+#接続ができなかった場合は、1以上の数値だとopになります。
+permission:
+  command:
+    aboutgunwar: 0
+    gunwarreload: 1
+
+mysql:
+  host: 'localhost'
+  port: 3306
+  database: ''
+  option: '?allowPublicKeyRetrieval=true&useSSL=false'
+  username: ''
+  password: ''

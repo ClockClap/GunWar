@@ -6,11 +6,19 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerQuitEvent;
+import xyz.n7mn.dev.api.data.RoleData;
 import xyz.n7mn.dev.gunwar.GunWar;
+import xyz.n7mn.dev.gunwar.NanamiGunWar;
 import xyz.n7mn.dev.gunwar.util.GwReference;
+import xyz.n7mn.dev.gunwar.util.PermissionInfo;
 import xyz.n7mn.dev.gunwar.util.Reference;
 
+import java.sql.*;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
 
 public class AboutGunWarCommand extends Command {
     public AboutGunWarCommand() {
@@ -19,9 +27,14 @@ public class AboutGunWarCommand extends Command {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        if(!sender.isOp()) {
-            sender.sendMessage(Reference.getChatCommandPermissionError("OP権限", "一般"));
-            return true;
+        int required = GunWar.getConfig().getConfig().getInt("permission.command.aboutgunwar", 1);
+        if(sender instanceof Player) {
+            Player p = (Player) sender;
+            PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
+            if(!info.isPassed()) {
+                p.sendMessage(Reference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
+                return true;
+            }
         }
         sender.sendMessage(ChatColor.DARK_GREEN + "=-=-=- ななみ銃撃戦 v" + GunWar.getPlugin().getDescription().getVersion() + " -=-=-=\n" +
                 ChatColor.GRAY + "説明: " + ChatColor.RESET + "ゾンビと逃走者に分かれてやる銃撃戦です。銃撃戦とか言いながらゾンビ側は銃を持てません。\n" +
