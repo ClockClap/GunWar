@@ -9,6 +9,7 @@ import java.io.*;
 public class NanamiGunWarConfiguration implements GunWarConfiguration {
 
     private Plugin plugin;
+    private File dataFolder;
     private FileConfiguration config;
     private File configFile;
 
@@ -23,6 +24,11 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
             File f = new File(dataFolder);
             if (!f.exists()) {
                 f.mkdir();
+            }
+            this.dataFolder = f;
+            File f_ = new File(dataFolder + "/players");
+            if(!f_.exists()) {
+                f_.mkdir();
             }
 
             configFile = new File(dataFolder + "/config.yml");
@@ -61,5 +67,9 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
     @Override
     public File getConfigFile() {
         return configFile;
+    }
+
+    public File getDataFolder() {
+        return dataFolder;
     }
 }

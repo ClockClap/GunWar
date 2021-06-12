@@ -7,10 +7,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.v1_12_R1.block.CraftBlock;
 import org.bukkit.entity.Player;
 import xyz.n7mn.dev.api.data.RoleData;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.NanamiGunWar;
+import xyz.n7mn.dev.gunwar.game.data.GunWarEntityData;
+import xyz.n7mn.dev.gunwar.game.data.GunWarPlayerData;
 import xyz.n7mn.dev.gunwar.util.PermissionInfo;
 import xyz.n7mn.dev.gunwar.util.Reference;
 

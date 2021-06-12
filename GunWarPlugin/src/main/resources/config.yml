@@ -2,17 +2,60 @@
 ## 設定を変更したら必ず /gwreload を実行してください。
 ## mysqlの設定を変更した場合はサーバーを再起動してください。
 
-#ここでの数値はななみ鯖のランクレベルです
-#接続ができなかった場合は、1以上の数値だとopになります。
+# Discord招待リンク
+discord: 'https://discord.gg/w2jFt4vA5A'
+
+# 権限設定
+## ここでの数値はななみ鯖のランクレベルです。
+## 接続ができなかった場合は、1以上の数値だとopになります。
 permission:
+  # モード
+  # 0 - 通常モード。1以上にするとその動作はop限定になります。
+  # 1 - ななみ鯖モード。ななみ鯖のランクレベルを指定します。
+  # これら以外の数値を入れるとデフォルト値が適用されます。
+  mode: 0
+  # コマンドの権限
   command:
     aboutgunwar: 0
     gunwarreload: 1
 
+# /gwconf で設定を確認できます。
+# ゲームの設定
+game:
+  # 自動でゲームを開始するかどうか。
+  # デフォルトでは有効。
+  auto-start: true
+  # プレイするゲームモード。
+  # NORMAL - 通常モード。チーム戦と個人戦がある
+  # ZOMBIE_ESCAPE - ゾンビエスケープ。時間制限以内に逃走者を全員感染させるか、救助場所 (セーフエリア) にゾンビが入るとゾンビの勝利。
+  # CASTLE_SIEGE - 攻城戦モード。守り側の大将を倒すと勝利。
+  gamemode: 'normal'
+  # 開始人数
+  # デフォルト: 10人
+  ## この人数に達すると自動的にゲームが開始されます。(無効化可能)
+  requires-players: 10
+  # ゾンビエスケープの設定
+  zombie-escape:
+    # ゾンビの割合 (10人いるうち何人選ばれるか)
+    zombies: 3
+    # 救助が来るまでの時間 (制限時間 - 秒)
+    game-time: 600
+  # 通常モードの設定
+  normal:
+    # チーム戦の制限時間 - 秒
+    game-time-team: 900
+    # 個人戦の制限時間 - 秒
+    game-time-solo: 900
+
+
+# データベースの設定
 mysql:
   host: 'localhost'
   port: 3306
   database: ''
   option: '?allowPublicKeyRetrieval=true&useSSL=false'
-  username: ''
   password: ''
+
+# /gwconf で設定を確認できます。
+# デバッグモード
+debug: false

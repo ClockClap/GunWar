@@ -5,10 +5,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import xyz.n7mn.dev.api.data.RoleData;
 import xyz.n7mn.dev.gunwar.GunWar;
-import xyz.n7mn.dev.gunwar.NanamiGunWar;
 import xyz.n7mn.dev.gunwar.event.GunWarCommandRegisterEvent;
+import xyz.n7mn.dev.gunwar.mysql.GwMySQLPlayerData;
+import xyz.n7mn.dev.gunwar.mysql.NanamiServer;
+import xyz.n7mn.dev.gunwar.nanamiserver.permission.NanamiServerRoleData;
 
 import java.sql.*;
 import java.util.Enumeration;
@@ -46,80 +47,56 @@ public class GwUtilities implements Utilities {
     }
 
     @Override
+    @NanamiServer
     public String getRoleNameById(int id) throws SQLException {
-        String result;
-        boolean found = false;
-        Enumeration<Driver> drivers = DriverManager.getDrivers();
-
-        while (drivers.hasMoreElements()){
-            Driver driver = drivers.nextElement();
-            if (driver.equals(new com.mysql.cj.jdbc.Driver())){
-                found = true;
-                break;
-            }
-        }
-
-        if (!found){
-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-        }
-
-        Connection con = DriverManager.getConnection("jdbc:mysql://" +
-                        GunWar.getConfig().getConfig().getString("mysql.host") + ":" +
-                        GunWar.getConfig().getConfig().getInt("mysql.port") + "/" +
-                        GunWar.getConfig().getConfig().getString("mysql.database")+
-                        GunWar.getConfig().getConfig().getString("mysql.option"),
-                GunWar.getConfig().getConfig().getString("mysql.username"),
-                GunWar.getConfig().getConfig().getString("mysql.password")
-        );
-        con.setAutoCommit(true);
-
-        PreparedStatement statement = con.prepareStatement("SELECT * FROM RoleRankList");
-        ResultSet set = statement.executeQuery();
-
-        StringBuffer sb = new StringBuffer();
-        while (set.next()){
-            if (set.getInt("Rank") == id){
-                sb.append(set.getString("Name"));
-                sb.append(",");
-            }
-        }
-        result = sb.toString();
-
-        set.close();
-        statement.close();
-        con.close();
-
-        return result;
+        return GwMySQLPlayerData.getRoleNameById(id);
     }
 
     @Override
     public PermissionInfo testPermission(Player player, int required) {
-        try {
-            String requiredRole = GunWar.getUtilities().getRoleNameById(required);
-            String nowRole = "";
-            int now = 0;
-            List<RoleData> data = NanamiGunWar.role.getList();
-            for(RoleData d : data) {
-                if(d.getUUID() == player.getUniqueId()) {
-                    nowRole = d.getRoleName();
-                    now = d.getRoleRank();
+        int mode = GunWar.getConfig().getConfig().getInt("permission.mode", 0);
+        if(mode == 1) {
+            try {
+                String requiredRole = getRoleNameById(required);
+                String nowRole = "";
+                int now = 0;
+                List<NanamiServerRoleData> data = GwMySQLPlayerData.getList();
+                for (NanamiServerRoleData d : data) {
+                    if (d.getUniqueId() == player.getUniqueId()) {
+                        nowRole = d.getName();
+                        now = d.getRank();
+                    }
                 }
+                boolean passed = true;
+                if (required > now) {
+                    passed = false;
+                }
+                return new PermissionInfo(requiredRole, nowRole, passed);
+            } catch (SQLException e) {
+                String requiredRole = "一般";
+                String nowRole = "一般";
+                boolean passed = true;
+                if (player.isOp()) {
+                    nowRole = "OP持ち";
+                }
+                if (required >= 1) {
+                    requiredRole = "OP持ち";
+                    if (!player.isOp()) {
+                        passed = false;
+                    }
+                }
+                return new PermissionInfo(requiredRole, nowRole, passed);
             }
-            boolean passed = true;
-            if(required > now) {
-                passed = false;
-            }
-            return new PermissionInfo(requiredRole, nowRole, passed);
-        } catch (SQLException e){
+        } else {
             String requiredRole = "一般";
             String nowRole = "一般";
             boolean passed = true;
-            if(player.isOp()) {
+            if (player.isOp()) {
                 nowRole = "OP持ち";
             }
             if (required >= 1) {
                 requiredRole = "OP持ち";
-                if(!player.isOp()) {
+                if (!player.isOp()) {
                     passed = false;
                 }
             }

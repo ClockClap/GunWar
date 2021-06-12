@@ -3,17 +3,19 @@ package xyz.n7mn.dev.gunwar;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.n7mn.dev.api.NanamiNetwork;
 import xyz.n7mn.dev.api.Role;
-import xyz.n7mn.dev.api.data.RoleData;
 import xyz.n7mn.dev.gunwar.commands.AboutGunWarCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
+import xyz.n7mn.dev.gunwar.game.GunWarGame;
+import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
+import xyz.n7mn.dev.gunwar.item.GwItems;
+import xyz.n7mn.dev.gunwar.listeners.ItemListener;
 import xyz.n7mn.dev.gunwar.listeners.PlayerListener;
 import xyz.n7mn.dev.gunwar.listeners.ServerListener;
+import xyz.n7mn.dev.gunwar.mysql.GwMySQLPlayerDataUpdater;
+import xyz.n7mn.dev.gunwar.mysql.MySQLSettingBuilder;
 import xyz.n7mn.dev.gunwar.util.GwUtilities;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
-
-import java.util.List;
 
 public final class NanamiGunWar extends JavaPlugin {
 
@@ -22,6 +24,8 @@ public final class NanamiGunWar extends JavaPlugin {
     private GwUtilities utilities;
     private NanamiGunWarConfiguration config;
     public static Role role;
+    public static GwMySQLPlayerDataUpdater updater;
+    private GunWarGame game;
 
     @Override
     public void onEnable() {
@@ -33,12 +37,22 @@ public final class NanamiGunWar extends JavaPlugin {
         config = new NanamiGunWarConfiguration(plugin);
         GunWar.config = config;
         config.init();
+        MySQLSettingBuilder.builder().withSetting(config.getConfig().getString("mysql.host", "localhost"),
+                config.getConfig().getInt("mysql.port", 3306),
+                config.getConfig().getString("mysql.database", ""),
+                config.getConfig().getString("mysql.option", "?allowPublicKeyRetrieval=true&useSSL=false"),
+                config.getConfig().getString("mysql.username", ""),
+                config.getConfig().getString("mysql.password", "")).build();
         role = new Role(config.getConfig().getString("mysql.host", "localhost"),
                 config.getConfig().getInt("mysql.port", 3306),
                 config.getConfig().getString("mysql.database", ""),
                 config.getConfig().getString("mysql.option", "?allowPublicKeyRetrieval=true&useSSL=false"),
                 config.getConfig().getString("mysql.username", ""),
                 config.getConfig().getString("mysql.password", ""));
+        GwGameModes.registerDefault();
+        game = new GunWarGame(plugin);
+        GunWar.game = game;
+        GwItems.a();
         pluginManager = (SimplePluginManager) Bukkit.getPluginManager();
         registerListeners();
         registerCommands();
@@ -47,6 +61,7 @@ public final class NanamiGunWar extends JavaPlugin {
     private void registerListeners() {
         pluginManager.registerEvents(new PlayerListener(), plugin);
         pluginManager.registerEvents(new ServerListener(), plugin);
+        pluginManager.registerEvents(new ItemListener(), plugin);
     }
 
     private void registerCommands() {
@@ -57,5 +72,7 @@ public final class NanamiGunWar extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        GwGameModes.clear();
+        GwItems.clear();
     }
 }
