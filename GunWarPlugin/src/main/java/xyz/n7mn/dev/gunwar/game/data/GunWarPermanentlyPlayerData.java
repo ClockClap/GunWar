@@ -8,7 +8,7 @@ import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import java.io.*;
 import java.util.*;
 
-public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData {
+public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Serializable {
 
     private final UUID uniqueId;
     private File dataFile;
@@ -25,7 +25,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData {
         this.gifts = new ArrayList<>();
         this.playCount = new HashMap<>();
         this.killCount = new HashMap<>();
-        this.dataFile = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/players/" + uniqueId + ".dat");
+        this.dataFile = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/players/" + uniqueId);
     }
 
     @Override
@@ -70,6 +70,10 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData {
 
     @Override
     public void save(File file) throws IOException {
+        save(this, file);
+    }
+
+    private void save(Object obj, File file) throws IOException {
         if(!file.exists()) {
             if(!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
@@ -78,8 +82,8 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData {
         }
         FileOutputStream output = new FileOutputStream(file);
         ObjectOutputStream objectOutput = new ObjectOutputStream(output);
-        objectOutput.writeObject(this);
-        output.close();
+        objectOutput.writeObject(obj);
+        objectOutput.flush();
         objectOutput.close();
     }
 
@@ -99,7 +103,6 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData {
                     this.killCount = data.getKillCount();
                 }
             }
-            input.close();
             objectInput.close();
         }
     }

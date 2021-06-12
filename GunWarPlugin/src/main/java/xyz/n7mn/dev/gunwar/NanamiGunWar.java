@@ -1,12 +1,16 @@
 package xyz.n7mn.dev.gunwar;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.n7mn.dev.api.Role;
 import xyz.n7mn.dev.gunwar.commands.AboutGunWarCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
+import xyz.n7mn.dev.gunwar.game.data.PermanentlyPlayerData;
+import xyz.n7mn.dev.gunwar.game.data.PlayerData;
 import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
 import xyz.n7mn.dev.gunwar.item.GwItems;
 import xyz.n7mn.dev.gunwar.listeners.ItemListener;
@@ -16,6 +20,9 @@ import xyz.n7mn.dev.gunwar.mysql.GwMySQLPlayerDataUpdater;
 import xyz.n7mn.dev.gunwar.mysql.MySQLSettingBuilder;
 import xyz.n7mn.dev.gunwar.util.GwUtilities;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
+import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
+
+import java.io.IOException;
 
 public final class NanamiGunWar extends JavaPlugin {
 
@@ -72,6 +79,24 @@ public final class NanamiGunWar extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            PlayerData data = GunWar.getGame().getPlayerData(p);
+            if(data != null) {
+                PlayerWatcher watcher = data.getWatcher();
+                watcher.stopWatch();
+                watcher.stopWatch10Ticks();
+                ((GunWarGame) GunWar.getGame()).removePlayerData(data.getUniqueId());
+            }
+            PermanentlyPlayerData data_ = GunWar.getGame().getPermanentlyPlayerData(p.getUniqueId());
+            if(data_ != null) {
+                try {
+                    data_.save(data_.getDefaultDataFile());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                ((GunWarGame) GunWar.getGame()).removePermanentlyPlayerData(p.getUniqueId());
+            }
+        }
         GwGameModes.clear();
         GwItems.clear();
     }

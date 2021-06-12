@@ -67,6 +67,10 @@ public class GunWarGame implements Game {
         permanentlyPlayerDataMap.put(data.getUniqueId(), data);
     }
 
+    public void removePermanentlyPlayerData(UUID uniqueId) {
+        permanentlyPlayerDataMap.remove(uniqueId);
+    }
+
     @Override
     public Collection<PlayerData> getOnlinePlayerData() {
         return dataMap.values();

@@ -10,10 +10,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.NanamiGunWar;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
-import xyz.n7mn.dev.gunwar.game.data.GunWarBlockData;
-import xyz.n7mn.dev.gunwar.game.data.GunWarPermanentlyPlayerData;
-import xyz.n7mn.dev.gunwar.game.data.GunWarPlayerData;
-import xyz.n7mn.dev.gunwar.game.data.PlayerData;
+import xyz.n7mn.dev.gunwar.game.data.*;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
 
@@ -43,6 +40,7 @@ public class PlayerListener implements Listener {
                     "\n" +
                     ChatColor.WHITE + "詳細はななみ鯖公式Discordをご確認ください。\n" +
                     ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord"));
+            ex.printStackTrace();
         }
     }
 
@@ -66,6 +64,15 @@ public class PlayerListener implements Listener {
             watcher.stopWatch();
             watcher.stopWatch10Ticks();
             ((GunWarGame) GunWar.getGame()).removePlayerData(data.getUniqueId());
+        }
+        PermanentlyPlayerData data_ = GunWar.getGame().getPermanentlyPlayerData(e.getPlayer().getUniqueId());
+        if(data_ != null) {
+            try {
+                data_.save(data_.getDefaultDataFile());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            ((GunWarGame) GunWar.getGame()).removePermanentlyPlayerData(e.getPlayer().getUniqueId());
         }
     }
 
