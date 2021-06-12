@@ -1,13 +1,12 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
 import xyz.n7mn.dev.gunwar.GunWar;
+import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData {
 
@@ -16,12 +15,16 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData {
     private int coins;
     private List<GwItem> items;
     private List<GwItem> gifts;
+    private Map<GwGunItem, Integer> playCount;
+    private Map<GwGunItem, Integer> killCount;
 
     public GunWarPermanentlyPlayerData(UUID uniqueId) {
         this.uniqueId = uniqueId;
         this.coins = 0;
         this.items = new ArrayList<>();
         this.gifts = new ArrayList<>();
+        this.playCount = new HashMap<>();
+        this.killCount = new HashMap<>();
         this.dataFile = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/players/" + uniqueId + ".dat");
     }
 
@@ -43,6 +46,16 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData {
     @Override
     public List<GwItem> getGifts() {
         return gifts;
+    }
+
+    @Override
+    public Map<GwGunItem, Integer> getPlayCount() {
+        return playCount;
+    }
+
+    @Override
+    public Map<GwGunItem, Integer> getKillCount() {
+        return killCount;
     }
 
     @Override
@@ -82,6 +95,8 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData {
                     this.coins = data.getCoins();
                     this.items = data.getItemInProcessions();
                     this.gifts = data.getGifts();
+                    this.playCount = data.getPlayCount();
+                    this.killCount = data.getKillCount();
                 }
             }
             input.close();

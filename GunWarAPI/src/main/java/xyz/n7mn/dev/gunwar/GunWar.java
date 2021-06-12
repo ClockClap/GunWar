@@ -1,7 +1,10 @@
 package xyz.n7mn.dev.gunwar;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import xyz.n7mn.dev.gunwar.game.Game;
+import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.util.GunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.Utilities;
 

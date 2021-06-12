@@ -1,11 +1,26 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
+import net.minecraft.server.v1_12_R1.BlockPosition;
+import net.minecraft.server.v1_12_R1.PacketPlayOutWorldEvent;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.Block;
+
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import xyz.n7mn.dev.gunwar.mysql.GwMySQLPlayerData;
+import xyz.n7mn.dev.gunwar.GunWar;
+import xyz.n7mn.dev.gunwar.entity.HitEntity;
+import xyz.n7mn.dev.gunwar.game.GunWarGame;
+import xyz.n7mn.dev.gunwar.item.GwGunItem;
+import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
+
+import java.util.List;
 
 public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
@@ -13,6 +28,8 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     private PlayerWatcher watcher;
     private float health;
     private float maxHealth;
+    private int team;
+    private boolean spectator;
     private boolean clickable;
 
     public GunWarPlayerData(Player player) {
@@ -20,6 +37,8 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         this.player = player;
         this.health = 100;
         this.maxHealth = 100;
+        this.team = -1;
+        this.spectator = true;
         this.clickable = true;
     }
 
@@ -46,6 +65,16 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     }
 
     @Override
+    public int getTeam() {
+        return team;
+    }
+
+    @Override
+    public boolean isSpectator() {
+        return spectator;
+    }
+
+    @Override
     public boolean isClickable() {
         return clickable;
     }
@@ -63,6 +92,17 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     @Override
     public void setMaxHealth(float maxHealth) {
         this.maxHealth = maxHealth;
+    }
+
+    @Override
+    public void setTeam(int team) {
+        this.team = team;
+        if(team < 0) setSpectator(true);
+    }
+
+    @Override
+    public void setSpectator(boolean spectator) {
+        this.spectator = spectator;
     }
 
     private Vector a(Vector onto, Vector u) {
@@ -125,4 +165,77 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         }
     }
 
+    @Override
+    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
+                                      double far, double separateX, double separateY, double separateZ, GwGunItem gun) {
+        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * far;
+        if(startZ < d) {
+            double times = d / separateZ;
+            double x = startX;
+            double y = startY;
+            double damageMin = gun.getAttackDamage() / 1.3;
+            double hsdamageMin = gun.getHeadShotDamage() / 1.3;
+            double currentDamage = gun.getAttackDamage();
+            double currentHSDamage = gun.getHeadShotDamage();
+            double separateDamage = currentDamage - damageMin / times;
+            double separateHSDamage = currentHSDamage - hsdamageMin / times;
+            for (double z = startZ; z < times; z += separateZ) {
+                c(particle, x, y, z);
+                for(Entity entity : getPlayer().getNearbyEntities(gun.getRange() + 1, gun.getRange() + 1, gun.getRange() + 1)) {
+                    if(entity instanceof LivingEntity) {
+                        LivingEntity livingEntity = (LivingEntity) entity;
+                        double xmin = entity.getLocation().getX() - (entity.getWidth() / 2);
+                        double xmax = entity.getLocation().getX() + (entity.getWidth() / 2);
+                        double ymin = entity.getLocation().getY();
+                        double ymax = entity.getLocation().getY() + entity.getHeight();
+                        double zmin = entity.getLocation().getZ() - (entity.getWidth() / 2);
+                        double zmax = entity.getLocation().getZ() + (entity.getWidth() / 2);
+                        boolean condition1 = xmin <= x && xmax >= x;
+                        boolean condition2 = ymin <= y && ymax >= y;
+                        boolean condition3 = zmin <= z && zmax >= z;
+                        if (condition1 && condition2 && condition3) {
+                            double hxmin = livingEntity.getEyeLocation().getX() - (livingEntity.getEyeHeight() / 2);
+                            double hxmax = livingEntity.getEyeLocation().getX() + (livingEntity.getEyeHeight() / 2);
+                            double hymin = livingEntity.getEyeLocation().getY() - (livingEntity.getEyeHeight() / 2);
+                            double hymax = livingEntity.getEyeLocation().getY() + (livingEntity.getEyeHeight() / 2);
+                            double hzmin = livingEntity.getEyeLocation().getZ() - (livingEntity.getEyeHeight() / 2);
+                            double hzmax = livingEntity.getEyeLocation().getZ() + (livingEntity.getEyeHeight() / 2);
+                            boolean hcondition1 = hxmin <= x && hxmax >= x;
+                            boolean hcondition2 = hymin <= y && hymax >= y;
+                            boolean hcondition3 = hzmin <= z && hzmax >= z;
+                            boolean headShot = hcondition1 && hcondition2 && hcondition3;
+                            return new HitEntity(livingEntity, headShot, headShot ? currentHSDamage : currentDamage,
+                                    getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), x, y, z));
+                        }
+                    }
+                }
+                Location loc = new Location(getPlayer().getWorld(), x, y, z);
+                Block block = loc.getBlock();
+                if(block != null && block.getType() != Material.AIR && block.getType() != Material.STRUCTURE_VOID) {
+                    @SuppressWarnings("deprecation")
+                    PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
+                            new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
+                            block.getType().getId(), false);
+                    List<Player> players = getPlayer().getWorld().getPlayers();
+                    for(final Player p : players) {
+                        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+                    }
+                    return null;
+                }
+                x += separateX;
+                y += separateY;
+                currentDamage -= separateDamage;
+                currentHSDamage -= separateHSDamage;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void giveItem(GwItem item) {
+        ItemStack i = item.getItem().clone();
+        ((GunWarGame) GunWar.getGame()).addItemData(new GunWarItemData(item, i, getPlayer()));
+        getPlayer().getInventory().addItem(i);
+        getPlayer().updateInventory();
+    }
 }
