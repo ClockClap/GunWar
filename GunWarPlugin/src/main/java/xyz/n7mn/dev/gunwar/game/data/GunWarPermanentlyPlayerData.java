@@ -17,6 +17,8 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
     private List<GwItem> gifts;
     private Map<GwGunItem, Integer> playCount;
     private Map<GwGunItem, Integer> killCount;
+    private int deathCount;
+    private int infectCount;
 
     public GunWarPermanentlyPlayerData(UUID uniqueId) {
         this.uniqueId = uniqueId;
@@ -25,6 +27,8 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
         this.gifts = new ArrayList<>();
         this.playCount = new HashMap<>();
         this.killCount = new HashMap<>();
+        this.deathCount = 0;
+        this.infectCount = 0;
         this.dataFile = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/players/" + uniqueId);
     }
 
@@ -59,8 +63,28 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
     }
 
     @Override
+    public int getDeathCount() {
+        return Math.max(0, deathCount);
+    }
+
+    @Override
+    public int getInfectCount() {
+        return Math.max(0, deathCount);
+    }
+
+    @Override
     public void setCoins(int coins) {
         this.coins = coins;
+    }
+
+    @Override
+    public void setDeathCount(int deathCount) {
+        this.deathCount = deathCount;
+    }
+
+    @Override
+    public void setInfectCount(int infectCount) {
+        this.infectCount = infectCount;
     }
 
     @Override
@@ -97,10 +121,12 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
                 PermanentlyPlayerData data = (PermanentlyPlayerData) object;
                 if (data.getUniqueId() == getUniqueId()) {
                     this.coins = data.getCoins();
-                    this.items = data.getItemInProcessions();
-                    this.gifts = data.getGifts();
-                    this.playCount = data.getPlayCount();
-                    this.killCount = data.getKillCount();
+                    if(data.getItemInProcessions() != null) this.items = data.getItemInProcessions();
+                    if(data.getGifts() != null) this.gifts = data.getGifts();
+                    if(data.getPlayCount() != null) this.playCount = data.getPlayCount();
+                    if(data.getKillCount() != null) this.killCount = data.getKillCount();
+                    this.deathCount = data.getDeathCount();
+                    this.infectCount = data.getInfectCount();
                 }
             }
             objectInput.close();

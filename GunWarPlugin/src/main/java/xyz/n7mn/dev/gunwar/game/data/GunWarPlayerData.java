@@ -12,6 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.entity.HitEntity;
@@ -19,18 +20,23 @@ import xyz.n7mn.dev.gunwar.game.GunWarGame;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
+import xyz.n7mn.dev.gunwar.util.Reference;
 
+import java.sql.Ref;
 import java.util.List;
 
 public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
     private final Player player;
     private PlayerWatcher watcher;
-    private float health;
-    private float maxHealth;
+    private double health;
+    private double maxHealth;
     private int team;
     private boolean spectator;
     private boolean clickable;
+    private boolean moveable;
+    private boolean dead;
+    private Location loc;
 
     public GunWarPlayerData(Player player) {
         super(player);
@@ -40,6 +46,9 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         this.team = -1;
         this.spectator = true;
         this.clickable = true;
+        this.moveable = true;
+        this.loc = player.getLocation();
+        this.dead = false;
     }
 
     @Override
@@ -56,11 +65,11 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         this.watcher = watcher;
     }
 
-    public float getHealth() {
+    public double getHealth() {
         return health;
     }
 
-    public float getMaxHealth() {
+    public double getMaxHealth() {
         return maxHealth;
     }
 
@@ -80,17 +89,27 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     }
 
     @Override
+    public boolean isDead() {
+        return dead;
+    }
+
+    @Override
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
+    @Override
     public void setClickable(boolean clickable) {
         this.clickable = clickable;
     }
 
     @Override
-    public void setHealth(float health) {
+    public void setHealth(double health) {
         this.health = Math.min(health, maxHealth);
     }
 
     @Override
-    public void setMaxHealth(float maxHealth) {
+    public void setMaxHealth(double maxHealth) {
         this.maxHealth = maxHealth;
     }
 
@@ -103,6 +122,67 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     @Override
     public void setSpectator(boolean spectator) {
         this.spectator = spectator;
+    }
+
+    private boolean inf = false;
+
+    @Override
+    public void infect() {
+        if(!dead && !inf) {
+            setTeam(1);
+            inf = true;
+            moveable = false;
+            loc = getPlayer().getLocation();
+            getPlayer().sendTitle(Reference.TITLE_MAIN_INFECT, Reference.TITLE_SUB_INFECT, 0, 100, 20);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    moveable = true;
+                    inf = false;
+                }
+            }.runTaskLater(GunWar.getPlugin(), 100);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!moveable) {
+                        this.cancel();
+                        return;
+                    }
+                    Location location = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ(),
+                            getPlayer().getLocation().getYaw(), getPlayer().getLocation().getPitch());
+                    getPlayer().teleport(location);
+                }
+            }.runTaskTimer(GunWar.getPlugin(), 0, 1);
+        }
+    }
+
+    @Override
+    public void kill() {
+        if(!dead && !inf) {
+            moveable = false;
+            dead = true;
+            loc = getPlayer().getLocation();
+            getPlayer().sendTitle(Reference.TITLE_MAIN_DIED_ZOMBIE, Reference.TITLE_SUB_INFECT, 0, 100, 20);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    moveable = true;
+                    dead = false;
+                }
+            }.runTaskLater(GunWar.getPlugin(), 100);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!moveable) {
+                        this.cancel();
+                        return;
+                    }
+                    Location location = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ(),
+                            getPlayer().getLocation().getYaw(), getPlayer().getLocation().getPitch());
+                    getPlayer().teleport(location);
+                }
+            }.runTaskTimer(GunWar.getPlugin(), 0, 1);
+        }
     }
 
     private Vector a(Vector onto, Vector u) {

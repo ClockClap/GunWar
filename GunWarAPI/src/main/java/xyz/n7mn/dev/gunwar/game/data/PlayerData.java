@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -14,9 +15,9 @@ public interface PlayerData extends EntityData {
 
     public PlayerWatcher getWatcher();
 
-    public float getHealth();
+    public double getHealth();
 
-    public float getMaxHealth();
+    public double getMaxHealth();
 
     public int getTeam();
 
@@ -24,15 +25,23 @@ public interface PlayerData extends EntityData {
 
     public boolean isClickable();
 
+    public boolean isDead();
+
+    public void setDead(boolean dead);
+
     public void setClickable(boolean clickable);
 
-    public void setHealth(float health);
+    public void setHealth(double health);
 
-    public void setMaxHealth(float maxHealth);
+    public void setMaxHealth(double maxHealth);
 
     public void setTeam(int team);
 
     public void setSpectator(boolean spectator);
+
+    public void infect();
+
+    public void kill();
 
     public void drawParticleLine(Particle particle, double start, double far, double separate);
 

@@ -25,7 +25,6 @@ public class PlayerListener implements Listener {
             GunWarPermanentlyPlayerData permanentlyPlayerData = new GunWarPermanentlyPlayerData(e.getUniqueId());
             File f = permanentlyPlayerData.getDefaultDataFile();
             if (!f.exists()) {
-                f.createNewFile();
                 permanentlyPlayerData.save(f);
             } else {
                 permanentlyPlayerData.load(f);

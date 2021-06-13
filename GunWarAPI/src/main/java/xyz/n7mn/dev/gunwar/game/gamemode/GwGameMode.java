@@ -5,20 +5,19 @@ public abstract class GwGameMode implements IGwGameMode {
     private final int index;
     private String name;
     private String displayName;
+    private int gameTime;
+    private int elapsedTime;
 
     protected GwGameMode(int index) {
         this.index = index;
     }
 
-    protected GwGameMode(int index, String name) {
-        this.index = index;
-        this.name = name;
-    }
-
-    public GwGameMode(int index, String name, String displayName) {
+    public GwGameMode(int index, String name, String displayName, int gameTime) {
         this.index = index;
         this.name = name;
         this.displayName = displayName;
+        this.gameTime = gameTime;
+        this.elapsedTime = 0;
     }
 
     public int getIndex() {
@@ -31,6 +30,29 @@ public abstract class GwGameMode implements IGwGameMode {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    @Override
+    public int getGameTime() {
+        return gameTime;
+    }
+
+    @Override
+    public int getElapsedTime() {
+        return elapsedTime;
+    }
+
+    @Override
+    public int getRemainingTime() {
+        return Math.max(0, gameTime - elapsedTime);
+    }
+
+    protected void setElapsedTime(int elapsedTime) {
+        this.elapsedTime = elapsedTime;
+    }
+
+    protected void setGameTime(int gameTime) {
+        this.gameTime = gameTime;
     }
 
     protected void setName(String name) {

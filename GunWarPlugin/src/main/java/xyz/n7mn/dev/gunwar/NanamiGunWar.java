@@ -2,12 +2,16 @@ package xyz.n7mn.dev.gunwar;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.n7mn.dev.api.Role;
 import xyz.n7mn.dev.gunwar.commands.AboutGunWarCommand;
+import xyz.n7mn.dev.gunwar.commands.GunWarItemCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
 import xyz.n7mn.dev.gunwar.game.data.GunWarPermanentlyPlayerData;
@@ -16,6 +20,7 @@ import xyz.n7mn.dev.gunwar.game.data.PermanentlyPlayerData;
 import xyz.n7mn.dev.gunwar.game.data.PlayerData;
 import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
 import xyz.n7mn.dev.gunwar.item.GwItems;
+import xyz.n7mn.dev.gunwar.listeners.DamageListener;
 import xyz.n7mn.dev.gunwar.listeners.ItemListener;
 import xyz.n7mn.dev.gunwar.listeners.PlayerListener;
 import xyz.n7mn.dev.gunwar.listeners.ServerListener;
@@ -24,6 +29,7 @@ import xyz.n7mn.dev.gunwar.mysql.MySQLSettingBuilder;
 import xyz.n7mn.dev.gunwar.util.GwUtilities;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
+import xyz.n7mn.dev.gunwar.util.Reference;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,6 +71,7 @@ public final class NanamiGunWar extends JavaPlugin {
         GunWar.game = game;
         GwItems.a();
         pluginManager = (SimplePluginManager) Bukkit.getPluginManager();
+        bossBar();
         registerListeners();
         registerCommands();
         for(Player p : Bukkit.getOnlinePlayers()) {
@@ -72,7 +79,6 @@ public final class NanamiGunWar extends JavaPlugin {
                 GunWarPermanentlyPlayerData permanentlyPlayerData = new GunWarPermanentlyPlayerData(p.getUniqueId());
                 File f = permanentlyPlayerData.getDefaultDataFile();
                 if (!f.exists()) {
-                    f.createNewFile();
                     permanentlyPlayerData.save(f);
                 } else {
                     permanentlyPlayerData.load(f);
@@ -98,15 +104,24 @@ public final class NanamiGunWar extends JavaPlugin {
         }
     }
 
+    private void bossBar() {
+        BossBar bar = Bukkit.getServer().createBossBar(Reference.BOSSBAR_WAITING, BarColor.RED, BarStyle.SOLID);
+        bar.setVisible(true);
+        bar.setProgress(1.0);
+        game.setBar(bar);
+    }
+
     private void registerListeners() {
         pluginManager.registerEvents(new PlayerListener(), plugin);
         pluginManager.registerEvents(new ServerListener(), plugin);
         pluginManager.registerEvents(new ItemListener(), plugin);
+        pluginManager.registerEvents(new DamageListener(), plugin);
     }
 
     private void registerCommands() {
         utilities.registerCommand(plugin.getName(), new AboutGunWarCommand());
         utilities.registerCommand(plugin.getName(), new GunWarReloadCommand());
+        utilities.registerCommand(plugin.getName(), new GunWarItemCommand());
     }
 
     @Override

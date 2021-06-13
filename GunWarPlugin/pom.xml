@@ -11,7 +11,7 @@
         <groupId>xyz.n7mn.dev</groupId>
     </parent>
     <artifactId>gunwar</artifactId>
-    <version>3.3.0</version>
+    <version>3.4.0</version>
     <packaging>jar</packaging>
 
     <name>GunWar</name>

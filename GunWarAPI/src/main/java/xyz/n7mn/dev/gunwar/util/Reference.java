@@ -12,6 +12,14 @@ public final class Reference {
     public static final String CHAT_ABOUT = ChatColor.DARK_GRAY + "[詳細]";
     private static final String CHAT_COMMAND_PERMISSION_ERROR_PRIVATE = ChatColor.RED + "このコマンドを実行する権限がありません";
     public static final String CHAT_COMMAND_RELOAD = "設定を再読み込みしました";
+    public static final String CHAT_COMMAND_GIVE_ITEM = ChatColor.GRAY + "%PLAYER% に %ITEM% を与えました";
+
+    public static final String TITLE_MAIN_INFECT = ChatColor.DARK_GREEN + "ゾンビに感染してしまった...";
+    public static final String TITLE_MAIN_DIED_ZOMBIE = ChatColor.DARK_GREEN + "死んでしまった...";
+    public static final String TITLE_SUB_INFECT = ChatColor.GRAY + "5秒後にゾンビとして復活します";
+
+    public static final String BOSSBAR_WAITING = ChatColor.RED + "待機中 - 人数が集まるまでしばらくお待ち下さい";
+    public static final String BOSSBAR_STARTING = ChatColor.GOLD + "残り%SECOND%秒でゲームが開始します";
 
     public static BaseComponent getChatCommandPermissionError(String required, String now) {
         TextComponent component = new TextComponent();

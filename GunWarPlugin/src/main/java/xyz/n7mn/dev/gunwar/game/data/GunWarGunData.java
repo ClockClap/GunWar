@@ -69,7 +69,14 @@ public class GunWarGunData extends GunWarItemData implements GunData {
             HitEntity hitEntity = GunWar.getGame().getPlayerData(getOwner()).drawParticleLine(
                     Particle.SMOKE_NORMAL, 0, 0, 0.2, ((GwGunItem) getGwItem()).getRange(),
                     separateX, separateY, 0.25, (GwGunItem) getGwItem());
-            hitEntity.getEntity().damage(hitEntity.getDamage(), getOwner());
+            if(hitEntity.getEntity() instanceof Player) {
+                PlayerData data = GunWar.getGame().getPlayerData((Player) hitEntity.getEntity());
+                hitEntity.getEntity().damage(0, getOwner());
+                data.setHealth(Math.max(0, data.getHealth() - hitEntity.getDamage()));
+            } else {
+                double damage = hitEntity.getDamage() * 0.25;
+                hitEntity.getEntity().damage(damage, getOwner());
+            }
 
             double subX = hitEntity.getHitLocation().getX() - hitEntity.getFrom().getX();
             double subY = hitEntity.getHitLocation().getY() - hitEntity.getFrom().getY();

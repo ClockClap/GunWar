@@ -1,5 +1,7 @@
 package xyz.n7mn.dev.gunwar.game;
 
+import org.bukkit.Location;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -25,10 +27,18 @@ public interface Game {
 
     public Collection<PlayerData> getOnlinePlayerData();
 
+    public BossBar getBar();
+
+    public void setBar(BossBar bar);
+
     public GwGameMode getGameMode();
 
     public ItemData getItemData(ItemStack item);
 
     public void setGameMode(GwGameMode gamemode);
+
+    public void start(Location loc);
+
+    public void stop();
 
 }

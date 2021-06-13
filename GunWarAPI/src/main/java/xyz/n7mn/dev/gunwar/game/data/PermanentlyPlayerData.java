@@ -23,7 +23,15 @@ public interface PermanentlyPlayerData {
 
     public Map<GwGunItem, Integer> getKillCount();
 
+    public int getDeathCount();
+
+    public int getInfectCount();
+
     public void setCoins(int coins);
+
+    public void setDeathCount(int deathCount);
+
+    public void setInfectCount(int infectCount);
 
     public File getDefaultDataFile();
 
