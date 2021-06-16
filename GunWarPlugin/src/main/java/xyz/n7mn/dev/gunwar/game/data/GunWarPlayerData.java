@@ -17,6 +17,8 @@ import org.bukkit.util.Vector;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.entity.HitEntity;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
+import xyz.n7mn.dev.gunwar.game.gamemode.GameModeNormal;
+import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
@@ -253,39 +255,51 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             double times = d / separateZ;
             double x = startX;
             double y = startY;
+            double z = startZ;
             double damageMin = gun.getAttackDamage() / 1.3;
             double hsdamageMin = gun.getHeadShotDamage() / 1.3;
             double currentDamage = gun.getAttackDamage();
             double currentHSDamage = gun.getHeadShotDamage();
             double separateDamage = currentDamage - damageMin / times;
             double separateHSDamage = currentHSDamage - hsdamageMin / times;
-            for (double z = startZ; z < times; z += separateZ) {
+            while (z < times) {
                 c(particle, x, y, z);
                 for(Entity entity : getPlayer().getNearbyEntities(gun.getRange() + 1, gun.getRange() + 1, gun.getRange() + 1)) {
                     if(entity instanceof LivingEntity) {
                         LivingEntity livingEntity = (LivingEntity) entity;
-                        double xmin = entity.getLocation().getX() - (entity.getWidth() / 2);
-                        double xmax = entity.getLocation().getX() + (entity.getWidth() / 2);
-                        double ymin = entity.getLocation().getY();
-                        double ymax = entity.getLocation().getY() + entity.getHeight();
-                        double zmin = entity.getLocation().getZ() - (entity.getWidth() / 2);
-                        double zmax = entity.getLocation().getZ() + (entity.getWidth() / 2);
-                        boolean condition1 = xmin <= x && xmax >= x;
-                        boolean condition2 = ymin <= y && ymax >= y;
-                        boolean condition3 = zmin <= z && zmax >= z;
-                        if (condition1 && condition2 && condition3) {
-                            double hxmin = livingEntity.getEyeLocation().getX() - (livingEntity.getEyeHeight() / 2);
-                            double hxmax = livingEntity.getEyeLocation().getX() + (livingEntity.getEyeHeight() / 2);
-                            double hymin = livingEntity.getEyeLocation().getY() - (livingEntity.getEyeHeight() / 2);
-                            double hymax = livingEntity.getEyeLocation().getY() + (livingEntity.getEyeHeight() / 2);
-                            double hzmin = livingEntity.getEyeLocation().getZ() - (livingEntity.getEyeHeight() / 2);
-                            double hzmax = livingEntity.getEyeLocation().getZ() + (livingEntity.getEyeHeight() / 2);
-                            boolean hcondition1 = hxmin <= x && hxmax >= x;
-                            boolean hcondition2 = hymin <= y && hymax >= y;
-                            boolean hcondition3 = hzmin <= z && hzmax >= z;
-                            boolean headShot = hcondition1 && hcondition2 && hcondition3;
-                            return new HitEntity(livingEntity, headShot, headShot ? currentHSDamage : currentDamage,
-                                    getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), x, y, z));
+                        if(livingEntity != getPlayer()) {
+                            double xmin = entity.getLocation().getX() - (entity.getWidth() / 2);
+                            double xmax = entity.getLocation().getX() + (entity.getWidth() / 2);
+                            double ymin = entity.getLocation().getY();
+                            double ymax = entity.getLocation().getY() + entity.getHeight();
+                            double zmin = entity.getLocation().getZ() - (entity.getWidth() / 2);
+                            double zmax = entity.getLocation().getZ() + (entity.getWidth() / 2);
+                            boolean condition1 = xmin <= x && xmax >= x;
+                            boolean condition2 = ymin <= y && ymax >= y;
+                            boolean condition3 = zmin <= z && zmax >= z;
+                            if (condition1 && condition2 && condition3) {
+                                double hxmin = livingEntity.getEyeLocation().getX() - (livingEntity.getEyeHeight() / 2);
+                                double hxmax = livingEntity.getEyeLocation().getX() + (livingEntity.getEyeHeight() / 2);
+                                double hymin = livingEntity.getEyeLocation().getY() - (livingEntity.getEyeHeight() / 2);
+                                double hymax = livingEntity.getEyeLocation().getY() + (livingEntity.getEyeHeight() / 2);
+                                double hzmin = livingEntity.getEyeLocation().getZ() - (livingEntity.getEyeHeight() / 2);
+                                double hzmax = livingEntity.getEyeLocation().getZ() + (livingEntity.getEyeHeight() / 2);
+                                boolean hcondition1 = hxmin <= x && hxmax >= x;
+                                boolean hcondition2 = hymin <= y && hymax >= y;
+                                boolean hcondition3 = hzmin <= z && hzmax >= z;
+                                boolean headShot = hcondition1 && hcondition2 && hcondition3;
+                                if(GunWar.getGame().getGameMode() == GwGameModes.NORMAL && ((GameModeNormal) GwGameModes.NORMAL).getMode() == GameModeNormal.Mode.TEAM) {
+                                    if (livingEntity instanceof Player) {
+                                        PlayerData data = GunWar.getGame().getPlayerData((Player) livingEntity);
+                                        if (data != null && data.getTeam() != getTeam()) {
+                                            return new HitEntity(livingEntity, headShot, headShot ? currentHSDamage : currentDamage,
+                                                    getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), x, y, z));
+                                        }
+                                    }
+                                }
+                                return new HitEntity(livingEntity, headShot, headShot ? currentHSDamage : currentDamage,
+                                        getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), x, y, z));
+                            }
                         }
                     }
                 }
@@ -304,6 +318,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                 }
                 x += separateX;
                 y += separateY;
+                z += separateZ;
                 currentDamage -= separateDamage;
                 currentHSDamage -= separateHSDamage;
             }
@@ -314,7 +329,9 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     @Override
     public void giveItem(GwItem item) {
         ItemStack i = item.getItem().clone();
-        ((GunWarGame) GunWar.getGame()).addItemData(new GunWarItemData(item, i, getPlayer()));
+        ((GunWarGame) GunWar.getGame()).addItemData(item instanceof GwGunItem ? new GunWarGunData((GwGunItem) item, i, getPlayer()) :
+                new GunWarItemData(item, i, getPlayer()));
+        if (GunWar.getGame().getItemData(i) != null) i = GunWar.getGame().getItemData(i).getItem();
         getPlayer().getInventory().addItem(i);
         getPlayer().updateInventory();
     }

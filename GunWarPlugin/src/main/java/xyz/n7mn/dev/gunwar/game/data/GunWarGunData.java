@@ -12,8 +12,7 @@ import xyz.n7mn.dev.gunwar.entity.HitEntity;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class GunWarGunData extends GunWarItemData implements GunData {
 
@@ -28,6 +27,7 @@ public class GunWarGunData extends GunWarItemData implements GunData {
         reloading = false;
         canFire = true;
         ammo = gwitem.getAmmo();
+        updateName();
     }
 
     @Override
@@ -67,30 +67,33 @@ public class GunWarGunData extends GunWarItemData implements GunData {
             double separateY = random.nextDouble() * (2 / accuracy) - (1 / accuracy);
 
             HitEntity hitEntity = GunWar.getGame().getPlayerData(getOwner()).drawParticleLine(
-                    Particle.SMOKE_NORMAL, 0, 0, 0.2, ((GwGunItem) getGwItem()).getRange(),
+                    Particle.SMOKE_NORMAL, 0, 0, 0.25, ((GwGunItem) getGwItem()).getRange(),
                     separateX, separateY, 0.25, (GwGunItem) getGwItem());
-            if(hitEntity.getEntity() instanceof Player) {
-                PlayerData data = GunWar.getGame().getPlayerData((Player) hitEntity.getEntity());
-                hitEntity.getEntity().damage(0, getOwner());
-                data.setHealth(Math.max(0, data.getHealth() - hitEntity.getDamage()));
-            } else {
-                double damage = hitEntity.getDamage() * 0.25;
-                hitEntity.getEntity().damage(damage, getOwner());
-            }
+            if(hitEntity != null) {
+                if (hitEntity.getEntity() instanceof Player) {
+                    PlayerData data = GunWar.getGame().getPlayerData((Player) hitEntity.getEntity());
+                    hitEntity.getEntity().damage(0, getOwner());
+                    data.setHealth(Math.max(0, data.getHealth() - hitEntity.getDamage()));
+                } else {
+                    double damage = hitEntity.getDamage() * 0.25;
+                    hitEntity.getEntity().damage(damage, getOwner());
+                }
 
-            double subX = hitEntity.getHitLocation().getX() - hitEntity.getFrom().getX();
-            double subY = hitEntity.getHitLocation().getY() - hitEntity.getFrom().getY();
-            double subZ = hitEntity.getHitLocation().getZ() - hitEntity.getFrom().getZ();
-            double far = Math.sqrt(Math.pow(subX, 2) +
-                    Math.pow(subY, 2) +
-                    Math.pow(subZ, 2));
-            double d = ((GwGunItem) getGwItem()).getKnockBack() / far;
-            Vector vector = new Vector(subX * d, subY * d, subZ * d);
-            hitEntity.getEntity().setVelocity(vector);
+                double subX = hitEntity.getHitLocation().getX() - hitEntity.getFrom().getX();
+                double subY = hitEntity.getHitLocation().getY() - hitEntity.getFrom().getY();
+                double subZ = hitEntity.getHitLocation().getZ() - hitEntity.getFrom().getZ();
+                double far = Math.sqrt(Math.pow(subX, 2) +
+                        Math.pow(subY, 2) +
+                        Math.pow(subZ, 2));
+                double d = ((GwGunItem) getGwItem()).getKnockBack() / far;
+                Vector vector = new Vector(subX * d, subY * d, subZ * d);
+                hitEntity.getEntity().setVelocity(vector);
+            }
 
             ((GwGunItem) getGwItem()).onShoot(getOwner());
 
             setAmmo(getAmmo() - 1);
+            updateName();
             if(getAmmo() <= 0) {
                 reload();
                 return;
@@ -133,6 +136,18 @@ public class GunWarGunData extends GunWarItemData implements GunData {
         ItemMeta meta = getItem().getItemMeta();
         meta.setDisplayName(ChatColor.GRAY + getGwItem().getDisplayName() + " " + (reloading ? "▫" : "▪") + " " + (reloading ? ChatColor.DARK_GRAY : ChatColor.WHITE) + "«" + ammo + "»");
         getItem().setItemMeta(meta);
+        List<ItemStack> items = Arrays.asList(getOwner().getInventory().getContents());
+        for(ItemStack i : items) {
+            if(i == null) {
+                continue;
+            }
+            if(i.hasItemMeta()) {
+                if(i.getItemMeta().getLore().contains(getGwItem().getId())); {
+                    getOwner().getInventory().setItem(items.indexOf(i), getItem());
+                }
+            }
+        }
+        getOwner().updateInventory();
     }
 
     @Override

@@ -44,6 +44,7 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
         this.accuracySneaking = accuracySneaking;
         this.knockback = knockback;
         this.gunType = gunType;
+        a();
     }
 
     public int getAmmo() {
@@ -164,7 +165,7 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
                 guntype = "Sniper Rifle";
                 break;
             case SUBMACHINE_GUN:
-                guntype = "Sub-Machine Gun";
+                guntype = "Submachine Gun";
                 break;
             case SHOTGUN:
                 guntype = "Shotgun";

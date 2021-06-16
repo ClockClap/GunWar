@@ -1,13 +1,14 @@
 package xyz.n7mn.dev.gunwar.game;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.n7mn.dev.gunwar.GunWar;
@@ -27,7 +28,7 @@ public class GunWarGame implements Game {
     private Map<UUID, PlayerData> dataMap;
     private Map<UUID, PermanentlyPlayerData> permanentlyPlayerDataMap;
     private GwGameMode gameMode;
-    private Map<ItemStack, ItemData> itemDataMap;
+    private List<ItemData> itemDataList;
     private BossBar bar;
 
     public GunWarGame(Plugin plugin) {
@@ -36,7 +37,7 @@ public class GunWarGame implements Game {
         this.dataMap = new HashMap<>();
         this.permanentlyPlayerDataMap = new HashMap<>();
         this.gameMode = GwGameModes.NORMAL;
-        this.itemDataMap = new HashMap<>();
+        this.itemDataList = new ArrayList<>();
     }
 
     @Override
@@ -102,11 +103,16 @@ public class GunWarGame implements Game {
 
     @Override
     public ItemData getItemData(ItemStack item) {
-        return itemDataMap.get(item);
+        if(item != null && item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            List<ItemData> dataList = itemDataList;
+            for (ItemData data : dataList) if(meta.getLore().contains(ChatColor.DARK_GRAY + data.getGwItem().getId())) return data;
+        }
+        return null;
     }
 
     public void addItemData(ItemData data) {
-        itemDataMap.put(data.getItem(), data);
+        itemDataList.add(data);
     }
 
     @Override
