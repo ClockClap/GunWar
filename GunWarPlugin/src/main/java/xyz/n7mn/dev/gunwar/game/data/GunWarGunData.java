@@ -11,6 +11,7 @@ import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.entity.HitEntity;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
+import xyz.n7mn.dev.gunwar.util.Angle;
 
 import java.util.*;
 
@@ -63,12 +64,12 @@ public class GunWarGunData extends GunWarItemData implements GunData {
                 accuracy = ((GwGunItem) getGwItem()).getAccuracyOnSneak();
             }
 
-            double separateX = random.nextDouble() * (2 / accuracy) - (1 / accuracy);
-            double separateY = random.nextDouble() * (2 / accuracy) - (1 / accuracy);
+            double yaw = random.nextDouble() * (60 / accuracy) - (30 / accuracy);
+            double pitch = random.nextDouble() * (60 / accuracy) - (30 / accuracy);
 
             HitEntity hitEntity = GunWar.getGame().getPlayerData(getOwner()).drawParticleLine(
                     Particle.SMOKE_NORMAL, 0, 0, 0.25, ((GwGunItem) getGwItem()).getRange(),
-                    separateX, separateY, 0.25, (GwGunItem) getGwItem());
+                    new Angle(yaw, pitch), 0.25, (GwGunItem) getGwItem());
             if(hitEntity != null) {
                 if (hitEntity.getEntity() instanceof Player) {
                     PlayerData data = GunWar.getGame().getPlayerData((Player) hitEntity.getEntity());

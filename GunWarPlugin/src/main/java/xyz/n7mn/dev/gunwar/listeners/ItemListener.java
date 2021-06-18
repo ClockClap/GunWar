@@ -7,6 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.game.data.GunData;
@@ -27,12 +29,19 @@ public class ItemListener implements Listener {
                     data.setClickable(true);
                 }
             }.runTaskLater(GunWar.getPlugin(), 1);
-            if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                ItemData itemData = GunWar.getGame().getItemData(e.getItem());
-                if (itemData != null) {
-                    if (itemData instanceof GunData) {
-                        if (((GunData) itemData).getAmmo() <= 0) ((GunData) itemData).reload();
-                        ((GunData) itemData).fire();
+            ItemData itemData = GunWar.getGame().getItemData(e.getItem());
+            if (itemData != null) {
+                if (itemData instanceof GunData) {
+                    GunData gunData = (GunData) itemData;
+                    if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                        if (gunData.getAmmo() <= 0) gunData.reload();
+                        gunData.fire();
+                    } else if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+                        if(data.isZoom()) {
+                            data.setZoom(false, 0);
+                        } else {
+                            data.setZoom(true, ((GwGunItem) gunData.getGwItem()).getZoomLevel());
+                        }
                     }
                 }
             }
@@ -54,7 +63,12 @@ public class ItemListener implements Listener {
     public void onSlotChange(PlayerItemHeldEvent e) {
         for(ItemStack i : e.getPlayer().getInventory().getContents()) {
             ItemData data = GunWar.getGame().getItemData(i);
-            if(data instanceof GunData) ((GunData) data).cancelReload();
+            if(data instanceof GunData) {
+                GunData gunData = (GunData) data;
+                gunData.cancelReload();
+                PlayerData pdata = GunWar.getGame().getPlayerData(e.getPlayer());
+                if(pdata != null) pdata.setZoom(false, 0);
+            }
         }
     }
 

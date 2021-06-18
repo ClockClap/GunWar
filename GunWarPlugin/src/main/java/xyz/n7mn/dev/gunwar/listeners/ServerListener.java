@@ -10,7 +10,8 @@ public class ServerListener implements Listener {
     @EventHandler
     public void onRegisterCommand(GunWarCommandRegisterEvent e) {
         if(e.getCommand().getName().equalsIgnoreCase("aboutgunwar") ||
-                e.getCommand().getName().equalsIgnoreCase("gunwarreload")) {
+                e.getCommand().getName().equalsIgnoreCase("gunwarreload") ||
+                e.getCommand().getName().equalsIgnoreCase("gunwaritem")) {
             if(e.getThrowable() != null) {
                 e.catchThrowable();
                 GunWar.getPlugin().getLogger().info("Failed to register command: /" + e.getCommand().getName());
