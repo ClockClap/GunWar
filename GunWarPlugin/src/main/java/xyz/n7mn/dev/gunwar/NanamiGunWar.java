@@ -40,7 +40,6 @@ public final class NanamiGunWar extends JavaPlugin {
     private SimplePluginManager pluginManager;
     private GwUtilities utilities;
     private NanamiGunWarConfiguration config;
-    public static Role role;
     public static GwMySQLPlayerDataUpdater updater;
     private GunWarGame game;
 
@@ -60,12 +59,6 @@ public final class NanamiGunWar extends JavaPlugin {
                 config.getConfig().getString("mysql.option", "?allowPublicKeyRetrieval=true&useSSL=false"),
                 config.getConfig().getString("mysql.username", ""),
                 config.getConfig().getString("mysql.password", "")).build();
-        role = new Role(config.getConfig().getString("mysql.host", "localhost"),
-                config.getConfig().getInt("mysql.port", 3306),
-                config.getConfig().getString("mysql.database", ""),
-                config.getConfig().getString("mysql.option", "?allowPublicKeyRetrieval=true&useSSL=false"),
-                config.getConfig().getString("mysql.username", ""),
-                config.getConfig().getString("mysql.password", ""));
         GwGameModes.registerDefault();
         game = new GunWarGame(plugin);
         GunWar.game = game;
