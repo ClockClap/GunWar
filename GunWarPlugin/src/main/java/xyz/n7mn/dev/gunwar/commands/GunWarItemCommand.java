@@ -64,6 +64,7 @@ public class GunWarItemCommand extends Command {
         if(args.length == 2) {
             List<String> result = new ArrayList<>();
             for(GwItem i : GwItems.getRegisteredItems()) {
+                if(i.getName().startsWith(args[1]))
                 result.add(i.getName());
             }
             return result;
