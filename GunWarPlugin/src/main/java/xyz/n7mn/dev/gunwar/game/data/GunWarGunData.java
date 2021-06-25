@@ -2,6 +2,9 @@ package xyz.n7mn.dev.gunwar.game.data;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
+import org.bukkit.Server;
+import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -64,31 +67,36 @@ public class GunWarGunData extends GunWarItemData implements GunData {
                 accuracy = ((GwGunItem) getGwItem()).getAccuracyOnSneak();
             }
 
-            double yaw = random.nextDouble() * (60 / accuracy) - (30 / accuracy);
-            double pitch = random.nextDouble() * (60 / accuracy) - (30 / accuracy);
+            double yaw = random.nextDouble() * (16 / accuracy) - (8 / accuracy);
+            double pitch = random.nextDouble() * (16 / accuracy) - (8 / accuracy);
 
             HitEntity hitEntity = GunWar.getGame().getPlayerData(getOwner()).drawParticleLine(
-                    Particle.SMOKE_NORMAL, 0, 0, 0.25, ((GwGunItem) getGwItem()).getRange(),
+                    Particle.CRIT, 0, 0, 0.1, ((GwGunItem) getGwItem()).getRange(),
                     new Angle(yaw, pitch), 0.25, (GwGunItem) getGwItem());
             if(hitEntity != null) {
-                if (hitEntity.getEntity() instanceof Player) {
-                    PlayerData data = GunWar.getGame().getPlayerData((Player) hitEntity.getEntity());
-                    hitEntity.getEntity().damage(0, getOwner());
-                    data.setHealth(Math.max(0, data.getHealth() - hitEntity.getDamage()));
-                } else {
-                    double damage = hitEntity.getDamage() * 0.25;
-                    hitEntity.getEntity().damage(damage, getOwner());
-                }
-
                 double subX = hitEntity.getHitLocation().getX() - hitEntity.getFrom().getX();
                 double subY = hitEntity.getHitLocation().getY() - hitEntity.getFrom().getY();
                 double subZ = hitEntity.getHitLocation().getZ() - hitEntity.getFrom().getZ();
                 double far = Math.sqrt(Math.pow(subX, 2) +
                         Math.pow(subY, 2) +
                         Math.pow(subZ, 2));
-                double d = ((GwGunItem) getGwItem()).getKnockBack() / far;
-                Vector vector = new Vector(subX * d, subY * d, subZ * d);
-                hitEntity.getEntity().setVelocity(vector);
+                if(hitEntity.getEntity() != null) {
+                    if (hitEntity.getEntity() instanceof Player) {
+                        PlayerData data = GunWar.getGame().getPlayerData((Player) hitEntity.getEntity());
+                        hitEntity.getEntity().damage(0, getOwner());
+                        data.setHealth(Math.max(0, data.getHealth() - hitEntity.getDamage()));
+                    } else if (!(hitEntity.getEntity() instanceof ArmorStand)) {
+                        double damage = hitEntity.getDamage();
+                        hitEntity.getEntity().damage(damage, getOwner());
+                    }
+                    double d = ((GwGunItem) getGwItem()).getKnockBack() / far;
+                    Vector vector = new Vector(subX * d, subY * d, subZ * d);
+                    hitEntity.getEntity().setVelocity(vector);
+                }
+                double recoil = (getOwner().isSneaking() ? ((GwGunItem) getGwItem()).getRecoilOnSneak() : ((GwGunItem) getGwItem()).getRecoil());
+                double d_ = recoil / far;
+                Vector vector_ = new Vector(subX * d_ * -1, subY * d_ * -1, subZ * d_ * -1);
+                getOwner().setVelocity(vector_);
             }
 
             ((GwGunItem) getGwItem()).onShoot(getOwner());
@@ -143,7 +151,7 @@ public class GunWarGunData extends GunWarItemData implements GunData {
                 continue;
             }
             if(i.hasItemMeta()) {
-                if(i.getItemMeta().getLore().contains(getGwItem().getId())); {
+                if(i.getItemMeta().getLore() != null && i.getItemMeta().getLore().contains(getGwItem().getId())); {
                     getOwner().getInventory().setItem(items.indexOf(i), getItem());
                 }
             }
@@ -155,6 +163,7 @@ public class GunWarGunData extends GunWarItemData implements GunData {
     public void cancelReload() {
         if(reload != null && !reload.isCancelled()) {
             reload.cancel();
+            reloading = false;
             canFire = true;
             updateName();
         }

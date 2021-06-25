@@ -105,8 +105,11 @@ public class GunWarGame implements Game {
     public ItemData getItemData(ItemStack item) {
         if(item != null && item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
-            List<ItemData> dataList = itemDataList;
-            for (ItemData data : dataList) if(meta.getLore().contains(ChatColor.DARK_GRAY + data.getGwItem().getId())) return data;
+            if(meta.getLore() != null) {
+                List<ItemData> dataList = itemDataList;
+                for (ItemData data : dataList)
+                    if (meta.getLore().contains(ChatColor.DARK_GRAY + data.getGwItem().getId())) return data;
+            }
         }
         return null;
     }

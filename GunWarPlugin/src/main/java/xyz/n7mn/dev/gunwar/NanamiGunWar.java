@@ -13,6 +13,7 @@ import xyz.n7mn.dev.api.Role;
 import xyz.n7mn.dev.gunwar.commands.AboutGunWarCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarItemCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
+import xyz.n7mn.dev.gunwar.entity.selector.CraftTargetSelectorInitializer;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
 import xyz.n7mn.dev.gunwar.game.data.GunWarPermanentlyPlayerData;
 import xyz.n7mn.dev.gunwar.game.data.GunWarPlayerData;
@@ -60,6 +61,7 @@ public final class NanamiGunWar extends JavaPlugin {
                 config.getConfig().getString("mysql.username", ""),
                 config.getConfig().getString("mysql.password", "")).build();
         GwGameModes.registerDefault();
+        CraftTargetSelectorInitializer.init();
         game = new GunWarGame(plugin);
         GunWar.game = game;
         GwItems.a();

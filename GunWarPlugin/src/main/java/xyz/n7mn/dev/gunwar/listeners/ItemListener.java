@@ -16,6 +16,9 @@ import xyz.n7mn.dev.gunwar.game.data.ItemData;
 import xyz.n7mn.dev.gunwar.game.data.PlayerData;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 public class ItemListener implements Listener {
 
     @EventHandler
@@ -48,7 +51,23 @@ public class ItemListener implements Listener {
         }
     }
 
-
+    @EventHandler
+    public void onInteractEntity(PlayerInteractEntityEvent e) {
+        PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
+        if(data != null) {
+            ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
+            if(item != null) {
+                ItemData itemData = GunWar.getGame().getItemData(e.getPlayer().getInventory().getItemInMainHand());
+                if (itemData != null) {
+                    if (itemData instanceof GunData) {
+                        GunData gunData = (GunData) itemData;
+                        if (gunData.getAmmo() <= 0) gunData.reload();
+                        gunData.fire();
+                    }
+                }
+            }
+        }
+    }
 
     @EventHandler
     public void onDropItem(PlayerDropItemEvent e) {
