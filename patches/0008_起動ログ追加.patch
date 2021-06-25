@@ -1,0 +1,24 @@
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java
+--- a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java	(revision b48b208f6edaa99533ebacaae765b9eb1f7d85c2)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java	(revision 533ae09df0d18f47e306fc090e3cc47f881af47a)
+@@ -47,6 +47,7 @@
+     @Override
+     public void onEnable() {
+         // Plugin startup logic
++        getLogger().info("銃撃戦プラグインを起動しています。");
+         plugin = this;
+         GunWar.plugin = plugin;
+         utilities = new GwUtilities(plugin);
+@@ -97,6 +98,7 @@
+             data.setWatcher(watcher);
+             ((GunWarGame) GunWar.getGame()).addPlayerData(data.getUniqueId(), data);
+         }
++        getLogger().info("銃撃戦プラグインの起動が完了しました。");
+     }
+ 
+     private void bossBar() {
