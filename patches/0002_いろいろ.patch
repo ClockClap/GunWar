@@ -1,0 +1,637 @@
+Index: GunWarAPI/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/pom.xml b/GunWarAPI/pom.xml
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarAPI/pom.xml	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,80 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++
++    <parent>
++        <relativePath>../pom.xml</relativePath>
++        <artifactId>gunwar-parent</artifactId>
++        <version>dev-SNAPSHOT</version>
++        <groupId>xyz.n7mn.dev</groupId>
++    </parent>
++    <artifactId>gunwar-api</artifactId>
++    <version>1.0</version>
++    <packaging>jar</packaging>
++
++    <name>GunWarAPI</name>
++
++    <properties>
++        <java.version>1.8</java.version>
++        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++        <revision>1.0.0</revision>
++    </properties>
++
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-compiler-plugin</artifactId>
++                <version>3.8.1</version>
++                <configuration>
++                    <source>${java.version}</source>
++                    <target>${java.version}</target>
++                </configuration>
++            </plugin>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-shade-plugin</artifactId>
++                <version>3.2.4</version>
++                <executions>
++                    <execution>
++                        <phase>package</phase>
++                        <goals>
++                            <goal>shade</goal>
++                        </goals>
++                        <configuration>
++                            <createDependencyReducedPom>false</createDependencyReducedPom>
++                        </configuration>
++                    </execution>
++                </executions>
++            </plugin>
++        </plugins>
++        <resources>
++            <resource>
++                <directory>src/main/resources</directory>
++                <filtering>true</filtering>
++            </resource>
++        </resources>
++    </build>
++
++    <repositories>
++        <repository>
++            <id>papermc-repo</id>
++            <url>https://papermc.io/repo/repository/maven-public/</url>
++        </repository>
++        <repository>
++            <id>sonatype</id>
++            <url>https://oss.sonatype.org/content/groups/public/</url>
++        </repository>
++    </repositories>
++
++    <dependencies>
++        <dependency>
++            <groupId>com.destroystokyo.paper</groupId>
++            <artifactId>paper-api</artifactId>
++            <version>1.12.2-R0.1-SNAPSHOT</version>
++            <scope>provided</scope>
++        </dependency>
++    </dependencies>
++</project>
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,22 @@
++package xyz.n7mn.dev.gunwar;
++
++import org.bukkit.plugin.Plugin;
++import org.bukkit.plugin.java.JavaPlugin;
++import xyz.n7mn.dev.gunwar.util.Utilities;
++
++public final class GunWar {
++
++    static Plugin plugin;
++    static Utilities utilities;
++
++    public static Plugin getPlugin() {
++        return plugin;
++    }
++
++    public static Utilities getUtilities() {
++        return utilities;
++    }
++
++}
++
++
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/event/GunWarCommandRegisterEvent.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/event/GunWarCommandRegisterEvent.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/event/GunWarCommandRegisterEvent.java
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/event/GunWarCommandRegisterEvent.java	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,46 @@
++package xyz.n7mn.dev.gunwar.event;
++
++import org.bukkit.Location;
++import org.bukkit.command.Command;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.server.ServerEvent;
++
++public class GunWarCommandRegisterEvent extends ServerEvent {
++
++    private static final HandlerList handlers = new HandlerList();
++    private final Command command;
++    private final Throwable throwable;
++    private boolean isCaught = false;
++
++    public GunWarCommandRegisterEvent(Command command, Throwable throwable) {
++        super();
++        this.command = command;
++        this.throwable = throwable;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++
++    public Command getCommand() {
++        return command;
++    }
++
++    public Throwable getThrowable() {
++        return throwable;
++    }
++
++    public void catchThrowable() {
++        isCaught = true;
++    }
++
++    public boolean isCaught() {
++        return isCaught;
++    }
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,29 @@
++package xyz.n7mn.dev.gunwar.util;
++
++import net.md_5.bungee.api.chat.BaseComponent;
++import net.md_5.bungee.api.chat.HoverEvent;
++import net.md_5.bungee.api.chat.TextComponent;
++import org.bukkit.ChatColor;
++
++public final class Reference {
++
++    public static final String PREFIX = ChatColor.DARK_GREEN + "[銃撃戦]" + ChatColor.GRAY;
++
++    public static final String CHAT_ABOUT = ChatColor.DARK_GRAY + "[詳細]";
++    private static final String CHAT_COMMAND_PERMISSION_ERROR_PRIVATE = ChatColor.RED + "このコマンドを実行する権限がありません";
++
++    public static BaseComponent getChatCommandPermissionError(String required, String now) {
++        TextComponent component = new TextComponent();
++        TextComponent component1 = new TextComponent();
++        component.setText(Reference.PREFIX + " " + Reference.CHAT_COMMAND_PERMISSION_ERROR_PRIVATE + "\n");
++        component1.setText(Reference.CHAT_ABOUT);
++        component1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{
++                new TextComponent(Reference.CHAT_ABOUT),
++                new TextComponent(ChatColor.GRAY + "あなたの権限: " + ChatColor.GREEN + now),
++                new TextComponent(ChatColor.GRAY + "必要な権限: " + ChatColor.GREEN + required)
++        }));
++        component.addExtra(component1);
++        return component;
++    }
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Utilities.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Utilities.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Utilities.java
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Utilities.java	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,12 @@
++package xyz.n7mn.dev.gunwar.util;
++
++import org.bukkit.command.Command;
++import org.bukkit.plugin.Plugin;
++
++public interface Utilities {
++
++    public Plugin getPlugin();
++
++    public void registerCommand(String fallbackPrefix, Command command);
++
++}
+Index: GunWarPlugin/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/pom.xml b/GunWarPlugin/pom.xml
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarPlugin/pom.xml	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,116 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++
++    <parent>
++        <relativePath>../pom.xml</relativePath>
++        <artifactId>gunwar-parent</artifactId>
++        <version>dev-SNAPSHOT</version>
++        <groupId>xyz.n7mn.dev</groupId>
++    </parent>
++    <artifactId>gunwar</artifactId>
++    <version>1.0</version>
++    <packaging>jar</packaging>
++
++    <name>GunWar</name>
++
++    <description>銃撃戦です</description>
++    <properties>
++        <java.version>1.8</java.version>
++        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++        <revision>1.0.0</revision>
++    </properties>
++
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-compiler-plugin</artifactId>
++                <version>3.8.1</version>
++                <configuration>
++                    <source>${java.version}</source>
++                    <target>${java.version}</target>
++                </configuration>
++            </plugin>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-shade-plugin</artifactId>
++                <version>3.2.4</version>
++                <executions>
++                    <execution>
++                        <phase>package</phase>
++                        <goals>
++                            <goal>shade</goal>
++                        </goals>
++                        <configuration>
++                            <createDependencyReducedPom>false</createDependencyReducedPom>
++                        </configuration>
++                    </execution>
++                </executions>
++            </plugin>
++        </plugins>
++        <resources>
++            <resource>
++                <directory>src/main/resources</directory>
++                <filtering>true</filtering>
++            </resource>
++        </resources>
++    </build>
++
++    <repositories>
++        <repository>
++            <id>papermc-repo</id>
++            <url>https://papermc.io/repo/repository/maven-public/</url>
++        </repository>
++        <repository>
++            <id>sonatype</id>
++            <url>https://oss.sonatype.org/content/groups/public/</url>
++        </repository>
++        <repository>
++            <id>jitpack.io</id>
++            <url>https://jitpack.io</url>
++        </repository>
++    </repositories>
++
++    <dependencies>
++        <dependency>
++            <groupId>com.destroystokyo.paper</groupId>
++            <artifactId>paper-api</artifactId>
++            <version>1.12.2-R0.1-SNAPSHOT</version>
++            <scope>provided</scope>
++        </dependency>
++        <dependency>
++            <groupId>com.destroystokyo.paper</groupId>
++            <artifactId>paper-server</artifactId>
++            <version>1.12.2-R0.1-SNAPSHOT</version>
++            <scope>system</scope>
++            <systemPath>${user.home}/Paper/patched_paper_1.12.2.jar</systemPath>
++        </dependency>
++        <dependency>
++            <groupId>xyz.n7mn.dev</groupId>
++            <artifactId>gunwar-api</artifactId>
++            <version>1.0</version>
++            <scope>compile</scope>
++        </dependency>
++        <dependency>
++            <groupId>mysql</groupId>
++            <artifactId>mysql-connector-java</artifactId>
++            <version>8.0.23</version>
++            <scope>compile</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.jetbrains</groupId>
++            <artifactId>annotations</artifactId>
++            <version>16.0.1</version>
++            <scope>compile</scope>
++        </dependency>
++        <dependency>
++            <groupId>com.github.nanami-network</groupId>
++            <artifactId>nanamiserver-api</artifactId>
++            <version>0.2.6</version>
++            <scope>compile</scope>
++        </dependency>
++    </dependencies>
++</project>
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,43 @@
++package xyz.n7mn.dev.gunwar;
++
++import org.bukkit.Bukkit;
++import org.bukkit.plugin.SimplePluginManager;
++import org.bukkit.plugin.java.JavaPlugin;
++import xyz.n7mn.dev.gunwar.commands.AboutGunWarCommand;
++import xyz.n7mn.dev.gunwar.listeners.PlayerListener;
++import xyz.n7mn.dev.gunwar.listeners.ServerListener;
++import xyz.n7mn.dev.gunwar.util.GwUtilities;
++import xyz.n7mn.dev.gunwar.util.Utilities;
++
++public final class NanamiGunWar extends JavaPlugin {
++
++    private NanamiGunWar plugin;
++    private SimplePluginManager pluginManager;
++    private GwUtilities utilities;
++
++    @Override
++    public void onEnable() {
++        // Plugin startup logic
++        plugin = this;
++        GunWar.plugin = plugin;
++        utilities = new GwUtilities(this);
++        GunWar.utilities = utilities;
++        pluginManager = (SimplePluginManager) Bukkit.getPluginManager();
++        registerListeners();
++        registerCommands();
++    }
++
++    private void registerListeners() {
++        pluginManager.registerEvents(new PlayerListener(), plugin);
++        pluginManager.registerEvents(new ServerListener(), plugin);
++    }
++
++    private void registerCommands() {
++        utilities.registerCommand(plugin.getName(), new AboutGunWarCommand());
++    }
++
++    @Override
++    public void onDisable() {
++        // Plugin shutdown logic
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/AboutGunWarCommand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/AboutGunWarCommand.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/AboutGunWarCommand.java
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/AboutGunWarCommand.java	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,31 @@
++package xyz.n7mn.dev.gunwar.commands;
++
++import net.md_5.bungee.api.chat.BaseComponent;
++import net.md_5.bungee.api.chat.HoverEvent;
++import net.md_5.bungee.api.chat.TextComponent;
++import org.bukkit.ChatColor;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.util.GwReference;
++import xyz.n7mn.dev.gunwar.util.Reference;
++
++import java.util.Arrays;
++
++public class AboutGunWarCommand extends Command {
++    public AboutGunWarCommand() {
++        super("aboutgunwar", GwReference.COMMAND_AGW_DESCRIPTION, "Usage: /aboutgunwar", Arrays.asList("aboutgw", "agw"));
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
++        if(!sender.isOp()) {
++            sender.sendMessage(Reference.getChatCommandPermissionError("OP権限", "一般"));
++            return true;
++        }
++        sender.sendMessage(ChatColor.DARK_GREEN + "=-=-=- ななみ銃撃戦 v" + GunWar.getPlugin().getDescription().getVersion() + " -=-=-=\n" +
++                ChatColor.GRAY + "説明: " + ChatColor.RESET + "ゾンビと逃走者に分かれてやる銃撃戦です。銃撃戦とか言いながらゾンビ側は銃を持てません。\n" +
++                ChatColor.GRAY + "作者: " + ChatColor.RESET + "ClockClap");
++        return true;
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/PlayerListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/PlayerListener.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/PlayerListener.java
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/PlayerListener.java	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,21 @@
++package xyz.n7mn.dev.gunwar.listeners;
++
++import org.bukkit.ChatColor;
++import org.bukkit.event.EventHandler;
++import org.bukkit.event.Listener;
++import org.bukkit.event.player.PlayerJoinEvent;
++import org.bukkit.event.player.PlayerQuitEvent;
++
++public class PlayerListener implements Listener {
++
++    @EventHandler
++    public void onJoin(PlayerJoinEvent e) {
++        e.setJoinMessage(ChatColor.GREEN + "[+] " + ChatColor.GRAY + e.getPlayer().getName());
++    }
++
++    @EventHandler
++    public void onQuit(PlayerQuitEvent e) {
++        e.setQuitMessage(ChatColor.RED + "[+] " + ChatColor.GRAY + e.getPlayer().getName());
++    }
++
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ServerListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ServerListener.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ServerListener.java
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ServerListener.java	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,22 @@
++package xyz.n7mn.dev.gunwar.listeners;
++
++import org.bukkit.event.EventHandler;
++import org.bukkit.event.Listener;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.event.GunWarCommandRegisterEvent;
++
++public class ServerListener implements Listener {
++
++    @EventHandler
++    public void onRegisterCommand(GunWarCommandRegisterEvent e) {
++        if(e.getCommand().getName().equalsIgnoreCase("aboutgunwar")) {
++            if(e.getThrowable() != null) {
++                e.catchThrowable();
++                GunWar.getPlugin().getLogger().info("Failed to register command: /" + e.getCommand().getName());
++                return;
++            }
++            GunWar.getPlugin().getLogger().info("Succeeded registering command: /" + e.getCommand().getName());
++        }
++    }
++
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwReference.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwReference.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwReference.java
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwReference.java	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,7 @@
++package xyz.n7mn.dev.gunwar.util;
++
++public final class GwReference {
++
++    public static final String COMMAND_AGW_DESCRIPTION = "銃撃戦プラグインの詳細を表示します";
++
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,39 @@
++package xyz.n7mn.dev.gunwar.util;
++
++import org.bukkit.Bukkit;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandMap;
++import org.bukkit.plugin.Plugin;
++import xyz.n7mn.dev.gunwar.event.GunWarCommandRegisterEvent;
++
++public class GwUtilities implements Utilities {
++
++    private Plugin plugin;
++
++    public GwUtilities(Plugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public Plugin getPlugin() {
++        return plugin;
++    }
++
++    @Override
++    public void registerCommand(String fallbackPrefix, Command command) {
++        try {
++            CommandMap map = Bukkit.getServer().getCommandMap();
++            map.getKnownCommands().put(command.getName(), command);
++            for (String alias : command.getAliases()) {
++                map.getKnownCommands().put(alias, command);
++            }
++            Bukkit.getServer().getCommandMap().register(fallbackPrefix, command);
++            GunWarCommandRegisterEvent event = new GunWarCommandRegisterEvent(command, null);
++            Bukkit.getPluginManager().callEvent(event);
++        } catch(Throwable throwable) {
++            GunWarCommandRegisterEvent event = new GunWarCommandRegisterEvent(command, throwable);
++            Bukkit.getPluginManager().callEvent(event);
++            if(!event.isCaught()) throw throwable;
++        }
++    }
++}
+Index: GunWarPlugin/src/main/resources/plugin.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/resources/plugin.yml b/GunWarPlugin/src/main/resources/plugin.yml
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/GunWarPlugin/src/main/resources/plugin.yml	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,6 @@
++name: GunWar
++version: ${project.version}
++main: xyz.n7mn.dev.gunwar.NanamiGunWar
++load: STARTUP
++authors: [ ClockClap ]
++description: 銃撃戦とか言いながら実はゾンエス
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+new file mode 100644
+--- /dev/null	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/pom.xml	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
+@@ -0,0 +1,23 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++
++    <groupId>xyz.n7mn.dev</groupId>
++    <artifactId>gunwar-parent</artifactId>
++    <version>dev-SNAPSHOT</version>
++    <packaging>pom</packaging>
++
++    <name>GunWarParent</name>
++
++    <modules>
++        <module>GunWarPlugin</module>
++    </modules>
++
++    <properties>
++        <java.version>1.8</java.version>
++        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++        <revision>1.0.0</revision>
++    </properties>
++</project>

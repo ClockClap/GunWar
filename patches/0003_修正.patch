@@ -1,0 +1,16 @@
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	(revision 94d9bc5e7c6548c41b49fc31b606cb008d64763c)
++++ b/pom.xml	(revision 98d7c2819ffdfa3e777a82cfb667704fafe0e7ee)
+@@ -12,6 +12,7 @@
+     <name>GunWarParent</name>
+ 
+     <modules>
++        <module>GunWarAPI</module>
+         <module>GunWarPlugin</module>
+     </modules>
+ 

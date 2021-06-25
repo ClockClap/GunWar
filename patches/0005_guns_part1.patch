@@ -1,0 +1,3903 @@
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java
+--- a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java	(revision f4b46d6230b069dcabeb91072ed0b4b2d56be7d5)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java	(revision 4fc8806e7d20564de736b0797aecdffc74c879a9)
+@@ -1,7 +1,10 @@
+ package xyz.n7mn.dev.gunwar;
+ 
++import org.bukkit.entity.Player;
++import org.bukkit.inventory.ItemStack;
+ import org.bukkit.plugin.Plugin;
+-import org.bukkit.plugin.java.JavaPlugin;
++import xyz.n7mn.dev.gunwar.game.Game;
++import xyz.n7mn.dev.gunwar.item.GwItem;
+ import xyz.n7mn.dev.gunwar.util.GunWarConfiguration;
+ import xyz.n7mn.dev.gunwar.util.Utilities;
+ 
+@@ -10,6 +13,7 @@
+     static Plugin plugin;
+     static Utilities utilities;
+     static GunWarConfiguration config;
++    static Game game;
+ 
+     public static Plugin getPlugin() {
+         return plugin;
+@@ -23,6 +27,10 @@
+         return config;
+     }
+ 
++    public static Game getGame() {
++        return game;
++    }
++
+ }
+ 
+ 
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/Game.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/Game.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/Game.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/Game.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,44 @@
++package xyz.n7mn.dev.gunwar.game;
++
++import org.bukkit.Location;
++import org.bukkit.boss.BossBar;
++import org.bukkit.entity.Player;
++import org.bukkit.inventory.ItemStack;
++import org.bukkit.plugin.Plugin;
++import xyz.n7mn.dev.gunwar.game.data.ItemData;
++import xyz.n7mn.dev.gunwar.game.data.PermanentlyPlayerData;
++import xyz.n7mn.dev.gunwar.game.data.PlayerData;
++import xyz.n7mn.dev.gunwar.game.gamemode.GwGameMode;
++
++import java.util.Collection;
++import java.util.UUID;
++
++public interface Game {
++
++    public Plugin getPlugin();
++
++    public GameState getState();
++
++    public void setState(GameState state);
++
++    public PlayerData getPlayerData(Player player);
++
++    public PermanentlyPlayerData getPermanentlyPlayerData(UUID uniqueId);
++
++    public Collection<PlayerData> getOnlinePlayerData();
++
++    public BossBar getBar();
++
++    public void setBar(BossBar bar);
++
++    public GwGameMode getGameMode();
++
++    public ItemData getItemData(ItemStack item);
++
++    public void setGameMode(GwGameMode gamemode);
++
++    public void start(Location loc);
++
++    public void stop();
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/GameState.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/GameState.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/GameState.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/GameState.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,29 @@
++package xyz.n7mn.dev.gunwar.game;
++
++import org.bukkit.ChatColor;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public enum GameState {
++    WAITING(0, "WAITING"),
++    STARTING(1, "STARTING"),
++    PLAYING(2, "PLAYING"),
++    ENDING(3, "ENDING");
++
++    private final int index;
++    private final String name;
++
++    private GameState(int index, String name) {
++        this.index = index;
++        this.name = name;
++    }
++
++    public int getIndex() {
++        return index;
++    }
++
++    public String getName() {
++        return name;
++    }
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/BlockData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/BlockData.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/BlockData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/BlockData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,15 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import org.bukkit.Location;
++import org.bukkit.Material;
++import org.bukkit.block.Block;
++
++public interface BlockData extends CustomData {
++
++    public Location getLocation();
++
++    public Block getBlock();
++
++    public Material getType();
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/CustomData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/CustomData.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/CustomData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/CustomData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,4 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++public interface CustomData {
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/EntityData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/EntityData.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/EntityData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/EntityData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,16 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.EntityType;
++
++import java.util.UUID;
++
++public interface EntityData extends CustomData {
++
++    public UUID getUniqueId();
++
++    public EntityType getType();
++
++    public Entity getEntity();
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunData.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,21 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++public interface GunData extends ItemData {
++
++    public boolean isReloading();
++
++    public boolean canFire();
++
++    public int getAmmo();
++
++    public void setAmmo(int ammo);
++
++    public void fire();
++
++    public void cancelFireCooldown();
++
++    public void reload();
++
++    public void cancelReload();
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/ItemData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/ItemData.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/ItemData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/ItemData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,28 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import org.bukkit.Material;
++import org.bukkit.entity.Player;
++import org.bukkit.inventory.InventoryHolder;
++import org.bukkit.inventory.ItemStack;
++import xyz.n7mn.dev.gunwar.item.GwItem;
++
++import java.util.UUID;
++
++public interface ItemData {
++
++    public UUID getUniqueId();
++
++    public ItemStack getItem();
++
++    public Player getOwner();
++
++    public String getName();
++
++    public GwItem getGwItem();
++
++    public Material getType();
++
++    public void setItem(ItemStack item);
++
++    public void setOwner(Player player);
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/PermanentlyPlayerData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/PermanentlyPlayerData.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/PermanentlyPlayerData.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/PermanentlyPlayerData.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,42 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import xyz.n7mn.dev.gunwar.item.GwGunItem;
++import xyz.n7mn.dev.gunwar.item.GwItem;
++
++import java.io.File;
++import java.io.IOException;
++import java.util.List;
++import java.util.Map;
++import java.util.UUID;
++
++public interface PermanentlyPlayerData {
++
++    public UUID getUniqueId();
++
++    public int getCoins();
++
++    public List<GwItem> getItemInProcessions();
++
++    public List<GwItem> getGifts();
++
++    public Map<GwGunItem, Integer> getPlayCount();
++
++    public Map<GwGunItem, Integer> getKillCount();
++
++    public int getDeathCount();
++
++    public int getInfectCount();
++
++    public void setCoins(int coins);
++
++    public void setDeathCount(int deathCount);
++
++    public void setInfectCount(int infectCount);
++
++    public File getDefaultDataFile();
++
++    public void save(File file) throws IOException;
++
++    public void load(File file) throws IOException,ClassNotFoundException;
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/PlayerData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/PlayerData.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/PlayerData.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/PlayerData.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,56 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import org.bukkit.Location;
++import org.bukkit.Particle;
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.Player;
++import xyz.n7mn.dev.gunwar.entity.HitEntity;
++import xyz.n7mn.dev.gunwar.item.GwGunItem;
++import xyz.n7mn.dev.gunwar.item.GwItem;
++import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
++
++public interface PlayerData extends EntityData {
++
++    public Player getPlayer();
++
++    public PlayerWatcher getWatcher();
++
++    public double getHealth();
++
++    public double getMaxHealth();
++
++    public int getTeam();
++
++    public boolean isSpectator();
++
++    public boolean isClickable();
++
++    public boolean isDead();
++
++    public void setDead(boolean dead);
++
++    public void setClickable(boolean clickable);
++
++    public void setHealth(double health);
++
++    public void setMaxHealth(double maxHealth);
++
++    public void setTeam(int team);
++
++    public void setSpectator(boolean spectator);
++
++    public void infect();
++
++    public void kill();
++
++    public void drawParticleLine(Particle particle, double start, double far, double separate);
++
++    public void drawParticleLine(Particle particle, double startX, double startY, double startZ, double far,
++                                 double separateX, double separateY, double separateZ);
++
++    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double far,
++                                      double separateX, double separateY, double separateZ, GwGunItem gun);
++
++    public void giveItem(GwItem item);
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/ProjectileData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/ProjectileData.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/ProjectileData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/data/ProjectileData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,12 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import org.bukkit.entity.Projectile;
++import org.bukkit.projectiles.ProjectileSource;
++
++public interface ProjectileData extends EntityData {
++
++    public Projectile getProjectile();
++
++    public ProjectileSource getShooter();
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeCastleSiege.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeCastleSiege.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeCastleSiege.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeCastleSiege.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,25 @@
++package xyz.n7mn.dev.gunwar.game.gamemode;
++
++import org.bukkit.ChatColor;
++import org.bukkit.Location;
++import xyz.n7mn.dev.gunwar.GunWar;
++
++public class GameModeCastleSiege extends GwGameMode {
++
++    public GameModeCastleSiege() {
++        super(2);
++        setName("CASTLE_SIEGE");
++        setDisplayName(ChatColor.AQUA + "Castle Siege");
++        setGameTime(0);
++    }
++
++    @Override
++    public void start(Location loc) {
++
++    }
++
++    @Override
++    public void stop() {
++
++    }
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeNormal.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeNormal.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeNormal.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeNormal.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,45 @@
++package xyz.n7mn.dev.gunwar.game.gamemode;
++
++import org.bukkit.ChatColor;
++import org.bukkit.Location;
++import xyz.n7mn.dev.gunwar.GunWar;
++
++public class GameModeNormal extends GwGameMode {
++
++    public enum Mode {
++        TEAM, SOLO
++    }
++
++    private Mode mode;
++
++    public GameModeNormal() {
++        super(0);
++        setName("NORMAL");
++        setDisplayName(ChatColor.GREEN + "Normal");
++        this.mode = Mode.SOLO;
++        setGameTime(GunWar.getConfig().getConfig().getInt("normal.game-time-solo"));
++    }
++
++    @Override
++    public void start(Location loc) {
++
++    }
++
++    @Override
++    public void stop() {
++
++    }
++
++    public Mode getMode() {
++        return mode;
++    }
++
++    public void setMode(Mode mode) {
++        this.mode = mode;
++        if(mode == Mode.SOLO) {
++            setGameTime(GunWar.getConfig().getConfig().getInt("normal.game-time-solo"));
++        } else if(mode == Mode.TEAM) {
++            setGameTime(GunWar.getConfig().getConfig().getInt("normal.game-time-team"));
++        }
++    }
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeZombieEscape.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeZombieEscape.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeZombieEscape.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GameModeZombieEscape.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,25 @@
++package xyz.n7mn.dev.gunwar.game.gamemode;
++
++import org.bukkit.ChatColor;
++import org.bukkit.Location;
++import xyz.n7mn.dev.gunwar.GunWar;
++
++public class GameModeZombieEscape extends GwGameMode {
++
++    public GameModeZombieEscape() {
++        super(1);
++        setName("ZOMBIE_ESCAPE");
++        setDisplayName(ChatColor.DARK_GREEN + "Zombie Escape");
++        setGameTime(GunWar.getConfig().getConfig().getInt("zombie-escape.game-time"));
++    }
++
++    @Override
++    public void start(Location loc) {
++
++    }
++
++    @Override
++    public void stop() {
++
++    }
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GwGameMode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GwGameMode.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GwGameMode.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GwGameMode.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,66 @@
++package xyz.n7mn.dev.gunwar.game.gamemode;
++
++public abstract class GwGameMode implements IGwGameMode {
++
++    private final int index;
++    private String name;
++    private String displayName;
++    private int gameTime;
++    private int elapsedTime;
++
++    protected GwGameMode(int index) {
++        this.index = index;
++    }
++
++    public GwGameMode(int index, String name, String displayName, int gameTime) {
++        this.index = index;
++        this.name = name;
++        this.displayName = displayName;
++        this.gameTime = gameTime;
++        this.elapsedTime = 0;
++    }
++
++    public int getIndex() {
++        return index;
++    }
++
++    public String getName() {
++        return name;
++    }
++
++    public String getDisplayName() {
++        return displayName;
++    }
++
++    @Override
++    public int getGameTime() {
++        return gameTime;
++    }
++
++    @Override
++    public int getElapsedTime() {
++        return elapsedTime;
++    }
++
++    @Override
++    public int getRemainingTime() {
++        return Math.max(0, gameTime - elapsedTime);
++    }
++
++    protected void setElapsedTime(int elapsedTime) {
++        this.elapsedTime = elapsedTime;
++    }
++
++    protected void setGameTime(int gameTime) {
++        this.gameTime = gameTime;
++    }
++
++    protected void setName(String name) {
++        this.name = name;
++    }
++
++    protected void setDisplayName(String displayName) {
++        this.displayName = displayName;
++    }
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GwGameModes.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GwGameModes.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GwGameModes.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/GwGameModes.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,67 @@
++package xyz.n7mn.dev.gunwar.game.gamemode;
++
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.List;
++
++public final class GwGameModes {
++
++    private static List<GwGameMode> registeredGameMode = new ArrayList<>();
++
++    public static GwGameMode NORMAL = new GameModeNormal();
++    public static GwGameMode CASTLE_SIEGE = new GameModeCastleSiege();
++    public static GwGameMode ZOMBIE_ESCAPE = new GameModeZombieEscape();
++
++    public static Collection<GwGameMode> getRegisteredGameModes() {
++        return registeredGameMode;
++    }
++
++    public static void register(GwGameMode gamemode) {
++        if(registeredGameMode != null && registeredGameMode.size() > 0 && !registeredGameMode.contains(gamemode)) {
++            List<GwGameMode> modeList = new ArrayList<>(registeredGameMode);
++            for(GwGameMode mode : modeList) if(mode.getIndex() == gamemode.getIndex() || mode.getName().equalsIgnoreCase(gamemode.getName())) return;
++            registeredGameMode.add(gamemode);
++        }
++    }
++
++    public static void unregister(GwGameMode gamemode) {
++        registeredGameMode.remove(gamemode);
++    }
++
++    public static void unregister(int index) {
++        if(registeredGameMode != null && registeredGameMode.size() > 0) {
++            List<GwGameMode> modeList = new ArrayList<>(registeredGameMode);
++            for(GwGameMode mode : modeList) {
++                if (mode.getIndex() == index) {
++                    registeredGameMode.remove(mode);
++                }
++            }
++        }
++    }
++
++    public static void unregister(String name) {
++        if(registeredGameMode != null && registeredGameMode.size() > 0) {
++            List<GwGameMode> modeList = new ArrayList<>(registeredGameMode);
++            for(GwGameMode mode : modeList) {
++                if (mode.getName().equalsIgnoreCase(name)) {
++                    registeredGameMode.remove(mode);
++                }
++            }
++        }
++    }
++
++    public static void unregisterAll(Collection<? extends GwGameMode> gamemodes) {
++        registeredGameMode.removeAll(gamemodes);
++    }
++
++    public static void registerDefault() {
++        register(NORMAL);
++        register(ZOMBIE_ESCAPE);
++        register(CASTLE_SIEGE);
++    }
++
++    public static void clear() {
++        unregisterAll(new ArrayList<>(registeredGameMode));
++    }
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/IGwGameMode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/IGwGameMode.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/IGwGameMode.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/game/gamemode/IGwGameMode.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,24 @@
++package xyz.n7mn.dev.gunwar.game.gamemode;
++
++import org.bukkit.ChatColor;
++import org.bukkit.Location;
++
++public interface IGwGameMode {
++
++    public int getIndex();
++
++    public String getName();
++
++    public String getDisplayName();
++
++    public int getGameTime();
++
++    public int getElapsedTime();
++
++    public int getRemainingTime();
++
++    public void start(Location loc);
++
++    public void stop();
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/ClickAction.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/ClickAction.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/ClickAction.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/ClickAction.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,23 @@
++package xyz.n7mn.dev.gunwar.item;
++
++public enum ClickAction {
++
++    LEFT_CLICK(0, "LEFT_CLICK"),
++    RIGHT_CLICK(1, "RIGHT_CLICK");
++
++    private int index;
++    private String name;
++
++    private ClickAction(int index, String name) {
++        this.index = index;
++        this.name = name;
++    }
++
++    public int getIndex() {
++        return index;
++    }
++
++    public String getName() {
++        return name;
++    }
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunBase.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunBase.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunBase.java
+new file mode 100644
+--- /dev/null	(revision a4b9255ce98a02382f0546a36a5e48f7ed667f77)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunBase.java	(revision a4b9255ce98a02382f0546a36a5e48f7ed667f77)
+@@ -0,0 +1,195 @@
++package xyz.n7mn.dev.gunwar.item;
++
++import org.bukkit.ChatColor;
++import org.bukkit.Material;
++import org.bukkit.inventory.meta.ItemMeta;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
++
++    private int ammo;
++    private double range;
++    private float recoil;
++    private float recoilSneaking;
++    private long reload;
++    private long fire;
++    private float zoom;
++    private float damageHeadShot;
++    private float accuracy;
++    private float accuracySneaking;
++    private float knockback;
++    private GwGunType gunType;
++
++    protected GwGunBase() {
++        this(0, Material.STONE, "", "", "",
++                new ArrayList<>(), 0F, 0F, 0, 0,
++                0F, 0F, 0L, 0L, 0F, 0F, 0F, 0F,  GwGunType.ASSAULT_RIFLE);
++    }
++
++    protected GwGunBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage, float damageHeadShot,
++                        int ammo, double range, float recoil, float recoilSneaking, long reload, long fire, float zoom, float accuracy,
++                        float accuracySneaking, float knockback, GwGunType gunType) {
++        super(index, type, name, displayName, id, description, damage);
++        this.ammo = ammo;
++        this.range = range;
++        this.recoil = recoil;
++        this.recoilSneaking = recoilSneaking;
++        this.reload = reload;
++        this.fire = fire;
++        this.zoom = zoom;
++        this.damageHeadShot = damageHeadShot;
++        this.accuracy = accuracy;
++        this.accuracySneaking = accuracySneaking;
++        this.knockback = knockback;
++        this.gunType = gunType;
++        a();
++    }
++
++    public int getAmmo() {
++        return ammo;
++    }
++
++    public double getRange() {
++        return range;
++    }
++
++    public float getRecoil() {
++        return recoil;
++    }
++
++    public float getRecoilOnSneak() {
++        return recoilSneaking;
++    }
++
++    public long getReload() {
++        return reload;
++    }
++
++    public long getFire() {
++        return fire;
++    }
++
++    public float getZoomLevel() {
++        return zoom;
++    }
++
++    public float getHeadShotDamage() {
++        return damageHeadShot;
++    }
++
++    public float getAccuracy() {
++        return accuracy;
++    }
++
++    public float getAccuracyOnSneak() {
++        return accuracySneaking;
++    }
++
++    public float getKnockBack() {
++        return knockback;
++    }
++
++    public GwGunType getGunType() {
++        return gunType;
++    }
++
++    protected void setAmmo(int ammo) {
++        this.ammo = ammo;
++    }
++
++    protected void setRange(float range) {
++        this.range = range;
++    }
++
++    protected void setRecoil(float recoil) {
++        this.recoil = recoil;
++    }
++
++    protected void setRecoilOnSneak(float recoilSneaking) {
++        this.recoilSneaking = recoilSneaking;
++    }
++
++    protected void setReload(long reload) {
++        this.reload = reload;
++    }
++
++    protected void setFire(long fire) {
++        this.fire = fire;
++    }
++
++    protected void setZoomLevel(float zoom) {
++        this.zoom = zoom;
++    }
++
++    protected void setHeadShotDamage(float damageHeadShot) {
++        this.damageHeadShot = damageHeadShot;
++    }
++
++    protected void setAccuracy(float accuracy) {
++        this.accuracy = accuracy;
++    }
++
++    protected void setAccuracyOnSneak(float accuracySneaking) {
++        this.accuracySneaking = accuracySneaking;
++    }
++
++    protected void setKnockBack(float knockback) {
++        this.knockback = knockback;
++    }
++
++    protected void setGunType(GwGunType gunType) {
++        this.gunType = gunType;
++    }
++
++    protected void setDescription(List<String> description) {
++        this.description = description;
++        a();
++    }
++
++    protected void setId(String id) {
++        this.id = id;
++        a();
++    }
++
++    private void a() {
++        ItemMeta meta = getItem().getItemMeta();
++        List<String> lore = new ArrayList<>(getDescription());
++        String guntype = "";
++        switch (getGunType()) {
++            case ASSAULT_RIFLE:
++                guntype = "Assault Rifle";
++                break;
++            case SNIPER_RIFLE:
++                guntype = "Sniper Rifle";
++                break;
++            case SUBMACHINE_GUN:
++                guntype = "Submachine Gun";
++                break;
++            case SHOTGUN:
++                guntype = "Shotgun";
++                break;
++            case HAND_GUN:
++                guntype = "Hand Gun";
++                break;
++        }
++        lore.add("");
++        lore.add(ChatColor.GRAY + "攻撃力 (ヘッドショット): " + ChatColor.GOLD + getAttackDamage()
++                + ChatColor.GRAY + "(" + ChatColor.GOLD + getHeadShotDamage() + ChatColor.GRAY + ")");
++        lore.add(ChatColor.GRAY + "射程: " + ChatColor.GOLD + getRange());
++        lore.add(ChatColor.GRAY + "連射: " + ChatColor.GOLD + getFire());
++        lore.add(ChatColor.GRAY + "精度 (スニーク時): " + ChatColor.GOLD + getAccuracy()
++                + ChatColor.GRAY + "(" + ChatColor.GOLD + getAccuracyOnSneak() + ChatColor.GRAY + ")");
++        lore.add(ChatColor.GRAY + "リロード時間: " + ChatColor.GOLD + getReload());
++        lore.add(ChatColor.GRAY + "ノックバック: " + ChatColor.GOLD + getKnockBack());
++        lore.add(ChatColor.GRAY + "反動 (スニーク時): " + ChatColor.GOLD + getRecoil()
++                + ChatColor.GRAY + "(" + ChatColor.GOLD + getRecoilOnSneak() + ChatColor.GRAY + ")");
++        lore.add(ChatColor.GRAY + "装填数: " + ChatColor.GOLD + getAmmo());
++        lore.add("");
++        lore.add(ChatColor.YELLOW + guntype);
++        lore.add(ChatColor.DARK_GRAY + getId());
++        meta.setLore(lore);
++        getItem().setItemMeta(meta);
++    }
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunItem.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunItem.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunItem.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunItem.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,100 @@
++package xyz.n7mn.dev.gunwar.item;
++
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.Player;
++
++public interface GwGunItem extends GwWeaponItem {
++
++    /**
++     * Gets amount of ammo the gun has.
++     *
++     * @return amoung of ammo with int
++     */
++    public int getAmmo();
++
++    /**
++     * Gets range can be shot.
++     *
++     * @return block
++     */
++    public double getRange();
++
++    /**
++     * Gets recoil size.
++     *
++     * @return block
++     */
++    public float getRecoil();
++
++    /**
++     * Gets recoil size when the gun owner is currently sneaking.
++     *
++     * @return block
++     */
++    public float getRecoilOnSneak();
++
++    /**
++     * Gets reloading time with tick.
++     *
++     * @return tick
++     */
++    public long getReload();
++
++    /**
++     * Gets rate of fire with tick.
++     *
++     * @return tick
++     */
++    public long getFire();
++
++    /**
++     * Gets zoom level with percent.
++     *
++     * @return percent as float
++     */
++    public float getZoomLevel();
++
++    /**
++     * Gets health value of damage when the gun gave head shot damage.
++     *
++     * @return health value of damage
++     */
++    public float getHeadShotDamage();
++
++    /**
++     * Gets accuracy of the gun ammo. <br>
++     * 500F is max value.
++     *
++     * @return accuracy of the gun ammo as float less than 500F
++     */
++    public float getAccuracy();
++
++    /**
++     * Gets accuracy of the gun ammo when the gun owner is currently sneaking. <br>
++     * 500F is max value.
++     *
++     * @return accuracy of the gun ammo as float less than 500F
++     */
++    public float getAccuracyOnSneak();
++
++    /**
++     * Gets value of knockback.
++     *
++     * @return value
++     */
++    public float getKnockBack();
++
++    /**
++     * Gets kind of the gun.
++     *
++     * @return gun type
++     */
++    public GwGunType getGunType();
++
++    public default void onShoot(Player player) { }
++
++    public default void onHit(Player player, Entity entity, float damage) { }
++
++    public default void onHitHeadShot(Player player, Entity entity, float damage) { }
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunType.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunType.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunType.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwGunType.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,27 @@
++package xyz.n7mn.dev.gunwar.item;
++
++public enum GwGunType {
++
++    ASSAULT_RIFLE(0, "ASSAULT_RIFLE"),
++    SNIPER_RIFLE(1, "SNIPER_RIFLE"),
++    SUBMACHINE_GUN(2, "SUBMACHINE_GUN"),
++    SHOTGUN(3, "SHOTGUN"),
++    HAND_GUN(4, "HAND_GUN");
++
++    private int index;
++    private String name;
++
++    private GwGunType(int index, String name) {
++        this.index = index;
++        this.name = name;
++    }
++
++    public int getIndex() {
++        return index;
++    }
++
++    public String getName() {
++        return name;
++    }
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItem.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItem.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItem.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItem.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,39 @@
++package xyz.n7mn.dev.gunwar.item;
++
++import org.bukkit.Material;
++import org.bukkit.block.Block;
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.Player;
++import org.bukkit.inventory.ItemStack;
++
++import java.util.List;
++
++public interface GwItem {
++
++    public ItemStack getItem();
++
++    public int getIndex();
++
++    public String getName();
++
++    public String getDisplayName();
++
++    public List<String> getDescription();
++
++    public String getId();
++
++    public Material getType();
++
++    public default void onClick(Player player, ClickAction action) { }
++
++    public default void onClickAtEntity(Player player, ClickAction action, Entity entity) { }
++
++    public default void onClickAtBlock(Player player, ClickAction action, Block block) { }
++
++    public default void onPlace(Player player, Block block) { }
++
++    public default void onBreak(Player player, Block block) { }
++
++    public default void onAttack(Player player, Entity target) { }
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItemBase.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItemBase.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItemBase.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItemBase.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,129 @@
++package xyz.n7mn.dev.gunwar.item;
++
++import org.bukkit.ChatColor;
++import org.bukkit.Material;
++import org.bukkit.block.Block;
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.Player;
++import org.bukkit.inventory.ItemStack;
++import org.bukkit.inventory.meta.ItemMeta;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public abstract class GwItemBase implements GwItem {
++
++    private ItemStack item;
++    private int index;
++    private String name;
++    private String displayName;
++    protected String id;
++    protected List<String> description;
++    private Material type;
++
++    protected GwItemBase() {
++        this(0, Material.STONE, "", "", "", new ArrayList<>());
++    }
++
++    protected GwItemBase(int index, Material type, String name, String displayName, String id, List<String> description) {
++        this.index = index;
++        this.type = type;
++        this.name = name;
++        this.displayName = displayName;
++        this.id = id;
++        this.description = description;
++        ItemStack i = new ItemStack(type);
++        ItemMeta meta = i.getItemMeta();
++        meta.setDisplayName(displayName);
++        List<String> lore = new ArrayList<>(description);
++        lore.add("");
++        lore.add(ChatColor.DARK_GRAY + id);
++        meta.setLore(lore);
++        i.setItemMeta(meta);
++        i.setAmount(1);
++        this.item = i;
++    }
++
++    @Override
++    public int getIndex() {
++        return index;
++    }
++
++    @Override
++    public ItemStack getItem() {
++        return item;
++    }
++
++    @Override
++    public String getName() {
++        return name;
++    }
++
++    @Override
++    public String getDisplayName() {
++        return displayName;
++    }
++
++    @Override
++    public List<String> getDescription() {
++        return description;
++    }
++
++    @Override
++    public String getId() {
++        return id;
++    }
++
++    @Override
++    public Material getType() {
++        return type;
++    }
++
++    protected void setIndex(int index) {
++        this.index = index;
++    }
++
++    protected void setItem(ItemStack item) {
++        this.item = item;
++        this.type = item.getType();
++        ItemMeta meta = getItem().getItemMeta();
++        meta.setDisplayName(getDisplayName());
++        List<String> lore = new ArrayList<>(getDescription());
++        lore.add("");
++        lore.add(ChatColor.DARK_GRAY + getId());
++        meta.setLore(lore);
++        getItem().setItemMeta(meta);
++    }
++
++    protected void setName(String name) {
++        this.name = name;
++    }
++
++    protected void setDisplayName(String displayName) {
++        this.displayName = displayName;
++        ItemMeta meta = getItem().getItemMeta();
++        meta.setDisplayName(getDisplayName());
++        getItem().setItemMeta(meta);
++    }
++
++    protected void setDescription(List<String> description) {
++        this.description = description;
++        ItemMeta meta = getItem().getItemMeta();
++        List<String> lore = new ArrayList<>(getDescription());
++        lore.add("");
++        lore.add(ChatColor.DARK_GRAY + getId());
++        meta.setLore(lore);
++        getItem().setItemMeta(meta);
++    }
++
++    protected void setId(String id) {
++        this.id = id;
++        ItemMeta meta = getItem().getItemMeta();
++        List<String> lore = new ArrayList<>(getDescription());
++        lore.add("");
++        lore.add(ChatColor.DARK_GRAY + getId());
++        meta.setLore(lore);
++        getItem().setItemMeta(meta);
++    }
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItems.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItems.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItems.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwItems.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,62 @@
++package xyz.n7mn.dev.gunwar.item;
++
++import xyz.n7mn.dev.gunwar.item.items.GwItemAK47;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public final class GwItems {
++
++    private static List<GwItem> registeredItems = new ArrayList<>();
++    private static List<GwWeaponItem> registeredWeapons = new ArrayList<>();
++    private static List<GwGunItem> registeredGuns = new ArrayList<>();
++
++    public static GwGunItem AK47 = new GwItemAK47();
++
++    public static List<GwItem> getRegisteredItems() {
++        return registeredItems;
++    }
++
++    public static List<GwWeaponItem> getRegisteredWeapons() {
++        return registeredWeapons;
++    }
++
++    public static List<GwGunItem> getRegisteredGuns() {
++        return registeredGuns;
++    }
++
++    public static void register(GwItem item) {
++        if(!registeredItems.contains(item)) {
++            registeredItems.add(item);
++            if(item instanceof GwWeaponItem) registeredWeapons.add((GwWeaponItem) item);
++            if(item instanceof GwGunItem) registeredWeapons.add((GwGunItem) item);
++        }
++    }
++
++    public static void unregister(GwItem item) {
++        registeredItems.remove(item);
++        if(item instanceof GwWeaponItem) registeredWeapons.remove(item);
++        if(item instanceof GwGunItem) registeredGuns.remove(item);
++    }
++
++    public static void unregister(String name) {
++        List<GwItem> lst = new ArrayList<>(getRegisteredItems());
++        for(GwItem item : lst) {
++            if(item.getName().equalsIgnoreCase(name)) {
++                registeredItems.remove(item);
++                if(item instanceof GwWeaponItem) registeredWeapons.remove(item);
++                if(item instanceof GwGunItem) registeredGuns.remove(item);
++            }
++        }
++    }
++
++    public static void clear() {
++        registeredItems.clear();
++        registeredWeapons.clear();
++        registeredGuns.clear();
++    }
++
++    public static void a() {
++        register(AK47);
++    }
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwWeaponBase.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwWeaponBase.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwWeaponBase.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwWeaponBase.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,57 @@
++package xyz.n7mn.dev.gunwar.item;
++
++import org.bukkit.ChatColor;
++import org.bukkit.Material;
++import org.bukkit.inventory.ItemStack;
++import org.bukkit.inventory.meta.ItemMeta;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public abstract class GwWeaponBase extends GwItemBase implements GwWeaponItem {
++
++    private float damage;
++
++    protected GwWeaponBase() {
++        this(0, Material.STONE, "", "", "", new ArrayList<>(), 0F);
++    }
++
++    protected GwWeaponBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage) {
++        super(index, type, name, displayName, id, description);
++        this.damage = damage;
++    }
++
++    public float getAttackDamage() {
++        return damage;
++    }
++
++    protected void setAttackDamage(float damage) {
++        this.damage = damage;
++    }
++
++    protected void setDescription(List<String> description) {
++        this.description = description;
++        ItemMeta meta = getItem().getItemMeta();
++        List<String> lore = new ArrayList<>(getDescription());
++        lore.add("");
++        lore.add(ChatColor.GRAY + "攻撃力: " + ChatColor.GOLD + getAttackDamage());
++        lore.add("");
++        lore.add(ChatColor.DARK_GRAY + getId());
++        meta.setLore(lore);
++        getItem().setItemMeta(meta);
++    }
++
++    protected void setId(String id) {
++        this.id = id;
++        ItemMeta meta = getItem().getItemMeta();
++        List<String> lore = new ArrayList<>(getDescription());
++        lore.add("");
++        lore.add(ChatColor.GRAY + "攻撃力: " + ChatColor.GOLD + getAttackDamage());
++        lore.add("");
++        lore.add(ChatColor.DARK_GRAY + getId());
++        meta.setLore(lore);
++        getItem().setItemMeta(meta);
++    }
++
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwWeaponItem.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwWeaponItem.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwWeaponItem.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/GwWeaponItem.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,10 @@
++package xyz.n7mn.dev.gunwar.item;
++
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.Player;
++
++public interface GwWeaponItem extends GwItem {
++
++    public float getAttackDamage();
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/items/GwItemAK47.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/items/GwItemAK47.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/items/GwItemAK47.java
+new file mode 100644
+--- /dev/null	(revision 4fc8806e7d20564de736b0797aecdffc74c879a9)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/item/items/GwItemAK47.java	(revision 4fc8806e7d20564de736b0797aecdffc74c879a9)
+@@ -0,0 +1,21 @@
++package xyz.n7mn.dev.gunwar.item.items;
++
++import org.bukkit.ChatColor;
++import org.bukkit.Material;
++import xyz.n7mn.dev.gunwar.item.GwGunBase;
++import xyz.n7mn.dev.gunwar.item.GwGunType;
++
++import java.util.ArrayList;
++import java.util.Arrays;
++import java.util.List;
++
++public class GwItemAK47 extends GwGunBase {
++
++    public GwItemAK47() {
++        super(0, Material.IRON_HOE, "AK47", "AK-47", "0f00a46e", Arrays.asList("" +
++                        ChatColor.WHITE + "初期武器のAK-47。ソ連が開発したアサルトライフル。攻撃力や精度、ノックバックなどから考えて割と使いやすい。"),
++                10F, 13F, 30, 30, 0.6F, 0F, 100L,
++                4L, 30F, 50F, 300F, 1.5F, GwGunType.ASSAULT_RIFLE);
++    }
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/PlayerWatcher.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/PlayerWatcher.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/PlayerWatcher.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/PlayerWatcher.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,51 @@
++package xyz.n7mn.dev.gunwar.util;
++
++import org.bukkit.plugin.Plugin;
++import org.bukkit.scheduler.BukkitRunnable;
++import xyz.n7mn.dev.gunwar.game.data.PlayerData;
++
++public class PlayerWatcher {
++
++    private final Plugin plugin;
++    private final PlayerData data;
++    private BukkitRunnable runnable1tick;
++    private BukkitRunnable runnable10tick;
++
++    public PlayerWatcher(Plugin plugin, PlayerData data) {
++        this.plugin = plugin;
++        this.data = data;
++    }
++
++    public PlayerData getOwner() {
++        return data;
++    }
++
++    public void startWatch10Ticks() {
++        runnable10tick = new BukkitRunnable() {
++            @Override
++            public void run() {
++
++            }
++        };
++        runnable10tick.runTaskTimer(plugin, 0, 10);
++    }
++
++    public void startWatch() {
++        runnable1tick = new BukkitRunnable() {
++            @Override
++            public void run() {
++
++            }
++        };
++        runnable1tick.runTaskTimer(plugin, 0, 1);
++    }
++
++    public void stopWatch10Ticks() {
++        runnable10tick.cancel();
++    }
++
++    public void stopWatch() {
++        runnable1tick.cancel();
++    }
++
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java
+--- a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java	(revision f4b46d6230b069dcabeb91072ed0b4b2d56be7d5)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -1,19 +1,38 @@
+ package xyz.n7mn.dev.gunwar;
+ 
+ import org.bukkit.Bukkit;
++import org.bukkit.ChatColor;
++import org.bukkit.boss.BarColor;
++import org.bukkit.boss.BarStyle;
++import org.bukkit.boss.BossBar;
++import org.bukkit.entity.Player;
++import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+ import org.bukkit.plugin.SimplePluginManager;
+ import org.bukkit.plugin.java.JavaPlugin;
+-import xyz.n7mn.dev.api.NanamiNetwork;
+ import xyz.n7mn.dev.api.Role;
+-import xyz.n7mn.dev.api.data.RoleData;
+ import xyz.n7mn.dev.gunwar.commands.AboutGunWarCommand;
++import xyz.n7mn.dev.gunwar.commands.GunWarItemCommand;
+ import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
++import xyz.n7mn.dev.gunwar.game.GunWarGame;
++import xyz.n7mn.dev.gunwar.game.data.GunWarPermanentlyPlayerData;
++import xyz.n7mn.dev.gunwar.game.data.GunWarPlayerData;
++import xyz.n7mn.dev.gunwar.game.data.PermanentlyPlayerData;
++import xyz.n7mn.dev.gunwar.game.data.PlayerData;
++import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
++import xyz.n7mn.dev.gunwar.item.GwItems;
++import xyz.n7mn.dev.gunwar.listeners.DamageListener;
++import xyz.n7mn.dev.gunwar.listeners.ItemListener;
+ import xyz.n7mn.dev.gunwar.listeners.PlayerListener;
+ import xyz.n7mn.dev.gunwar.listeners.ServerListener;
++import xyz.n7mn.dev.gunwar.mysql.GwMySQLPlayerDataUpdater;
++import xyz.n7mn.dev.gunwar.mysql.MySQLSettingBuilder;
+ import xyz.n7mn.dev.gunwar.util.GwUtilities;
+ import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
++import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
++import xyz.n7mn.dev.gunwar.util.Reference;
+ 
+-import java.util.List;
++import java.io.File;
++import java.io.IOException;
+ 
+ public final class NanamiGunWar extends JavaPlugin {
+ 
+@@ -22,6 +41,8 @@
+     private GwUtilities utilities;
+     private NanamiGunWarConfiguration config;
+     public static Role role;
++    public static GwMySQLPlayerDataUpdater updater;
++    private GunWarGame game;
+ 
+     @Override
+     public void onEnable() {
+@@ -33,29 +54,98 @@
+         config = new NanamiGunWarConfiguration(plugin);
+         GunWar.config = config;
+         config.init();
++        MySQLSettingBuilder.builder().withSetting(config.getConfig().getString("mysql.host", "localhost"),
++                config.getConfig().getInt("mysql.port", 3306),
++                config.getConfig().getString("mysql.database", ""),
++                config.getConfig().getString("mysql.option", "?allowPublicKeyRetrieval=true&useSSL=false"),
++                config.getConfig().getString("mysql.username", ""),
++                config.getConfig().getString("mysql.password", "")).build();
+         role = new Role(config.getConfig().getString("mysql.host", "localhost"),
+                 config.getConfig().getInt("mysql.port", 3306),
+                 config.getConfig().getString("mysql.database", ""),
+                 config.getConfig().getString("mysql.option", "?allowPublicKeyRetrieval=true&useSSL=false"),
+                 config.getConfig().getString("mysql.username", ""),
+                 config.getConfig().getString("mysql.password", ""));
++        GwGameModes.registerDefault();
++        game = new GunWarGame(plugin);
++        GunWar.game = game;
++        GwItems.a();
+         pluginManager = (SimplePluginManager) Bukkit.getPluginManager();
++        bossBar();
+         registerListeners();
+         registerCommands();
++        for(Player p : Bukkit.getOnlinePlayers()) {
++            try {
++                GunWarPermanentlyPlayerData permanentlyPlayerData = new GunWarPermanentlyPlayerData(p.getUniqueId());
++                File f = permanentlyPlayerData.getDefaultDataFile();
++                if (!f.exists()) {
++                    permanentlyPlayerData.save(f);
++                } else {
++                    permanentlyPlayerData.load(f);
++                }
++                ((GunWarGame) GunWar.getGame()).addPermanentlyPlayerData(permanentlyPlayerData);
++            } catch(Throwable ex) {
++                p.kickPlayer("" +
++                        ChatColor.DARK_GREEN + "=== ななみ銃撃戦 ===\n" +
++                        ChatColor.RED + "接続が切れました。\n" +
++                        ChatColor.GRAY + "原因: " + ChatColor.WHITE + "プレイヤーデータ読み込み時のエラー発生\n" +
++                        ChatColor.GRAY + "解決策: " + ChatColor.WHITE + "Discordの" + ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE + "にて報告してください。\n" +
++                        "\n" +
++                        ChatColor.WHITE + "詳細はななみ鯖公式Discordをご確認ください。\n" +
++                        ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord"));
++                ex.printStackTrace();
++            }
++            GunWarPlayerData data = new GunWarPlayerData(p);
++            PlayerWatcher watcher = new PlayerWatcher(GunWar.getPlugin(), data);
++            watcher.startWatch();
++            watcher.startWatch10Ticks();
++            data.setWatcher(watcher);
++            ((GunWarGame) GunWar.getGame()).addPlayerData(data.getUniqueId(), data);
++        }
++    }
++
++    private void bossBar() {
++        BossBar bar = Bukkit.getServer().createBossBar(Reference.BOSSBAR_WAITING, BarColor.RED, BarStyle.SOLID);
++        bar.setVisible(true);
++        bar.setProgress(1.0);
++        game.setBar(bar);
+     }
+ 
+     private void registerListeners() {
+         pluginManager.registerEvents(new PlayerListener(), plugin);
+         pluginManager.registerEvents(new ServerListener(), plugin);
++        pluginManager.registerEvents(new ItemListener(), plugin);
++        pluginManager.registerEvents(new DamageListener(), plugin);
+     }
+ 
+     private void registerCommands() {
+         utilities.registerCommand(plugin.getName(), new AboutGunWarCommand());
+         utilities.registerCommand(plugin.getName(), new GunWarReloadCommand());
++        utilities.registerCommand(plugin.getName(), new GunWarItemCommand());
+     }
+ 
+     @Override
+     public void onDisable() {
+         // Plugin shutdown logic
++        for(Player p : Bukkit.getOnlinePlayers()) {
++            PlayerData data = GunWar.getGame().getPlayerData(p);
++            if(data != null) {
++                PlayerWatcher watcher = data.getWatcher();
++                watcher.stopWatch();
++                watcher.stopWatch10Ticks();
++                ((GunWarGame) GunWar.getGame()).removePlayerData(data.getUniqueId());
++            }
++            PermanentlyPlayerData data_ = GunWar.getGame().getPermanentlyPlayerData(p.getUniqueId());
++            if(data_ != null) {
++                try {
++                    data_.save(data_.getDefaultDataFile());
++                } catch (IOException ex) {
++                    ex.printStackTrace();
++                }
++                ((GunWarGame) GunWar.getGame()).removePermanentlyPlayerData(p.getUniqueId());
++            }
++        }
++        GwGameModes.clear();
++        GwItems.clear();
+     }
+ }
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarConfigCommand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarConfigCommand.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarConfigCommand.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarConfigCommand.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,57 @@
++package xyz.n7mn.dev.gunwar.commands;
++
++import org.bukkit.ChatColor;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++import org.bukkit.entity.Player;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.util.PermissionInfo;
++import xyz.n7mn.dev.gunwar.util.Reference;
++
++import java.util.Arrays;
++
++public class GunWarConfigCommand extends Command {
++
++    public GunWarConfigCommand() {
++        super("gunwarconfig");
++        setAliases(Arrays.asList("gunwarconf", "gwconfig", "gwconf"));
++        setDescription("銃撃戦プラグインの設定を確認できます。");
++        setUsage("Usage: /gunwarconfig");
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
++        int required = GunWar.getConfig().getConfig().getInt("permission.command.gunwarreload", 1);
++        if(sender instanceof Player) {
++            Player p = (Player) sender;
++            PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
++            if(!info.isPassed()) {
++                p.sendMessage(Reference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
++                return true;
++            }
++        }
++        if(args.length <= 1) {
++            sender.sendMessage("" +
++                    ChatColor.DARK_GREEN + "=-=-=-=- 銃撃戦 -=-=-=-=" + "\n" +
++                    ChatColor.YELLOW + "自動でゲーム開始: " + ChatColor.GREEN +
++                    (GunWar.getConfig().getConfig().getBoolean("game.auto-start", true) ? "有効" : ChatColor.RED + "無効") + "\n" +
++                    ChatColor.YELLOW + "ゲームモード: " + ChatColor.RED + GunWar.getConfig().getConfig().getString("game.gamemode", "NORMAL") + "\n" +
++                    ChatColor.GOLD + "デバッグモード: " + ChatColor.GREEN +
++                    (GunWar.getConfig().getConfig().getBoolean("debug", false) ? "有効" : ChatColor.RED + "無効") + "\n" +
++                    ChatColor.DARK_GREEN + "=-=-=-=-=-=-=-=-=-=-=-=");
++        }
++        if(args.length > 1) {
++            if(args[1].equalsIgnoreCase("no") || args[1].equalsIgnoreCase("normal")) {
++                sender.sendMessage("" +
++                        ChatColor.DARK_GREEN + "=-=-=-=- 銃撃戦 (Normal) -=-=-=-=" + "\n" +
++                        ChatColor.DARK_GREEN + "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
++            }
++            if(args[1].equalsIgnoreCase("ze") || args[1].equalsIgnoreCase("zombie-escape") || args[1].equalsIgnoreCase("zombieescape")) {
++                sender.sendMessage("" +
++                        ChatColor.DARK_GREEN + "=-=-=-=- 銃撃戦 (Zombie Escape) -=-=-=-=" + "\n" +
++                        ChatColor.DARK_GREEN + "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
++            }
++        }
++        return true;
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarReloadCommand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarReloadCommand.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarReloadCommand.java
+--- a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarReloadCommand.java	(revision f4b46d6230b069dcabeb91072ed0b4b2d56be7d5)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarReloadCommand.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -7,10 +7,13 @@
+ import org.bukkit.configuration.InvalidConfigurationException;
+ import org.bukkit.configuration.file.FileConfiguration;
+ import org.bukkit.configuration.file.YamlConfiguration;
++import org.bukkit.craftbukkit.v1_12_R1.block.CraftBlock;
+ import org.bukkit.entity.Player;
+ import xyz.n7mn.dev.api.data.RoleData;
+ import xyz.n7mn.dev.gunwar.GunWar;
+ import xyz.n7mn.dev.gunwar.NanamiGunWar;
++import xyz.n7mn.dev.gunwar.game.data.GunWarEntityData;
++import xyz.n7mn.dev.gunwar.game.data.GunWarPlayerData;
+ import xyz.n7mn.dev.gunwar.util.PermissionInfo;
+ import xyz.n7mn.dev.gunwar.util.Reference;
+ 
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/GunWarGame.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/GunWarGame.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/GunWarGame.java
+new file mode 100644
+--- /dev/null	(revision a4b9255ce98a02382f0546a36a5e48f7ed667f77)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/GunWarGame.java	(revision a4b9255ce98a02382f0546a36a5e48f7ed667f77)
+@@ -0,0 +1,159 @@
++package xyz.n7mn.dev.gunwar.game;
++
++import org.bukkit.Bukkit;
++import org.bukkit.ChatColor;
++import org.bukkit.Location;
++import org.bukkit.Sound;
++import org.bukkit.boss.BarColor;
++import org.bukkit.boss.BossBar;
++import org.bukkit.entity.Player;
++import org.bukkit.inventory.ItemStack;
++import org.bukkit.inventory.meta.ItemMeta;
++import org.bukkit.plugin.Plugin;
++import org.bukkit.scheduler.BukkitRunnable;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.game.data.ItemData;
++import xyz.n7mn.dev.gunwar.game.data.PermanentlyPlayerData;
++import xyz.n7mn.dev.gunwar.game.data.PlayerData;
++import xyz.n7mn.dev.gunwar.game.gamemode.GwGameMode;
++import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
++import xyz.n7mn.dev.gunwar.util.Reference;
++
++import java.util.*;
++
++public class GunWarGame implements Game {
++
++    private final Plugin plugin;
++    private GameState state;
++    private Map<UUID, PlayerData> dataMap;
++    private Map<UUID, PermanentlyPlayerData> permanentlyPlayerDataMap;
++    private GwGameMode gameMode;
++    private List<ItemData> itemDataList;
++    private BossBar bar;
++
++    public GunWarGame(Plugin plugin) {
++        this.plugin = plugin;
++        this.state = GameState.WAITING;
++        this.dataMap = new HashMap<>();
++        this.permanentlyPlayerDataMap = new HashMap<>();
++        this.gameMode = GwGameModes.NORMAL;
++        this.itemDataList = new ArrayList<>();
++    }
++
++    @Override
++    public Plugin getPlugin() {
++        return plugin;
++    }
++
++    @Override
++    public GameState getState() {
++        return state;
++    }
++
++    @Override
++    public void setState(GameState state) {
++        this.state = state;
++    }
++
++    public void addPlayerData(UUID uniqueId, PlayerData data) {
++        dataMap.put(uniqueId, data);
++    }
++
++    public void removePlayerData(UUID uniqueId) {
++        dataMap.remove(uniqueId);
++    }
++
++    @Override
++    public PlayerData getPlayerData(Player player) {
++        return dataMap.get(player.getUniqueId());
++    }
++
++    @Override
++    public PermanentlyPlayerData getPermanentlyPlayerData(UUID uniqueId) {
++        return permanentlyPlayerDataMap.get(uniqueId);
++    }
++
++    public void addPermanentlyPlayerData(PermanentlyPlayerData data) {
++        permanentlyPlayerDataMap.put(data.getUniqueId(), data);
++    }
++
++    public void removePermanentlyPlayerData(UUID uniqueId) {
++        permanentlyPlayerDataMap.remove(uniqueId);
++    }
++
++    @Override
++    public Collection<PlayerData> getOnlinePlayerData() {
++        return dataMap.values();
++    }
++
++    @Override
++    public BossBar getBar() {
++        return bar;
++    }
++
++    @Override
++    public void setBar(BossBar bar) {
++        this.bar = bar;
++    }
++
++    @Override
++    public GwGameMode getGameMode() {
++        return gameMode;
++    }
++
++    @Override
++    public ItemData getItemData(ItemStack item) {
++        if(item != null && item.hasItemMeta()) {
++            ItemMeta meta = item.getItemMeta();
++            List<ItemData> dataList = itemDataList;
++            for (ItemData data : dataList) if(meta.getLore().contains(ChatColor.DARK_GRAY + data.getGwItem().getId())) return data;
++        }
++        return null;
++    }
++
++    public void addItemData(ItemData data) {
++        itemDataList.add(data);
++    }
++
++    @Override
++    public void setGameMode(GwGameMode gameMode) {
++        if(getState() == GameState.WAITING) this.gameMode = gameMode;
++    }
++
++    @Override
++    public void start(Location loc) {
++        int prepare = GunWar.getConfig().getConfig().getInt("", 10);
++        setState(GameState.STARTING);
++        final int[] t = { prepare + 1 };
++        getBar().setColor(BarColor.YELLOW);
++        new BukkitRunnable() {
++            @Override
++            public void run() {
++                t[0]--;
++                if(t[0] <= 0) {
++                    this.cancel();
++                    return;
++                }
++                getBar().setTitle(Reference.BOSSBAR_STARTING.replaceAll("%SECOND%", Integer.toString(t[0])));
++                if(t[0] <= 5) {
++                    for (Player p : Bukkit.getOnlinePlayers()) {
++                        p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
++                    }
++                }
++            }
++        }.runTaskTimer(GunWar.getPlugin(), 0, 20);
++        new BukkitRunnable() {
++            @Override
++            public void run() {
++                setState(GameState.PLAYING);
++                getGameMode().start(loc);
++            }
++        }.runTaskLater(GunWar.getPlugin(), prepare);
++    }
++
++    @Override
++    public void stop() {
++        setState(GameState.WAITING);
++        getGameMode().stop();
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarBlockData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarBlockData.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarBlockData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarBlockData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,34 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import net.minecraft.server.v1_12_R1.BlockPosition;
++import org.bukkit.Location;
++import org.bukkit.Material;
++import org.bukkit.block.Block;
++
++public class GunWarBlockData implements BlockData {
++
++    private final Block block;
++
++    public GunWarBlockData(Block block) {
++        this.block = block;
++    }
++
++    @Override
++    public Location getLocation() {
++        return block.getLocation();
++    }
++
++    @Override
++    public Block getBlock() {
++        return block;
++    }
++
++    @Override
++    public Material getType() {
++        return block.getType();
++    }
++
++    public BlockPosition getPosition() {
++        return new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarEntityData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarEntityData.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarEntityData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarEntityData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,34 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.EntityType;
++
++import java.util.UUID;
++
++public class GunWarEntityData implements EntityData {
++
++    private final UUID uniqueId;
++    private final Entity entity;
++    private final EntityType type;
++
++    public GunWarEntityData(Entity entity) {
++        this.uniqueId = entity.getUniqueId();
++        this.entity = entity;
++        this.type = entity.getType();
++    }
++
++    @Override
++    public UUID getUniqueId() {
++        return uniqueId;
++    }
++
++    @Override
++    public Entity getEntity() {
++        return entity;
++    }
++
++    @Override
++    public EntityType getType() {
++        return type;
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarGunData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarGunData.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarGunData.java
+new file mode 100644
+--- /dev/null	(revision a4b9255ce98a02382f0546a36a5e48f7ed667f77)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarGunData.java	(revision a4b9255ce98a02382f0546a36a5e48f7ed667f77)
+@@ -0,0 +1,162 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import org.bukkit.ChatColor;
++import org.bukkit.Particle;
++import org.bukkit.entity.Player;
++import org.bukkit.inventory.ItemStack;
++import org.bukkit.inventory.meta.ItemMeta;
++import org.bukkit.scheduler.BukkitRunnable;
++import org.bukkit.util.Vector;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.entity.HitEntity;
++import xyz.n7mn.dev.gunwar.item.GwGunItem;
++import xyz.n7mn.dev.gunwar.item.GwItem;
++
++import java.util.*;
++
++public class GunWarGunData extends GunWarItemData implements GunData {
++
++    private boolean reloading;
++    private boolean canFire;
++    private int ammo;
++    private BukkitRunnable fire;
++    private BukkitRunnable reload;
++
++    public GunWarGunData(GwGunItem gwitem, ItemStack item, Player owner) {
++        super(gwitem, item, owner);
++        reloading = false;
++        canFire = true;
++        ammo = gwitem.getAmmo();
++        updateName();
++    }
++
++    @Override
++    public boolean isReloading() {
++        return reloading;
++    }
++
++    @Override
++    public boolean canFire() {
++        return canFire;
++    }
++
++    @Override
++    public int getAmmo() {
++        return ammo;
++    }
++
++    @Override
++    public void setAmmo(int ammo) {
++        this.ammo = Math.max(0, ammo);
++        if(this.ammo <= 0) canFire = false;
++        if(this.ammo > 0) canFire = true;
++    }
++
++    @Override
++    public void fire() {
++        if(canFire && getAmmo() > 0) {
++            canFire = false;
++
++            Random random = new Random();
++            float accuracy = ((GwGunItem) getGwItem()).getAccuracy();
++            if (getOwner().isSneaking()) {
++                accuracy = ((GwGunItem) getGwItem()).getAccuracyOnSneak();
++            }
++
++            double separateX = random.nextDouble() * (2 / accuracy) - (1 / accuracy);
++            double separateY = random.nextDouble() * (2 / accuracy) - (1 / accuracy);
++
++            HitEntity hitEntity = GunWar.getGame().getPlayerData(getOwner()).drawParticleLine(
++                    Particle.SMOKE_NORMAL, 0, 0, 0.25, ((GwGunItem) getGwItem()).getRange(),
++                    separateX, separateY, 0.25, (GwGunItem) getGwItem());
++            if(hitEntity != null) {
++                if (hitEntity.getEntity() instanceof Player) {
++                    PlayerData data = GunWar.getGame().getPlayerData((Player) hitEntity.getEntity());
++                    hitEntity.getEntity().damage(0, getOwner());
++                    data.setHealth(Math.max(0, data.getHealth() - hitEntity.getDamage()));
++                } else {
++                    double damage = hitEntity.getDamage() * 0.25;
++                    hitEntity.getEntity().damage(damage, getOwner());
++                }
++
++                double subX = hitEntity.getHitLocation().getX() - hitEntity.getFrom().getX();
++                double subY = hitEntity.getHitLocation().getY() - hitEntity.getFrom().getY();
++                double subZ = hitEntity.getHitLocation().getZ() - hitEntity.getFrom().getZ();
++                double far = Math.sqrt(Math.pow(subX, 2) +
++                        Math.pow(subY, 2) +
++                        Math.pow(subZ, 2));
++                double d = ((GwGunItem) getGwItem()).getKnockBack() / far;
++                Vector vector = new Vector(subX * d, subY * d, subZ * d);
++                hitEntity.getEntity().setVelocity(vector);
++            }
++
++            ((GwGunItem) getGwItem()).onShoot(getOwner());
++
++            setAmmo(getAmmo() - 1);
++            updateName();
++            if(getAmmo() <= 0) {
++                reload();
++                return;
++            }
++            fire = new BukkitRunnable() {
++                @Override
++                public void run() {
++                    canFire = true;
++                }
++            };
++            fire.runTaskLater(GunWar.getPlugin(), ((GwGunItem) getGwItem()).getFire());
++        }
++    }
++
++    @Override
++    public void cancelFireCooldown() {
++        if(fire != null && !fire.isCancelled()) fire.cancel();
++    }
++
++    @Override
++    public void reload() {
++        if(!isReloading()) {
++            reloading = true;
++            canFire = false;
++            updateName();
++            reload = new BukkitRunnable() {
++                @Override
++                public void run() {
++                    reloading = false;
++                    setAmmo(((GwGunItem) getGwItem()).getAmmo());
++                    updateName();
++                    canFire = true;
++                }
++            };
++            reload.runTaskLater(GunWar.getPlugin(), ((GwGunItem) getGwItem()).getReload());
++        }
++    }
++
++    public void updateName() {
++        ItemMeta meta = getItem().getItemMeta();
++        meta.setDisplayName(ChatColor.GRAY + getGwItem().getDisplayName() + " " + (reloading ? "▫" : "▪") + " " + (reloading ? ChatColor.DARK_GRAY : ChatColor.WHITE) + "«" + ammo + "»");
++        getItem().setItemMeta(meta);
++        List<ItemStack> items = Arrays.asList(getOwner().getInventory().getContents());
++        for(ItemStack i : items) {
++            if(i == null) {
++                continue;
++            }
++            if(i.hasItemMeta()) {
++                if(i.getItemMeta().getLore().contains(getGwItem().getId())); {
++                    getOwner().getInventory().setItem(items.indexOf(i), getItem());
++                }
++            }
++        }
++        getOwner().updateInventory();
++    }
++
++    @Override
++    public void cancelReload() {
++        if(reload != null && !reload.isCancelled()) {
++            reload.cancel();
++            canFire = true;
++            updateName();
++        }
++
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarItemData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarItemData.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarItemData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarItemData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,64 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import org.bukkit.Material;
++import org.bukkit.entity.Item;
++import org.bukkit.entity.Player;
++import org.bukkit.inventory.ItemStack;
++import xyz.n7mn.dev.gunwar.item.GwItem;
++
++import java.util.UUID;
++
++public class GunWarItemData implements ItemData {
++
++    private UUID uniqueId;
++    private ItemStack item;
++    private GwItem gwitem;
++    private Player owner;
++
++    public GunWarItemData(GwItem gwitem, ItemStack item, Player owner) {
++        this.uniqueId = UUID.randomUUID();
++        this.gwitem = gwitem;
++        this.item = item;
++        this.owner = owner;
++    }
++
++    @Override
++    public UUID getUniqueId() {
++        return uniqueId;
++    }
++
++    @Override
++    public ItemStack getItem() {
++        return item;
++    }
++
++    @Override
++    public Player getOwner() {
++        return owner;
++    }
++
++    @Override
++    public String getName() {
++        return gwitem.getName();
++    }
++
++    @Override
++    public GwItem getGwItem() {
++        return gwitem;
++    }
++
++    @Override
++    public Material getType() {
++        return item.getType();
++    }
++
++    @Override
++    public void setItem(ItemStack item) {
++        this.item = item;
++    }
++
++    @Override
++    public void setOwner(Player player) {
++        this.owner = player;
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarPermanentlyPlayerData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarPermanentlyPlayerData.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarPermanentlyPlayerData.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarPermanentlyPlayerData.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,135 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.item.GwGunItem;
++import xyz.n7mn.dev.gunwar.item.GwItem;
++import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
++
++import java.io.*;
++import java.util.*;
++
++public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Serializable {
++
++    private final UUID uniqueId;
++    private File dataFile;
++    private int coins;
++    private List<GwItem> items;
++    private List<GwItem> gifts;
++    private Map<GwGunItem, Integer> playCount;
++    private Map<GwGunItem, Integer> killCount;
++    private int deathCount;
++    private int infectCount;
++
++    public GunWarPermanentlyPlayerData(UUID uniqueId) {
++        this.uniqueId = uniqueId;
++        this.coins = 0;
++        this.items = new ArrayList<>();
++        this.gifts = new ArrayList<>();
++        this.playCount = new HashMap<>();
++        this.killCount = new HashMap<>();
++        this.deathCount = 0;
++        this.infectCount = 0;
++        this.dataFile = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/players/" + uniqueId);
++    }
++
++    @Override
++    public UUID getUniqueId() {
++        return uniqueId;
++    }
++
++    @Override
++    public int getCoins() {
++        return coins;
++    }
++
++    @Override
++    public List<GwItem> getItemInProcessions() {
++        return items;
++    }
++
++    @Override
++    public List<GwItem> getGifts() {
++        return gifts;
++    }
++
++    @Override
++    public Map<GwGunItem, Integer> getPlayCount() {
++        return playCount;
++    }
++
++    @Override
++    public Map<GwGunItem, Integer> getKillCount() {
++        return killCount;
++    }
++
++    @Override
++    public int getDeathCount() {
++        return Math.max(0, deathCount);
++    }
++
++    @Override
++    public int getInfectCount() {
++        return Math.max(0, deathCount);
++    }
++
++    @Override
++    public void setCoins(int coins) {
++        this.coins = coins;
++    }
++
++    @Override
++    public void setDeathCount(int deathCount) {
++        this.deathCount = deathCount;
++    }
++
++    @Override
++    public void setInfectCount(int infectCount) {
++        this.infectCount = infectCount;
++    }
++
++    @Override
++    public File getDefaultDataFile() {
++        return dataFile;
++    }
++
++    @Override
++    public void save(File file) throws IOException {
++        save(this, file);
++    }
++
++    private void save(Object obj, File file) throws IOException {
++        if(!file.exists()) {
++            if(!file.getParentFile().exists()) {
++                file.getParentFile().mkdirs();
++            }
++            file.createNewFile();
++        }
++        FileOutputStream output = new FileOutputStream(file);
++        ObjectOutputStream objectOutput = new ObjectOutputStream(output);
++        objectOutput.writeObject(obj);
++        objectOutput.flush();
++        objectOutput.close();
++    }
++
++    @Override
++    public void load(File file) throws IOException, ClassNotFoundException {
++        if(file.exists()) {
++            FileInputStream input = new FileInputStream(file);
++            ObjectInputStream objectInput = new ObjectInputStream(input);
++            Object object = objectInput.readObject();
++            if (object instanceof PermanentlyPlayerData) {
++                PermanentlyPlayerData data = (PermanentlyPlayerData) object;
++                if (data.getUniqueId() == getUniqueId()) {
++                    this.coins = data.getCoins();
++                    if(data.getItemInProcessions() != null) this.items = data.getItemInProcessions();
++                    if(data.getGifts() != null) this.gifts = data.getGifts();
++                    if(data.getPlayCount() != null) this.playCount = data.getPlayCount();
++                    if(data.getKillCount() != null) this.killCount = data.getKillCount();
++                    this.deathCount = data.getDeathCount();
++                    this.infectCount = data.getInfectCount();
++                }
++            }
++            objectInput.close();
++        }
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarPlayerData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarPlayerData.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarPlayerData.java
+new file mode 100644
+--- /dev/null	(revision a4b9255ce98a02382f0546a36a5e48f7ed667f77)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarPlayerData.java	(revision a4b9255ce98a02382f0546a36a5e48f7ed667f77)
+@@ -0,0 +1,338 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import net.minecraft.server.v1_12_R1.BlockPosition;
++import net.minecraft.server.v1_12_R1.PacketPlayOutWorldEvent;
++import org.bukkit.Location;
++import org.bukkit.Material;
++import org.bukkit.Particle;
++import org.bukkit.block.Block;
++
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.LivingEntity;
++import org.bukkit.entity.Player;
++import org.bukkit.inventory.ItemStack;
++import org.bukkit.scheduler.BukkitRunnable;
++import org.bukkit.util.Vector;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.entity.HitEntity;
++import xyz.n7mn.dev.gunwar.game.GunWarGame;
++import xyz.n7mn.dev.gunwar.game.gamemode.GameModeNormal;
++import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
++import xyz.n7mn.dev.gunwar.item.GwGunItem;
++import xyz.n7mn.dev.gunwar.item.GwItem;
++import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
++import xyz.n7mn.dev.gunwar.util.Reference;
++
++import java.sql.Ref;
++import java.util.List;
++
++public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
++
++    private final Player player;
++    private PlayerWatcher watcher;
++    private double health;
++    private double maxHealth;
++    private int team;
++    private boolean spectator;
++    private boolean clickable;
++    private boolean moveable;
++    private boolean dead;
++    private Location loc;
++
++    public GunWarPlayerData(Player player) {
++        super(player);
++        this.player = player;
++        this.health = 100;
++        this.maxHealth = 100;
++        this.team = -1;
++        this.spectator = true;
++        this.clickable = true;
++        this.moveable = true;
++        this.loc = player.getLocation();
++        this.dead = false;
++    }
++
++    @Override
++    public Player getPlayer() {
++        return player;
++    }
++
++    @Override
++    public PlayerWatcher getWatcher() {
++        return watcher;
++    }
++
++    public void setWatcher(PlayerWatcher watcher) {
++        this.watcher = watcher;
++    }
++
++    public double getHealth() {
++        return health;
++    }
++
++    public double getMaxHealth() {
++        return maxHealth;
++    }
++
++    @Override
++    public int getTeam() {
++        return team;
++    }
++
++    @Override
++    public boolean isSpectator() {
++        return spectator;
++    }
++
++    @Override
++    public boolean isClickable() {
++        return clickable;
++    }
++
++    @Override
++    public boolean isDead() {
++        return dead;
++    }
++
++    @Override
++    public void setDead(boolean dead) {
++        this.dead = dead;
++    }
++
++    @Override
++    public void setClickable(boolean clickable) {
++        this.clickable = clickable;
++    }
++
++    @Override
++    public void setHealth(double health) {
++        this.health = Math.min(health, maxHealth);
++    }
++
++    @Override
++    public void setMaxHealth(double maxHealth) {
++        this.maxHealth = maxHealth;
++    }
++
++    @Override
++    public void setTeam(int team) {
++        this.team = team;
++        if(team < 0) setSpectator(true);
++    }
++
++    @Override
++    public void setSpectator(boolean spectator) {
++        this.spectator = spectator;
++    }
++
++    private boolean inf = false;
++
++    @Override
++    public void infect() {
++        if(!dead && !inf) {
++            setTeam(1);
++            inf = true;
++            moveable = false;
++            loc = getPlayer().getLocation();
++            getPlayer().sendTitle(Reference.TITLE_MAIN_INFECT, Reference.TITLE_SUB_INFECT, 0, 100, 20);
++            new BukkitRunnable() {
++                @Override
++                public void run() {
++                    moveable = true;
++                    inf = false;
++                }
++            }.runTaskLater(GunWar.getPlugin(), 100);
++            new BukkitRunnable() {
++                @Override
++                public void run() {
++                    if (!moveable) {
++                        this.cancel();
++                        return;
++                    }
++                    Location location = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ(),
++                            getPlayer().getLocation().getYaw(), getPlayer().getLocation().getPitch());
++                    getPlayer().teleport(location);
++                }
++            }.runTaskTimer(GunWar.getPlugin(), 0, 1);
++        }
++    }
++
++    @Override
++    public void kill() {
++        if(!dead && !inf) {
++            moveable = false;
++            dead = true;
++            loc = getPlayer().getLocation();
++            getPlayer().sendTitle(Reference.TITLE_MAIN_DIED_ZOMBIE, Reference.TITLE_SUB_INFECT, 0, 100, 20);
++            new BukkitRunnable() {
++                @Override
++                public void run() {
++                    moveable = true;
++                    dead = false;
++                }
++            }.runTaskLater(GunWar.getPlugin(), 100);
++            new BukkitRunnable() {
++                @Override
++                public void run() {
++                    if (!moveable) {
++                        this.cancel();
++                        return;
++                    }
++                    Location location = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ(),
++                            getPlayer().getLocation().getYaw(), getPlayer().getLocation().getPitch());
++                    getPlayer().teleport(location);
++                }
++            }.runTaskTimer(GunWar.getPlugin(), 0, 1);
++        }
++    }
++
++    private Vector a(Vector onto, Vector u) {
++        return u.clone().subtract(b(onto, u));
++    }
++
++    private Vector b(Vector onto, Vector u) {
++        return onto.clone().multiply(onto.dot(u) / onto.lengthSquared());
++    }
++
++    private void c(Particle particle, double xb, double yb, double zb) {
++        Player p = getPlayer();
++
++        double twopi = 2 * Math.PI;
++        double times = 1 * twopi;
++        double division = twopi / 100;
++        double radius = 2;
++
++        Location c = p.getEyeLocation();
++        Vector nv = c.getDirection().normalize();
++
++        double nx = radius * nv.getX() + c.getX();
++        double ny = radius * nv.getY() + c.getY();
++        double nz = radius * nv.getZ() + c.getZ();
++
++        Vector ya = a(nv, new Vector(0, 1, 0)).normalize();
++        Vector xa = ya.getCrossProduct(nv).normalize();
++
++        for (double theta = 0; theta < times; theta += division) {
++            double xi = xa.getX() * xb + ya.getX() * yb + nv.getX() * zb;
++            double yi = xa.getY() * xb + ya.getY() * yb + nv.getY() * zb;
++            double zi = xa.getZ() * xb + ya.getZ() * yb + nv.getZ() * zb;
++
++            double x = xi + nx;
++            double y = yi + ny;
++            double z = zi + nz;
++
++            p.spawnParticle(particle, new Location(c.getWorld(), x, y, z), 1, 0, 0, 0, 0);
++        }
++    }
++
++    @Override
++    public void drawParticleLine(Particle particle, double start, double far, double separate) {
++        drawParticleLine(particle, 0, 0, start, far, 0, 0, separate);
++    }
++
++    @Override
++    public void drawParticleLine(Particle particle, double startX, double startY, double startZ,
++                                 double far, double separateX, double separateY, double separateZ) {
++        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * far;
++        if(startZ < d) {
++            double times = d / separateZ;
++            double x = startX;
++            double y = startY;
++            for (double z = startZ; z < times; z += separateZ) {
++                c(particle, x, y, z);
++                x += separateX;
++                y += separateY;
++            }
++        }
++    }
++
++    @Override
++    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
++                                      double far, double separateX, double separateY, double separateZ, GwGunItem gun) {
++        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * far;
++        if(startZ < d) {
++            double times = d / separateZ;
++            double x = startX;
++            double y = startY;
++            double z = startZ;
++            double damageMin = gun.getAttackDamage() / 1.3;
++            double hsdamageMin = gun.getHeadShotDamage() / 1.3;
++            double currentDamage = gun.getAttackDamage();
++            double currentHSDamage = gun.getHeadShotDamage();
++            double separateDamage = currentDamage - damageMin / times;
++            double separateHSDamage = currentHSDamage - hsdamageMin / times;
++            while (z < times) {
++                c(particle, x, y, z);
++                for(Entity entity : getPlayer().getNearbyEntities(gun.getRange() + 1, gun.getRange() + 1, gun.getRange() + 1)) {
++                    if(entity instanceof LivingEntity) {
++                        LivingEntity livingEntity = (LivingEntity) entity;
++                        if(livingEntity != getPlayer()) {
++                            double xmin = entity.getLocation().getX() - (entity.getWidth() / 2);
++                            double xmax = entity.getLocation().getX() + (entity.getWidth() / 2);
++                            double ymin = entity.getLocation().getY();
++                            double ymax = entity.getLocation().getY() + entity.getHeight();
++                            double zmin = entity.getLocation().getZ() - (entity.getWidth() / 2);
++                            double zmax = entity.getLocation().getZ() + (entity.getWidth() / 2);
++                            boolean condition1 = xmin <= x && xmax >= x;
++                            boolean condition2 = ymin <= y && ymax >= y;
++                            boolean condition3 = zmin <= z && zmax >= z;
++                            if (condition1 && condition2 && condition3) {
++                                double hxmin = livingEntity.getEyeLocation().getX() - (livingEntity.getEyeHeight() / 2);
++                                double hxmax = livingEntity.getEyeLocation().getX() + (livingEntity.getEyeHeight() / 2);
++                                double hymin = livingEntity.getEyeLocation().getY() - (livingEntity.getEyeHeight() / 2);
++                                double hymax = livingEntity.getEyeLocation().getY() + (livingEntity.getEyeHeight() / 2);
++                                double hzmin = livingEntity.getEyeLocation().getZ() - (livingEntity.getEyeHeight() / 2);
++                                double hzmax = livingEntity.getEyeLocation().getZ() + (livingEntity.getEyeHeight() / 2);
++                                boolean hcondition1 = hxmin <= x && hxmax >= x;
++                                boolean hcondition2 = hymin <= y && hymax >= y;
++                                boolean hcondition3 = hzmin <= z && hzmax >= z;
++                                boolean headShot = hcondition1 && hcondition2 && hcondition3;
++                                if(GunWar.getGame().getGameMode() == GwGameModes.NORMAL && ((GameModeNormal) GwGameModes.NORMAL).getMode() == GameModeNormal.Mode.TEAM) {
++                                    if (livingEntity instanceof Player) {
++                                        PlayerData data = GunWar.getGame().getPlayerData((Player) livingEntity);
++                                        if (data != null && data.getTeam() != getTeam()) {
++                                            return new HitEntity(livingEntity, headShot, headShot ? currentHSDamage : currentDamage,
++                                                    getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), x, y, z));
++                                        }
++                                    }
++                                }
++                                return new HitEntity(livingEntity, headShot, headShot ? currentHSDamage : currentDamage,
++                                        getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), x, y, z));
++                            }
++                        }
++                    }
++                }
++                Location loc = new Location(getPlayer().getWorld(), x, y, z);
++                Block block = loc.getBlock();
++                if(block != null && block.getType() != Material.AIR && block.getType() != Material.STRUCTURE_VOID) {
++                    @SuppressWarnings("deprecation")
++                    PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
++                            new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
++                            block.getType().getId(), false);
++                    List<Player> players = getPlayer().getWorld().getPlayers();
++                    for(final Player p : players) {
++                        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
++                    }
++                    return null;
++                }
++                x += separateX;
++                y += separateY;
++                z += separateZ;
++                currentDamage -= separateDamage;
++                currentHSDamage -= separateHSDamage;
++            }
++        }
++        return null;
++    }
++
++    @Override
++    public void giveItem(GwItem item) {
++        ItemStack i = item.getItem().clone();
++        ((GunWarGame) GunWar.getGame()).addItemData(item instanceof GwGunItem ? new GunWarGunData((GwGunItem) item, i, getPlayer()) :
++                new GunWarItemData(item, i, getPlayer()));
++        if (GunWar.getGame().getItemData(i) != null) i = GunWar.getGame().getItemData(i).getItem();
++        getPlayer().getInventory().addItem(i);
++        getPlayer().updateInventory();
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarProjectileData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarProjectileData.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarProjectileData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/game/data/GunWarProjectileData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,24 @@
++package xyz.n7mn.dev.gunwar.game.data;
++
++import org.bukkit.entity.Projectile;
++import org.bukkit.projectiles.ProjectileSource;
++
++public class GunWarProjectileData extends GunWarEntityData implements ProjectileData {
++
++    private final Projectile projectile;
++
++    public GunWarProjectileData(Projectile projectile) {
++        super(projectile);
++        this.projectile = projectile;
++    }
++
++    @Override
++    public Projectile getProjectile() {
++        return projectile;
++    }
++
++    @Override
++    public ProjectileSource getShooter() {
++        return projectile.getShooter();
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ItemListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ItemListener.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ItemListener.java
+new file mode 100644
+--- /dev/null	(revision a4b9255ce98a02382f0546a36a5e48f7ed667f77)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ItemListener.java	(revision a4b9255ce98a02382f0546a36a5e48f7ed667f77)
+@@ -0,0 +1,61 @@
++package xyz.n7mn.dev.gunwar.listeners;
++
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
++import org.bukkit.entity.Player;
++import org.bukkit.event.EventHandler;
++import org.bukkit.event.Listener;
++import org.bukkit.event.block.Action;
++import org.bukkit.event.player.*;
++import org.bukkit.inventory.ItemStack;
++import org.bukkit.scheduler.BukkitRunnable;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.game.data.GunData;
++import xyz.n7mn.dev.gunwar.game.data.ItemData;
++import xyz.n7mn.dev.gunwar.game.data.PlayerData;
++import xyz.n7mn.dev.gunwar.item.GwGunItem;
++
++public class ItemListener implements Listener {
++
++    @EventHandler
++    public void onInteract(PlayerInteractEvent e) {
++        PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
++        if(data != null && data.isClickable()) {
++            data.setClickable(false);
++            new BukkitRunnable() {
++                @Override
++                public void run() {
++                    data.setClickable(true);
++                }
++            }.runTaskLater(GunWar.getPlugin(), 1);
++            if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
++                ItemData itemData = GunWar.getGame().getItemData(e.getItem());
++                if (itemData != null) {
++                    if (itemData instanceof GunData) {
++                        if (((GunData) itemData).getAmmo() <= 0) ((GunData) itemData).reload();
++                        ((GunData) itemData).fire();
++                    }
++                }
++            }
++        }
++    }
++
++
++
++    @EventHandler
++    public void onDropItem(PlayerDropItemEvent e) {
++        ItemData data = GunWar.getGame().getItemData(e.getItemDrop().getItemStack());
++        if(data instanceof GunData) {
++            e.setCancelled(true);
++            ((GunData) data).reload();
++        }
++    }
++
++    @EventHandler
++    public void onSlotChange(PlayerItemHeldEvent e) {
++        for(ItemStack i : e.getPlayer().getInventory().getContents()) {
++            ItemData data = GunWar.getGame().getItemData(i);
++            if(data instanceof GunData) ((GunData) data).cancelReload();
++        }
++    }
++
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/PlayerListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/PlayerListener.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/PlayerListener.java
+--- a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/PlayerListener.java	(revision f4b46d6230b069dcabeb91072ed0b4b2d56be7d5)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/PlayerListener.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -1,21 +1,78 @@
+ package xyz.n7mn.dev.gunwar.listeners;
+ 
+ import org.bukkit.ChatColor;
++import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+ import org.bukkit.event.EventHandler;
+ import org.bukkit.event.Listener;
++import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+ import org.bukkit.event.player.PlayerJoinEvent;
+ import org.bukkit.event.player.PlayerQuitEvent;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.NanamiGunWar;
++import xyz.n7mn.dev.gunwar.game.GunWarGame;
++import xyz.n7mn.dev.gunwar.game.data.*;
++import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
++import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
++
++import java.io.File;
++import java.io.IOException;
+ 
+ public class PlayerListener implements Listener {
+ 
++    @EventHandler
++    public void onPreLogin(AsyncPlayerPreLoginEvent e) {
++        try {
++            GunWarPermanentlyPlayerData permanentlyPlayerData = new GunWarPermanentlyPlayerData(e.getUniqueId());
++            File f = permanentlyPlayerData.getDefaultDataFile();
++            if (!f.exists()) {
++                permanentlyPlayerData.save(f);
++            } else {
++                permanentlyPlayerData.load(f);
++            }
++            ((GunWarGame) GunWar.getGame()).addPermanentlyPlayerData(permanentlyPlayerData);
++        } catch(Throwable ex) {
++            e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "" +
++                    ChatColor.DARK_GREEN + "=== ななみ銃撃戦 ===\n" +
++                    ChatColor.RED + "接続に失敗しました。\n" +
++                    ChatColor.GRAY + "原因: " + ChatColor.WHITE + "ログイン時のエラー発生\n" +
++                    ChatColor.GRAY + "解決策: " + ChatColor.WHITE + "Discordの" + ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE + "にて報告してください。\n" +
++                    "\n" +
++                    ChatColor.WHITE + "詳細はななみ鯖公式Discordをご確認ください。\n" +
++                    ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord"));
++            ex.printStackTrace();
++        }
++    }
++
+     @EventHandler
+     public void onJoin(PlayerJoinEvent e) {
+         e.setJoinMessage(ChatColor.GREEN + "[+] " + ChatColor.GRAY + e.getPlayer().getName());
++        GunWarPlayerData data = new GunWarPlayerData(e.getPlayer());
++        PlayerWatcher watcher = new PlayerWatcher(GunWar.getPlugin(), data);
++        watcher.startWatch();
++        watcher.startWatch10Ticks();
++        data.setWatcher(watcher);
++        ((GunWarGame) GunWar.getGame()).addPlayerData(data.getUniqueId(), data);
+     }
+ 
+     @EventHandler
+     public void onQuit(PlayerQuitEvent e) {
+-        e.setQuitMessage(ChatColor.RED + "[+] " + ChatColor.GRAY + e.getPlayer().getName());
++        e.setQuitMessage(ChatColor.RED + "[-] " + ChatColor.GRAY + e.getPlayer().getName());
++        PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
++        if(data != null) {
++            PlayerWatcher watcher = data.getWatcher();
++            watcher.stopWatch();
++            watcher.stopWatch10Ticks();
++            ((GunWarGame) GunWar.getGame()).removePlayerData(data.getUniqueId());
++        }
++        PermanentlyPlayerData data_ = GunWar.getGame().getPermanentlyPlayerData(e.getPlayer().getUniqueId());
++        if(data_ != null) {
++            try {
++                data_.save(data_.getDefaultDataFile());
++            } catch (IOException ex) {
++                ex.printStackTrace();
++            }
++            ((GunWarGame) GunWar.getGame()).removePermanentlyPlayerData(e.getPlayer().getUniqueId());
++        }
+     }
+ 
+ }
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySQLPlayerData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySQLPlayerData.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySQLPlayerData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySQLPlayerData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,155 @@
++package xyz.n7mn.dev.gunwar.mysql;
++
++import xyz.n7mn.dev.gunwar.game.data.PlayerData;
++import xyz.n7mn.dev.gunwar.nanamiserver.permission.NanamiServerRoleData;
++
++import java.sql.*;
++import java.util.*;
++
++public final class GwMySQLPlayerData {
++
++    private static Map<PlayerData, GwMySQLPlayerData> dataMap = new HashMap<>();
++
++    public static GwMySQLPlayerData getPlayerData(PlayerData data) {
++        return GwMySQLPlayerData.dataMap.get(data);
++    }
++
++    @NanamiServer
++    public static String getRoleNameById(int id) throws SQLException {
++        String result;
++        boolean found = false;
++        Enumeration<Driver> drivers = DriverManager.getDrivers();
++
++        while (drivers.hasMoreElements()) {
++            Driver driver = drivers.nextElement();
++            if (driver.equals(new com.mysql.cj.jdbc.Driver())) {
++                found = true;
++                break;
++            }
++        }
++
++        if (!found) {
++            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
++        }
++
++        Connection con = DriverManager.getConnection("jdbc:mysql://" +
++                        MySQLSettingBuilder.getSetting().getHost() + ":" +
++                        MySQLSettingBuilder.getSetting().getPort() + "/" +
++                        MySQLSettingBuilder.getSetting().getDatabase() +
++                        MySQLSettingBuilder.getSetting().getOption(),
++                MySQLSettingBuilder.getSetting().getUsername(),
++                MySQLSettingBuilder.getSetting().getPassword()
++        );
++        con.setAutoCommit(true);
++
++        PreparedStatement statement = con.prepareStatement("SELECT * FROM RoleRankList");
++        ResultSet set = statement.executeQuery();
++
++        StringBuffer sb = new StringBuffer();
++        while (set.next()) {
++            if (set.getInt("Rank") == id) {
++                sb.append(set.getString("Name"));
++                sb.append(",");
++            }
++        }
++        result = sb.toString();
++
++        set.close();
++        statement.close();
++        con.close();
++
++        return result;
++    }
++
++    @NanamiServer
++    public static List<NanamiServerRoleData> getList() throws SQLException {
++        try {
++            boolean found = false;
++            Enumeration<Driver> drivers = DriverManager.getDrivers();
++
++            while (drivers.hasMoreElements()){
++                Driver driver = drivers.nextElement();
++                if (driver.equals(new com.mysql.cj.jdbc.Driver())){
++                    found = true;
++                    break;
++                }
++            }
++
++            if (!found){
++                DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
++            }
++        } catch (SQLException e){
++            e.printStackTrace();
++        }
++
++        List<NanamiServerRoleData> list = new ArrayList<>();
++        Connection con = DriverManager.getConnection("" +
++                "jdbc:mysql://" +
++                        MySQLSettingBuilder.getSetting().getHost()+ ":" +
++                        MySQLSettingBuilder.getSetting().getPort() + "/" +
++                        MySQLSettingBuilder.getSetting().getDatabase() +
++                        MySQLSettingBuilder.getSetting().getOption(),
++                MySQLSettingBuilder.getSetting().getUsername(),
++                MySQLSettingBuilder.getSetting().getPassword());
++
++        PreparedStatement statement = con.prepareStatement("SELECT * FROM RoleRankList");
++        ResultSet set = statement.executeQuery();
++
++        while (set.next()){
++            list.add(new NanamiServerRoleData(
++                    UUID.fromString(set.getString("UUID")),
++                    set.getString("DiscordRoleID"),
++                    set.getString("Name"),
++                    set.getInt("Rank")
++            ));
++        }
++        set.close();
++        statement.close();
++        con.close();
++
++        return list;
++    }
++
++    private PlayerData data;
++    private int coins;
++
++    public GwMySQLPlayerData(PlayerData data) {
++        this.data = data;
++        this.coins = 0;
++    }
++
++    public UUID getUniqueId() {
++        return this.data.getUniqueId();
++    }
++
++    public int getRank() {
++        try {
++            List<NanamiServerRoleData> data = getList();
++            for (NanamiServerRoleData d : data) {
++                if (d.getUniqueId() == this.data.getPlayer().getUniqueId()) {
++                    return d.getRank();
++                }
++            }
++            return 0;
++        } catch(SQLException ex) {
++            return this.data.getPlayer().isOp() ? 1 : 0;
++        }
++    }
++
++    public int getCoins() {
++        return coins;
++    }
++
++    public void setCoins(int coins) {
++        this.coins = coins;
++    }
++
++    public void addToList() {
++        dataMap.put(this.data, this);
++    }
++
++    public void removeFromList() {
++        dataMap.remove(this.data);
++    }
++
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySQLPlayerDataUpdater.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySQLPlayerDataUpdater.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySQLPlayerDataUpdater.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySQLPlayerDataUpdater.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,15 @@
++package xyz.n7mn.dev.gunwar.mysql;
++
++public class GwMySQLPlayerDataUpdater {
++
++    private final GwMySqlSetting setting;
++
++    GwMySQLPlayerDataUpdater(GwMySqlSetting setting) {
++        this.setting = setting;
++    }
++
++    public void update(GwMySQLPlayerData data) {
++
++    }
++
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySqlSetting.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySqlSetting.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySqlSetting.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/GwMySqlSetting.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,52 @@
++package xyz.n7mn.dev.gunwar.mysql;
++
++import xyz.n7mn.dev.api.Role;
++
++final class GwMySqlSetting {
++
++    private final String host;
++    private final int port;
++    private final String database;
++    private final String option;
++    private final String username;
++    private final String password;
++    private final String url;
++
++    GwMySqlSetting(String host, int port, String database, String option, String username, String password) {
++        this.host = host;
++        this.port = port;
++        this.database = database;
++        this.option = option;
++        this.username = username;
++        this.password = password;
++        this.url = "jdbc:mysql://" + host + ":" + port + "/" + database + option;
++    }
++
++    String getHost() {
++        return host;
++    }
++
++    int getPort() {
++        return port;
++    }
++
++    String getDatabase() {
++        return database;
++    }
++
++    String getOption() {
++        return option;
++    }
++
++    String getUsername() {
++        return username;
++    }
++
++    String getPassword() {
++        return password;
++    }
++
++    String getUrl() {
++        return url;
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/MySQLSettingBuilder.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/MySQLSettingBuilder.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/MySQLSettingBuilder.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/MySQLSettingBuilder.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,41 @@
++package xyz.n7mn.dev.gunwar.mysql;
++
++import org.bukkit.Bukkit;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.nanamiserver.permission.NanamiServerRoleData;
++
++import java.sql.*;
++import java.util.ArrayList;
++import java.util.Enumeration;
++import java.util.List;
++
++public final class MySQLSettingBuilder {
++
++    private GwMySqlSetting setting;
++
++    private static GwMySqlSetting settingStatic;
++    private static GwMySQLPlayerDataUpdater updaterStatic;
++
++    public static MySQLSettingBuilder builder() {
++        return new MySQLSettingBuilder();
++    }
++
++    public MySQLSettingBuilder withSetting(String host, int port, String database, String option, String username, String password) {
++        setting = new GwMySqlSetting(host, port, database, option, username, password);
++        return this;
++    }
++
++    public void build() {
++        settingStatic = this.setting;
++        updaterStatic = new GwMySQLPlayerDataUpdater(this.setting);
++    }
++
++    public static GwMySQLPlayerDataUpdater getUpdater() {
++        return updaterStatic;
++    }
++
++    static GwMySqlSetting getSetting() {
++        return settingStatic;
++    }
++
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/NanamiServer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/NanamiServer.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/NanamiServer.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/mysql/NanamiServer.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,11 @@
++package xyz.n7mn.dev.gunwar.mysql;
++
++import java.lang.annotation.ElementType;
++import java.lang.annotation.Retention;
++import java.lang.annotation.RetentionPolicy;
++import java.lang.annotation.Target;
++
++@Retention(RetentionPolicy.RUNTIME)
++@Target({ElementType.METHOD})
++public @interface NanamiServer {
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/nanamiserver/permission/NanamiServerRoleData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/nanamiserver/permission/NanamiServerRoleData.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/nanamiserver/permission/NanamiServerRoleData.java
+new file mode 100644
+--- /dev/null	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/nanamiserver/permission/NanamiServerRoleData.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -0,0 +1,35 @@
++package xyz.n7mn.dev.gunwar.nanamiserver.permission;
++
++import java.util.UUID;
++
++public class NanamiServerRoleData {
++
++    private java.util.UUID uniqueId;
++    private String id;
++    private String name;
++    private int rank;
++
++    public NanamiServerRoleData(UUID uuid, String discordRoleID, String roleName, int roleRank){
++        this.uniqueId = uuid;
++        this.id = discordRoleID;
++        this.name = roleName;
++        this.rank = roleRank;
++    }
++
++    public UUID getUniqueId() {
++        return uniqueId;
++    }
++
++    public String getDiscordRoleId() {
++        return id;
++    }
++
++    public String getName() {
++        return name;
++    }
++
++    public int getRank() {
++        return rank;
++    }
++
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java
+--- a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java	(revision f4b46d6230b069dcabeb91072ed0b4b2d56be7d5)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -5,10 +5,11 @@
+ import org.bukkit.command.CommandMap;
+ import org.bukkit.entity.Player;
+ import org.bukkit.plugin.Plugin;
+-import xyz.n7mn.dev.api.data.RoleData;
+ import xyz.n7mn.dev.gunwar.GunWar;
+-import xyz.n7mn.dev.gunwar.NanamiGunWar;
+ import xyz.n7mn.dev.gunwar.event.GunWarCommandRegisterEvent;
++import xyz.n7mn.dev.gunwar.mysql.GwMySQLPlayerData;
++import xyz.n7mn.dev.gunwar.mysql.NanamiServer;
++import xyz.n7mn.dev.gunwar.nanamiserver.permission.NanamiServerRoleData;
+ 
+ import java.sql.*;
+ import java.util.Enumeration;
+@@ -46,80 +47,56 @@
+     }
+ 
+     @Override
++    @NanamiServer
+     public String getRoleNameById(int id) throws SQLException {
+-        String result;
+-        boolean found = false;
+-        Enumeration<Driver> drivers = DriverManager.getDrivers();
+-
+-        while (drivers.hasMoreElements()){
+-            Driver driver = drivers.nextElement();
+-            if (driver.equals(new com.mysql.cj.jdbc.Driver())){
+-                found = true;
+-                break;
+-            }
+-        }
+-
+-        if (!found){
+-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+-        }
+-
+-        Connection con = DriverManager.getConnection("jdbc:mysql://" +
+-                        GunWar.getConfig().getConfig().getString("mysql.host") + ":" +
+-                        GunWar.getConfig().getConfig().getInt("mysql.port") + "/" +
+-                        GunWar.getConfig().getConfig().getString("mysql.database")+
+-                        GunWar.getConfig().getConfig().getString("mysql.option"),
+-                GunWar.getConfig().getConfig().getString("mysql.username"),
+-                GunWar.getConfig().getConfig().getString("mysql.password")
+-        );
+-        con.setAutoCommit(true);
+-
+-        PreparedStatement statement = con.prepareStatement("SELECT * FROM RoleRankList");
+-        ResultSet set = statement.executeQuery();
+-
+-        StringBuffer sb = new StringBuffer();
+-        while (set.next()){
+-            if (set.getInt("Rank") == id){
+-                sb.append(set.getString("Name"));
+-                sb.append(",");
+-            }
+-        }
+-        result = sb.toString();
+-
+-        set.close();
+-        statement.close();
+-        con.close();
+-
+-        return result;
++        return GwMySQLPlayerData.getRoleNameById(id);
+     }
+ 
+     @Override
+     public PermissionInfo testPermission(Player player, int required) {
+-        try {
+-            String requiredRole = GunWar.getUtilities().getRoleNameById(required);
+-            String nowRole = "";
+-            int now = 0;
+-            List<RoleData> data = NanamiGunWar.role.getList();
+-            for(RoleData d : data) {
+-                if(d.getUUID() == player.getUniqueId()) {
+-                    nowRole = d.getRoleName();
+-                    now = d.getRoleRank();
+-                }
+-            }
+-            boolean passed = true;
+-            if(required > now) {
+-                passed = false;
+-            }
+-            return new PermissionInfo(requiredRole, nowRole, passed);
+-        } catch (SQLException e){
++        int mode = GunWar.getConfig().getConfig().getInt("permission.mode", 0);
++        if(mode == 1) {
++            try {
++                String requiredRole = getRoleNameById(required);
++                String nowRole = "";
++                int now = 0;
++                List<NanamiServerRoleData> data = GwMySQLPlayerData.getList();
++                for (NanamiServerRoleData d : data) {
++                    if (d.getUniqueId() == player.getUniqueId()) {
++                        nowRole = d.getName();
++                        now = d.getRank();
++                    }
++                }
++                boolean passed = true;
++                if (required > now) {
++                    passed = false;
++                }
++                return new PermissionInfo(requiredRole, nowRole, passed);
++            } catch (SQLException e) {
++                String requiredRole = "一般";
++                String nowRole = "一般";
++                boolean passed = true;
++                if (player.isOp()) {
++                    nowRole = "OP持ち";
++                }
++                if (required >= 1) {
++                    requiredRole = "OP持ち";
++                    if (!player.isOp()) {
++                        passed = false;
++                    }
++                }
++                return new PermissionInfo(requiredRole, nowRole, passed);
++            }
++        } else {
+             String requiredRole = "一般";
+             String nowRole = "一般";
+             boolean passed = true;
+-            if(player.isOp()) {
++            if (player.isOp()) {
+                 nowRole = "OP持ち";
+             }
+             if (required >= 1) {
+                 requiredRole = "OP持ち";
+-                if(!player.isOp()) {
++                if (!player.isOp()) {
+                     passed = false;
+                 }
+             }
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/NanamiGunWarConfiguration.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/NanamiGunWarConfiguration.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/NanamiGunWarConfiguration.java
+--- a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/NanamiGunWarConfiguration.java	(revision f4b46d6230b069dcabeb91072ed0b4b2d56be7d5)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/NanamiGunWarConfiguration.java	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
+@@ -9,6 +9,7 @@
+ public class NanamiGunWarConfiguration implements GunWarConfiguration {
+ 
+     private Plugin plugin;
++    private File dataFolder;
+     private FileConfiguration config;
+     private File configFile;
+ 
+@@ -24,6 +25,11 @@
+             if (!f.exists()) {
+                 f.mkdir();
+             }
++            this.dataFolder = f;
++            File f_ = new File(dataFolder + "/players");
++            if(!f_.exists()) {
++                f_.mkdir();
++            }
+ 
+             configFile = new File(dataFolder + "/config.yml");
+             boolean b0 = true;
+@@ -62,4 +68,8 @@
+     public File getConfigFile() {
+         return configFile;
+     }
++
++    public File getDataFolder() {
++        return dataFolder;
++    }
+ }
+Index: GunWarPlugin/src/main/resources/config.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/resources/config.yml b/GunWarPlugin/src/main/resources/config.yml
+--- a/GunWarPlugin/src/main/resources/config.yml	(revision f4b46d6230b069dcabeb91072ed0b4b2d56be7d5)
++++ b/GunWarPlugin/src/main/resources/config.yml	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -2,17 +2,64 @@
+ ## 設定を変更したら必ず /gwreload を実行してください。
+ ## mysqlの設定を変更した場合はサーバーを再起動してください。
+ 
+-#ここでの数値はななみ鯖のランクレベルです
+-#接続ができなかった場合は、1以上の数値だとopになります。
++# Discord招待リンク
++discord: 'https://discord.gg/w2jFt4vA5A'
++
++# 権限設定
++## ここでの数値はななみ鯖のランクレベルです。
++## 接続ができなかった場合は、1以上の数値だとopになります。
+ permission:
++  # モード
++  # 0 - 通常モード。1以上にするとその動作はop限定になります。
++  # 1 - ななみ鯖モード。ななみ鯖のランクレベルを指定します。
++  # これら以外の数値を入れるとデフォルト値が適用されます。
++  mode: 0
++  # コマンドの権限
+   command:
+     aboutgunwar: 0
+     gunwarreload: 1
+ 
++# /gwconf で設定を確認できます。
++# ゲームの設定
++game:
++  # 自動でゲームを開始するかどうか。
++  # デフォルトでは有効。
++  auto-start: true
++  # プレイするゲームモード。
++  # NORMAL - 通常モード。チーム戦と個人戦がある
++  # ZOMBIE_ESCAPE - ゾンビエスケープ。時間制限以内に逃走者を全員感染させるか、救助場所 (セーフエリア) にゾンビが入るとゾンビの勝利。
++  # CASTLE_SIEGE - 攻城戦モード。守り側の大将を倒すと勝利。
++  gamemode: 'normal'
++  # 開始人数
++  # デフォルト: 10人
++  ## この人数に達すると自動的にゲームが開始されます。(無効化可能)
++  requires-players: 10
++  # 準備時間 (秒)
++  prepare: 10
++  # ゾンビエスケープの設定
++  zombie-escape:
++    # ゾンビの割合 (10人いるうち何人選ばれるか)
++    zombies: 3
++    # ゾンビが選ばれるまでの時間 (秒)
++    choose-zombies: 10
++    # 救助が来るまでの時間 (制限時間 - 秒)
++    game-time: 600
++  # 通常モードの設定
++  normal:
++    # チーム戦の制限時間 - 秒
++    game-time-team: 900
++    # 個人戦の制限時間 - 秒
++    game-time-solo: 900
++
++
++# データベースの設定
+ mysql:
+   host: 'localhost'
+   port: 3306
+   database: ''
+   option: '?allowPublicKeyRetrieval=true&useSSL=false'
+-  username: ''
+-  password: ''
+\ No newline at end of file
++  password: ''
++
++# /gwconf で設定を確認できます。
++# デバッグモード
++debug: false
+\ No newline at end of file
+Index: GunWarPlugin/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/pom.xml b/GunWarPlugin/pom.xml
+--- a/GunWarPlugin/pom.xml	(revision db04b8b34d9b09b21a33689ccdb2518460650ad7)
++++ b/GunWarPlugin/pom.xml	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -11,7 +11,7 @@
+         <groupId>xyz.n7mn.dev</groupId>
+     </parent>
+     <artifactId>gunwar</artifactId>
+-    <version>1.0</version>
++    <version>3.4.0</version>
+     <packaging>jar</packaging>
+ 
+     <name>GunWar</name>
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/entity/HitEntity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/entity/HitEntity.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/entity/HitEntity.java
+new file mode 100644
+--- /dev/null	(revision 4fc8806e7d20564de736b0797aecdffc74c879a9)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/entity/HitEntity.java	(revision 4fc8806e7d20564de736b0797aecdffc74c879a9)
+@@ -0,0 +1,49 @@
++package xyz.n7mn.dev.gunwar.entity;
++
++import org.bukkit.Location;
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.LivingEntity;
++import org.bukkit.util.Vector;
++
++import java.util.UUID;
++
++public class HitEntity {
++
++    private LivingEntity entity;
++    private boolean headShot;
++    private double damage;
++    private Location from;
++    private Location hitLocation;
++
++    public HitEntity(LivingEntity entity, boolean headShot, double damage, Location from, Location hitLocation) {
++        this.entity = entity;
++        this.headShot = headShot;
++        this.damage = damage;
++        this.from = from;
++        this.hitLocation = hitLocation;
++    }
++
++    public UUID getUniqueId() {
++        return entity.getUniqueId();
++    }
++
++    public LivingEntity getEntity() {
++        return entity;
++    }
++
++    public boolean isHeadShot() {
++        return headShot;
++    }
++
++    public double getDamage() {
++        return damage;
++    }
++
++    public Location getFrom() {
++        return from;
++    }
++
++    public Location getHitLocation() {
++        return hitLocation;
++    }
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java
+--- a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java	(revision e5d7c4990c296dcf7262a5697fb93b2ed739a51e)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -12,6 +12,14 @@
+     public static final String CHAT_ABOUT = ChatColor.DARK_GRAY + "[詳細]";
+     private static final String CHAT_COMMAND_PERMISSION_ERROR_PRIVATE = ChatColor.RED + "このコマンドを実行する権限がありません";
+     public static final String CHAT_COMMAND_RELOAD = "設定を再読み込みしました";
++    public static final String CHAT_COMMAND_GIVE_ITEM = ChatColor.GRAY + "%PLAYER% に %ITEM% を与えました";
++
++    public static final String TITLE_MAIN_INFECT = ChatColor.DARK_GREEN + "ゾンビに感染してしまった...";
++    public static final String TITLE_MAIN_DIED_ZOMBIE = ChatColor.DARK_GREEN + "死んでしまった...";
++    public static final String TITLE_SUB_INFECT = ChatColor.GRAY + "5秒後にゾンビとして復活します";
++
++    public static final String BOSSBAR_WAITING = ChatColor.RED + "待機中 - 人数が集まるまでしばらくお待ち下さい";
++    public static final String BOSSBAR_STARTING = ChatColor.GOLD + "残り%SECOND%秒でゲームが開始します";
+ 
+     public static BaseComponent getChatCommandPermissionError(String required, String now) {
+         TextComponent component = new TextComponent();
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarItemCommand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarItemCommand.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarItemCommand.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarItemCommand.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,73 @@
++package xyz.n7mn.dev.gunwar.commands;
++
++import org.bukkit.Bukkit;
++import org.bukkit.ChatColor;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++import org.bukkit.entity.Player;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.game.data.PlayerData;
++import xyz.n7mn.dev.gunwar.item.GwItem;
++import xyz.n7mn.dev.gunwar.item.GwItems;
++import xyz.n7mn.dev.gunwar.util.PermissionInfo;
++import xyz.n7mn.dev.gunwar.util.Reference;
++
++import java.sql.Ref;
++import java.util.ArrayList;
++import java.util.Arrays;
++import java.util.List;
++
++public class GunWarItemCommand extends Command {
++
++    public GunWarItemCommand() {
++        super("gunwaritem", "ななみ銃撃戦のアイテムを入手します。", "使用法: /gunwaritem <item>", Arrays.asList("gwitem", "gwi"));
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
++        int required = GunWar.getConfig().getConfig().getInt("permission.command.gunwaritem", 1);
++        if(sender instanceof Player) {
++            Player p = (Player) sender;
++            PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
++            if(!info.isPassed()) {
++                p.sendMessage(Reference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
++                return true;
++            }
++        }
++        if(args.length >= 2) {
++            Player p = Bukkit.getPlayer(args[0]);
++            if(p != null) {
++                PlayerData data = GunWar.getGame().getPlayerData(p);
++                for(GwItem i : GwItems.getRegisteredItems()) {
++                    if(i.getName().equalsIgnoreCase(args[1])) {
++                        data.giveItem(i);
++                        sender.sendMessage(Reference.PREFIX + " " + Reference.CHAT_COMMAND_GIVE_ITEM
++                                .replaceAll("%PLAYER%", p.getName()).replaceAll("%ITEM%", i.getName()));
++                        return true;
++                    }
++                }
++            }
++        }
++        sender.sendMessage(Reference.PREFIX + " " + ChatColor.GRAY + getUsage());
++        return true;
++    }
++
++    @Override
++    public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
++        if(args.length == 1) {
++            List<String> result = new ArrayList<>();
++            for(Player p : Bukkit.getOnlinePlayers()) {
++                result.add(p.getName());
++            }
++            return result;
++        }
++        if(args.length == 2) {
++            List<String> result = new ArrayList<>();
++            for(GwItem i : GwItems.getRegisteredItems()) {
++                result.add(i.getName());
++            }
++            return result;
++        }
++        return null;
++    }
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/DamageListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/DamageListener.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/DamageListener.java
+new file mode 100644
+--- /dev/null	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/DamageListener.java	(revision b6d598733769c6436745a6dd1db1f8c4b5b47d20)
+@@ -0,0 +1,107 @@
++package xyz.n7mn.dev.gunwar.listeners;
++
++import org.bukkit.entity.Player;
++import org.bukkit.event.EventHandler;
++import org.bukkit.event.Listener;
++import org.bukkit.event.block.Action;
++import org.bukkit.event.block.BlockBreakEvent;
++import org.bukkit.event.block.BlockExplodeEvent;
++import org.bukkit.event.block.BlockPlaceEvent;
++import org.bukkit.event.entity.EntityDamageByEntityEvent;
++import org.bukkit.event.entity.EntityDamageEvent;
++import org.bukkit.event.entity.EntityDeathEvent;
++import org.bukkit.event.entity.EntityExplodeEvent;
++import org.bukkit.event.player.PlayerInteractEvent;
++import org.bukkit.event.player.PlayerItemHeldEvent;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.game.data.GunData;
++import xyz.n7mn.dev.gunwar.game.data.ItemData;
++import xyz.n7mn.dev.gunwar.game.data.PermanentlyPlayerData;
++import xyz.n7mn.dev.gunwar.game.data.PlayerData;
++import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
++import xyz.n7mn.dev.gunwar.item.GwGunItem;
++import xyz.n7mn.dev.gunwar.item.GwItem;
++import xyz.n7mn.dev.gunwar.util.Reference;
++
++public class DamageListener implements Listener {
++
++    @EventHandler
++    public void onExplodeEntity(EntityExplodeEvent e) {
++        e.setCancelled(true);
++    }
++
++    @EventHandler
++    public void onDamageByEntity(EntityDamageByEntityEvent e) {
++        if(e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
++            e.setDamage(0);
++            PlayerData vdata = GunWar.getGame().getPlayerData((Player) e.getEntity());
++            PermanentlyPlayerData vdata_ = GunWar.getGame().getPermanentlyPlayerData(e.getEntity().getUniqueId());
++            PlayerData ddata = GunWar.getGame().getPlayerData((Player) e.getDamager());
++            PermanentlyPlayerData ddata_ = GunWar.getGame().getPermanentlyPlayerData(e.getDamager().getUniqueId());
++            if(!vdata.isSpectator() && !ddata.isSpectator()) {
++                if(GunWar.getGame().getGameMode() == GwGameModes.ZOMBIE_ESCAPE) {
++                    if (ddata.getTeam() == 1 && vdata.getTeam() == 0) {
++                        e.setCancelled(true);
++                        vdata.infect();
++                        ddata_.setInfectCount(ddata_.getInfectCount() + 1);
++                    }
++                }
++                if(vdata.getHealth() <= 0) {
++                    vdata_.setDeathCount(vdata_.getDeathCount() + 1);
++                    ItemData i = GunWar.getGame().getItemData(((Player) e.getDamager()).getInventory().getItemInMainHand());
++                    if (i instanceof GunData) {
++                        GwGunItem gi = (GwGunItem) i.getGwItem();
++                        ddata_.getKillCount().put(gi, ddata_.getKillCount().get(gi));
++                    }
++                    if(GunWar.getGame().getGameMode() == GwGameModes.ZOMBIE_ESCAPE) {
++                        vdata.kill();
++                    }
++                }
++            }
++        }
++    }
++
++    @EventHandler
++    public void onDamage(EntityDamageEvent e) {
++        if(!(e instanceof EntityDamageByEntityEvent)) e.setCancelled(true);
++    }
++
++    @EventHandler
++    public void onDeathByEntity(EntityDeathEvent e) {
++        if(e.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
++            EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) e.getEntity().getLastDamageCause();
++            if(event.getDamager() instanceof Player) {
++                PlayerData ddata = GunWar.getGame().getPlayerData((Player) event.getDamager());
++                if(!ddata.isSpectator()) {
++                    PermanentlyPlayerData ddata_ = GunWar.getGame().getPermanentlyPlayerData(event.getDamager().getUniqueId());
++                    if (ddata_ != null) {
++                        ItemData i = GunWar.getGame().getItemData(((Player) event.getDamager()).getInventory().getItemInMainHand());
++                        if (i instanceof GunData) {
++                            GwGunItem gi = (GwGunItem) i.getGwItem();
++                            ddata_.getKillCount().put(gi, ddata_.getKillCount().get(gi));
++                        }
++                    }
++                }
++            }
++        }
++    }
++
++    @EventHandler
++    public void onPlace(BlockPlaceEvent e) {
++        if(!e.getPlayer().isOp()) e.setCancelled(true);
++    }
++
++    @EventHandler
++    public void onBreak(BlockBreakEvent e) {
++        if(!e.getPlayer().isOp()) e.setCancelled(true);
++    }
++
++    @EventHandler
++    public void onInteract(PlayerInteractEvent e) {
++        if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
++            PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
++            if(!data.isSpectator() && !e.getPlayer().isOp()) e.setCancelled(true);
++        }
++    }
++
++}

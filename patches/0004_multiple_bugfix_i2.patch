@@ -1,0 +1,569 @@
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java
+--- a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java	(revision 98d7c2819ffdfa3e777a82cfb667704fafe0e7ee)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/GunWar.java	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
+@@ -2,12 +2,14 @@
+ 
+ import org.bukkit.plugin.Plugin;
+ import org.bukkit.plugin.java.JavaPlugin;
++import xyz.n7mn.dev.gunwar.util.GunWarConfiguration;
+ import xyz.n7mn.dev.gunwar.util.Utilities;
+ 
+ public final class GunWar {
+ 
+     static Plugin plugin;
+     static Utilities utilities;
++    static GunWarConfiguration config;
+ 
+     public static Plugin getPlugin() {
+         return plugin;
+@@ -17,6 +19,10 @@
+         return utilities;
+     }
+ 
++    public static GunWarConfiguration getConfig() {
++        return config;
++    }
++
+ }
+ 
+ 
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/GunWarConfiguration.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/GunWarConfiguration.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/GunWarConfiguration.java
+new file mode 100644
+--- /dev/null	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/GunWarConfiguration.java	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
+@@ -0,0 +1,13 @@
++package xyz.n7mn.dev.gunwar.util;
++
++import org.bukkit.configuration.file.FileConfiguration;
++
++import java.io.File;
++
++public interface GunWarConfiguration {
++
++    public FileConfiguration getConfig();
++
++    public File getConfigFile();
++
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/PermissionInfo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/PermissionInfo.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/PermissionInfo.java
+new file mode 100644
+--- /dev/null	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/PermissionInfo.java	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
+@@ -0,0 +1,26 @@
++package xyz.n7mn.dev.gunwar.util;
++
++public class PermissionInfo {
++
++    private final String required;
++    private final String current;
++    private final boolean passed;
++
++    public PermissionInfo(String required, String current, boolean passed) {
++        this.required = required;
++        this.current = current;
++        this.passed = passed;
++    }
++
++    public String getRequired() {
++        return required;
++    }
++
++    public String getCurrent() {
++        return current;
++    }
++
++    public boolean isPassed() {
++        return passed;
++    }
++}
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java
+--- a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java	(revision 98d7c2819ffdfa3e777a82cfb667704fafe0e7ee)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Reference.java	(revision f4b46d6230b069dcabeb91072ed0b4b2d56be7d5)
+@@ -11,15 +11,16 @@
+ 
+     public static final String CHAT_ABOUT = ChatColor.DARK_GRAY + "[詳細]";
+     private static final String CHAT_COMMAND_PERMISSION_ERROR_PRIVATE = ChatColor.RED + "このコマンドを実行する権限がありません";
++    public static final String CHAT_COMMAND_RELOAD = "設定を再読み込みしました";
+ 
+     public static BaseComponent getChatCommandPermissionError(String required, String now) {
+         TextComponent component = new TextComponent();
+         TextComponent component1 = new TextComponent();
+-        component.setText(Reference.PREFIX + " " + Reference.CHAT_COMMAND_PERMISSION_ERROR_PRIVATE + "\n");
++        component.setText(Reference.PREFIX + " " + Reference.CHAT_COMMAND_PERMISSION_ERROR_PRIVATE + " ");
+         component1.setText(Reference.CHAT_ABOUT);
+         component1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{
+-                new TextComponent(Reference.CHAT_ABOUT),
+-                new TextComponent(ChatColor.GRAY + "あなたの権限: " + ChatColor.GREEN + now),
++                new TextComponent(Reference.CHAT_ABOUT + "\n"),
++                new TextComponent(ChatColor.GRAY + "あなたの権限: " + ChatColor.GREEN + now + "\n"),
+                 new TextComponent(ChatColor.GRAY + "必要な権限: " + ChatColor.GREEN + required)
+         }));
+         component.addExtra(component1);
+Index: GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Utilities.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Utilities.java b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Utilities.java
+--- a/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Utilities.java	(revision 98d7c2819ffdfa3e777a82cfb667704fafe0e7ee)
++++ b/GunWarAPI/src/main/java/xyz/n7mn/dev/gunwar/util/Utilities.java	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
+@@ -1,12 +1,20 @@
+ package xyz.n7mn.dev.gunwar.util;
+ 
+ import org.bukkit.command.Command;
++import org.bukkit.entity.Player;
+ import org.bukkit.plugin.Plugin;
+ 
++import java.sql.SQLException;
++import java.util.UUID;
++
+ public interface Utilities {
+ 
+     public Plugin getPlugin();
+ 
+     public void registerCommand(String fallbackPrefix, Command command);
+ 
++    public String getRoleNameById(int id) throws SQLException;
++
++    public PermissionInfo testPermission(Player player, int required);
++
+ }
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java
+--- a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java	(revision 98d7c2819ffdfa3e777a82cfb667704fafe0e7ee)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/NanamiGunWar.java	(revision 36fbc8cf91991b6c9426d24d44683d0389fab304)
+@@ -3,25 +3,42 @@
+ import org.bukkit.Bukkit;
+ import org.bukkit.plugin.SimplePluginManager;
+ import org.bukkit.plugin.java.JavaPlugin;
++import xyz.n7mn.dev.api.NanamiNetwork;
++import xyz.n7mn.dev.api.Role;
++import xyz.n7mn.dev.api.data.RoleData;
+ import xyz.n7mn.dev.gunwar.commands.AboutGunWarCommand;
++import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
+ import xyz.n7mn.dev.gunwar.listeners.PlayerListener;
+ import xyz.n7mn.dev.gunwar.listeners.ServerListener;
+ import xyz.n7mn.dev.gunwar.util.GwUtilities;
+-import xyz.n7mn.dev.gunwar.util.Utilities;
++import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
++
++import java.util.List;
+ 
+ public final class NanamiGunWar extends JavaPlugin {
+ 
+     private NanamiGunWar plugin;
+     private SimplePluginManager pluginManager;
+     private GwUtilities utilities;
++    private NanamiGunWarConfiguration config;
++    public static Role role;
+ 
+     @Override
+     public void onEnable() {
+         // Plugin startup logic
+         plugin = this;
+         GunWar.plugin = plugin;
+-        utilities = new GwUtilities(this);
++        utilities = new GwUtilities(plugin);
+         GunWar.utilities = utilities;
++        config = new NanamiGunWarConfiguration(plugin);
++        GunWar.config = config;
++        config.init();
++        role = new Role(config.getConfig().getString("mysql.host", "localhost"),
++                config.getConfig().getInt("mysql.port", 3306),
++                config.getConfig().getString("mysql.database", ""),
++                config.getConfig().getString("mysql.option", "?allowPublicKeyRetrieval=true&useSSL=false"),
++                config.getConfig().getString("mysql.username", ""),
++                config.getConfig().getString("mysql.password", ""));
+         pluginManager = (SimplePluginManager) Bukkit.getPluginManager();
+         registerListeners();
+         registerCommands();
+@@ -34,6 +51,7 @@
+ 
+     private void registerCommands() {
+         utilities.registerCommand(plugin.getName(), new AboutGunWarCommand());
++        utilities.registerCommand(plugin.getName(), new GunWarReloadCommand());
+     }
+ 
+     @Override
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/AboutGunWarCommand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/AboutGunWarCommand.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/AboutGunWarCommand.java
+--- a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/AboutGunWarCommand.java	(revision 98d7c2819ffdfa3e777a82cfb667704fafe0e7ee)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/AboutGunWarCommand.java	(revision 37cc44d3841854933c55ddbc9447cef140618b9f)
+@@ -6,11 +6,19 @@
+ import org.bukkit.ChatColor;
+ import org.bukkit.command.Command;
+ import org.bukkit.command.CommandSender;
++import org.bukkit.entity.Player;
++import org.bukkit.event.player.PlayerQuitEvent;
++import xyz.n7mn.dev.api.data.RoleData;
+ import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.NanamiGunWar;
+ import xyz.n7mn.dev.gunwar.util.GwReference;
++import xyz.n7mn.dev.gunwar.util.PermissionInfo;
+ import xyz.n7mn.dev.gunwar.util.Reference;
+ 
++import java.sql.*;
+ import java.util.Arrays;
++import java.util.Enumeration;
++import java.util.List;
+ 
+ public class AboutGunWarCommand extends Command {
+     public AboutGunWarCommand() {
+@@ -19,9 +27,14 @@
+ 
+     @Override
+     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
+-        if(!sender.isOp()) {
+-            sender.sendMessage(Reference.getChatCommandPermissionError("OP権限", "一般"));
+-            return true;
++        int required = GunWar.getConfig().getConfig().getInt("permission.command.aboutgunwar", 0);
++        if(sender instanceof Player) {
++            Player p = (Player) sender;
++            PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
++            if(!info.isPassed()) {
++                p.sendMessage(Reference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
++                return true;
++            }
+         }
+         sender.sendMessage(ChatColor.DARK_GREEN + "=-=-=- ななみ銃撃戦 v" + GunWar.getPlugin().getDescription().getVersion() + " -=-=-=\n" +
+                 ChatColor.GRAY + "説明: " + ChatColor.RESET + "ゾンビと逃走者に分かれてやる銃撃戦です。銃撃戦とか言いながらゾンビ側は銃を持てません。\n" +
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarReloadCommand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarReloadCommand.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarReloadCommand.java
+new file mode 100644
+--- /dev/null	(revision 9c33624d80250521966c16d133cc605badae5739)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/commands/GunWarReloadCommand.java	(revision 9c33624d80250521966c16d133cc605badae5739)
+@@ -0,0 +1,63 @@
++package xyz.n7mn.dev.gunwar.commands;
++
++import com.google.common.base.Charsets;
++import org.bukkit.Bukkit;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++import org.bukkit.configuration.InvalidConfigurationException;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.configuration.file.YamlConfiguration;
++import org.bukkit.entity.Player;
++import xyz.n7mn.dev.api.data.RoleData;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.NanamiGunWar;
++import xyz.n7mn.dev.gunwar.util.PermissionInfo;
++import xyz.n7mn.dev.gunwar.util.Reference;
++
++import java.io.IOException;
++import java.io.InputStream;
++import java.io.InputStreamReader;
++import java.sql.SQLException;
++import java.util.Arrays;
++import java.util.List;
++
++public class GunWarReloadCommand extends Command {
++    public GunWarReloadCommand() {
++        super("gunwarreload", "銃撃戦プラグインの設定を再読み込みします", "Usage: /gunwarreload", Arrays.asList("gwreload"));
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
++        int required = GunWar.getConfig().getConfig().getInt("permission.command.gunwarreload", 1);
++        if(sender instanceof Player) {
++            Player p = (Player) sender;
++            PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
++            if(!info.isPassed()) {
++                p.sendMessage(Reference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
++                return true;
++            }
++        }
++        reload();
++        sender.sendMessage(Reference.PREFIX + " " + Reference.CHAT_COMMAND_RELOAD);
++        return true;
++    }
++
++    private void reload() {
++        FileConfiguration newConfig = YamlConfiguration.loadConfiguration(GunWar.getConfig().getConfigFile());
++
++        final InputStream defConfigStream = GunWar.getPlugin().getResource("config.yml");
++        if (defConfigStream == null) {
++            return;
++        }
++
++        newConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
++        try {
++            GunWar.getConfig().getConfig().load(GunWar.getConfig().getConfigFile());
++        } catch (IOException e) {
++            e.printStackTrace();
++        } catch (InvalidConfigurationException e) {
++            e.printStackTrace();
++        }
++    }
++
++}
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java
+--- a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java	(revision 98d7c2819ffdfa3e777a82cfb667704fafe0e7ee)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/GwUtilities.java	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
+@@ -3,12 +3,20 @@
+ import org.bukkit.Bukkit;
+ import org.bukkit.command.Command;
+ import org.bukkit.command.CommandMap;
++import org.bukkit.entity.Player;
+ import org.bukkit.plugin.Plugin;
++import xyz.n7mn.dev.api.data.RoleData;
++import xyz.n7mn.dev.gunwar.GunWar;
++import xyz.n7mn.dev.gunwar.NanamiGunWar;
+ import xyz.n7mn.dev.gunwar.event.GunWarCommandRegisterEvent;
+ 
++import java.sql.*;
++import java.util.Enumeration;
++import java.util.List;
++
+ public class GwUtilities implements Utilities {
+ 
+-    private Plugin plugin;
++    private final Plugin plugin;
+ 
+     public GwUtilities(Plugin plugin) {
+         this.plugin = plugin;
+@@ -36,4 +44,86 @@
+             if(!event.isCaught()) throw throwable;
+         }
+     }
++
++    @Override
++    public String getRoleNameById(int id) throws SQLException {
++        String result;
++        boolean found = false;
++        Enumeration<Driver> drivers = DriverManager.getDrivers();
++
++        while (drivers.hasMoreElements()){
++            Driver driver = drivers.nextElement();
++            if (driver.equals(new com.mysql.cj.jdbc.Driver())){
++                found = true;
++                break;
++            }
++        }
++
++        if (!found){
++            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
++        }
++
++        Connection con = DriverManager.getConnection("jdbc:mysql://" +
++                        GunWar.getConfig().getConfig().getString("mysql.host") + ":" +
++                        GunWar.getConfig().getConfig().getInt("mysql.port") + "/" +
++                        GunWar.getConfig().getConfig().getString("mysql.database")+
++                        GunWar.getConfig().getConfig().getString("mysql.option"),
++                GunWar.getConfig().getConfig().getString("mysql.username"),
++                GunWar.getConfig().getConfig().getString("mysql.password")
++        );
++        con.setAutoCommit(true);
++
++        PreparedStatement statement = con.prepareStatement("SELECT * FROM RoleRankList");
++        ResultSet set = statement.executeQuery();
++
++        StringBuffer sb = new StringBuffer();
++        while (set.next()){
++            if (set.getInt("Rank") == id){
++                sb.append(set.getString("Name"));
++                sb.append(",");
++            }
++        }
++        result = sb.toString();
++
++        set.close();
++        statement.close();
++        con.close();
++
++        return result;
++    }
++
++    @Override
++    public PermissionInfo testPermission(Player player, int required) {
++        try {
++            String requiredRole = GunWar.getUtilities().getRoleNameById(required);
++            String nowRole = "";
++            int now = 0;
++            List<RoleData> data = NanamiGunWar.role.getList();
++            for(RoleData d : data) {
++                if(d.getUUID() == player.getUniqueId()) {
++                    nowRole = d.getRoleName();
++                    now = d.getRoleRank();
++                }
++            }
++            boolean passed = true;
++            if(required > now) {
++                passed = false;
++            }
++            return new PermissionInfo(requiredRole, nowRole, passed);
++        } catch (SQLException e){
++            String requiredRole = "一般";
++            String nowRole = "一般";
++            boolean passed = true;
++            if(player.isOp()) {
++                nowRole = "OP持ち";
++            }
++            if (required >= 1) {
++                requiredRole = "OP持ち";
++                if(!player.isOp()) {
++                    passed = false;
++                }
++            }
++            return new PermissionInfo(requiredRole, nowRole, passed);
++        }
++    }
+ }
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/NanamiGunWarConfiguration.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/NanamiGunWarConfiguration.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/NanamiGunWarConfiguration.java
+new file mode 100644
+--- /dev/null	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/util/NanamiGunWarConfiguration.java	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
+@@ -0,0 +1,65 @@
++package xyz.n7mn.dev.gunwar.util;
++
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.configuration.file.YamlConfiguration;
++import org.bukkit.plugin.Plugin;
++
++import java.io.*;
++
++public class NanamiGunWarConfiguration implements GunWarConfiguration {
++
++    private Plugin plugin;
++    private FileConfiguration config;
++    private File configFile;
++
++    public NanamiGunWarConfiguration(Plugin plugin) {
++        this.plugin = plugin;
++    }
++
++    public void init() {
++        try {
++            String dataFolder = "plugins/" + plugin.getName();
++
++            File f = new File(dataFolder);
++            if (!f.exists()) {
++                f.mkdir();
++            }
++
++            configFile = new File(dataFolder + "/config.yml");
++            boolean b0 = true;
++            if (!configFile.exists()) {
++                configFile.createNewFile();
++                b0 = false;
++            }
++            if (!b0) {
++                try {
++                    InputStream inputStream = plugin.getResource("config.yml");
++                    File file = configFile;
++                    OutputStream out = new FileOutputStream(file);
++                    byte[] buf = new byte['?'];
++                    int length;
++                    while ((length = inputStream.read(buf)) > 0) {
++                        out.write(buf, 0, length);
++                    }
++                    out.close();
++                    inputStream.close();
++                } catch (Exception e) {
++                    e.printStackTrace();
++                }
++            }
++            config = YamlConfiguration.loadConfiguration(configFile);
++        } catch(IOException ex) {
++            ex.printStackTrace();
++        }
++    }
++
++    @Override
++    public FileConfiguration getConfig() {
++        return config;
++    }
++
++    @Override
++    public File getConfigFile() {
++        return configFile;
++    }
++}
+Index: GunWarPlugin/src/main/resources/config.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/resources/config.yml b/GunWarPlugin/src/main/resources/config.yml
+new file mode 100644
+--- /dev/null	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
++++ b/GunWarPlugin/src/main/resources/config.yml	(revision 01237a0aec6d24d9d4939d0d0e41b9b50428ede7)
+@@ -0,0 +1,18 @@
++# 銃撃戦プラグイン設定
++## 設定を変更したら必ず /gwreload を実行してください。
++## mysqlの設定を変更した場合はサーバーを再起動してください。
++
++#ここでの数値はななみ鯖のランクレベルです
++#接続ができなかった場合は、1以上の数値だとopになります。
++permission:
++  command:
++    aboutgunwar: 0
++    gunwarreload: 1
++
++mysql:
++  host: 'localhost'
++  port: 3306
++  database: ''
++  option: '?allowPublicKeyRetrieval=true&useSSL=false'
++  username: ''
++  password: ''
+\ No newline at end of file
+Index: GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ServerListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ServerListener.java b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ServerListener.java
+--- a/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ServerListener.java	(revision 37cc44d3841854933c55ddbc9447cef140618b9f)
++++ b/GunWarPlugin/src/main/java/xyz/n7mn/dev/gunwar/listeners/ServerListener.java	(revision ee67669cd40c954aa4a45f037680be01d6f5986b)
+@@ -9,7 +9,8 @@
+ 
+     @EventHandler
+     public void onRegisterCommand(GunWarCommandRegisterEvent e) {
+-        if(e.getCommand().getName().equalsIgnoreCase("aboutgunwar")) {
++        if(e.getCommand().getName().equalsIgnoreCase("aboutgunwar") ||
++                e.getCommand().getName().equalsIgnoreCase("gunwarreload")) {
+             if(e.getThrowable() != null) {
+                 e.catchThrowable();
+                 GunWar.getPlugin().getLogger().info("Failed to register command: /" + e.getCommand().getName());

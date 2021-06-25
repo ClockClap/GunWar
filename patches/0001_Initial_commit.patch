@@ -1,0 +1,12 @@
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/README.md b/README.md
+new file mode 100644
+--- /dev/null	(revision 4d79ec9c5f11df6c396e0cdfe6aebc268334e9e6)
++++ b/README.md	(revision 4d79ec9c5f11df6c396e0cdfe6aebc268334e9e6)
+@@ -0,0 +1,2 @@
++# GunWar
++銃撃戦
