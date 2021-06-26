@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.gunwar.entity.selector;
 
+import net.minecraft.server.v1_12_R1.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -11,6 +12,9 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import sun.plugin2.message.ProxyReplyMessage;
 
 import java.util.*;
 
@@ -25,7 +29,7 @@ public final class CraftTargetSelector implements TargetSelector {
         private GameMode mode;
         private CraftPlayer sender;
 
-        Builder(Type selectorType, CraftPlayer playerSender, Location source) {
+        Builder(@NotNull Type selectorType, CraftPlayer playerSender, Location source) {
             this.source = source;
             this.selectorType = selectorType;
             this.sender = playerSender;
@@ -53,7 +57,7 @@ public final class CraftTargetSelector implements TargetSelector {
         }
 
         @Override
-        public TargetSelector.Builder with(String key, Object value) {
+        public TargetSelector.Builder with(@NotNull String key, Object value) {
             if(value != null) {
                 if (key.equalsIgnoreCase("type") && value instanceof EntityType) {
                     this.type = (EntityType) value;
@@ -67,7 +71,7 @@ public final class CraftTargetSelector implements TargetSelector {
         }
 
         @Override
-        public TargetSelector.Builder fromString(String selector) {
+        public TargetSelector.Builder fromString(@NotNull String selector) {
             if(selector.length() >= 2 && selector.startsWith("@")) {
                 this.type = null;
                 this.name = null;
@@ -124,7 +128,7 @@ public final class CraftTargetSelector implements TargetSelector {
 
     }
 
-    static CraftTargetSelector.Builder builder(Type selectorType, CraftPlayer playerSender, Location source) {
+    static CraftTargetSelector.Builder builder(@NotNull Type selectorType, CraftPlayer playerSender, Location source) {
         return new CraftTargetSelector.Builder(selectorType, playerSender, source);
     }
 
@@ -134,7 +138,7 @@ public final class CraftTargetSelector implements TargetSelector {
     private final GameMode mode;
     private final List<CraftEntity> targets;
 
-    private CraftTargetSelector(Type selectorType, CraftPlayer playerSender, Location source, EntityType type, String name, GameMode mode) {
+    private CraftTargetSelector(@NotNull Type selectorType, @Nullable CraftPlayer playerSender, @Nullable Location source, @Nullable EntityType type, @Nullable String name, @Nullable GameMode mode) {
         this.selectorType = selectorType;
         this.type = type;
         this.name = name;
@@ -187,28 +191,34 @@ public final class CraftTargetSelector implements TargetSelector {
         }
     }
 
+
     @Override
+    @NotNull
     public Type getSelectorType() {
         return selectorType;
     }
 
     @Override
+    @Nullable
     public EntityType getType() {
         return type;
     }
 
     @Override
+    @Nullable
     public String getName() {
         return name;
     }
 
     @Override
+    @Nullable
     public GameMode getMode() {
         return mode;
     }
 
     @Override
     public String toString() {
+
         String type = (getType() == null ? "" : nonnull(getType().getName()));
         String name = nonnull(getName());
         int m_ = -1;

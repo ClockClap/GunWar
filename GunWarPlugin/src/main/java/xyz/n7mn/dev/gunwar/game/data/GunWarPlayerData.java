@@ -1,10 +1,9 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.server.v1_12_R1.BlockPosition;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldEvent;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
@@ -25,8 +24,11 @@ import xyz.n7mn.dev.gunwar.util.Angle;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
 import xyz.n7mn.dev.gunwar.util.Reference;
 
+import java.lang.reflect.Field;
 import java.sql.Ref;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
@@ -42,6 +44,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     private Location loc;
     private boolean zoom;
     private float zoomLevel;
+    private final Nanami nanami;
 
     public GunWarPlayerData(Player player) {
         super(player);
@@ -56,6 +59,167 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         this.dead = false;
         this.zoom = false;
         this.zoomLevel = 0F;
+        this.nanami = new Nanami() {
+            private final String oldName = player.getName();
+            private Map<Player, String> nameMap;
+
+            public String getOldName() {
+                return oldName;
+            }
+
+            public void setName(String name) {
+                nameMap.clear();
+                Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+                for(Player p : players) {
+                    nameMap.put(p, name);
+                }
+            }
+
+            public void setName(Player from, String name) {
+                nameMap.put(from, name);
+            }
+
+            public void setNameByMap(Map<Player, String> map) {
+                nameMap = map;
+            }
+
+            public String getName(Player player) {
+                return nameMap.get(player);
+            }
+
+            public void resetName(Player from) {
+                setName(from, getOldName());
+            }
+
+            public void resetName() {
+                setName(getOldName());
+            }
+
+            public boolean canSee(Player from) {
+                if (from.getWorld() != player.getWorld()) {
+                    return false;
+                }
+                World world = from.getWorld();
+                Location fromLoc = from.getEyeLocation();
+                Location to = player.getEyeLocation();
+                int x = to.getBlockX();
+                int y = to.getBlockY();
+                int z = to.getBlockZ();
+                int x_ = fromLoc.getBlockX();
+                int y_ = fromLoc.getBlockY();
+                int z_ = fromLoc.getBlockZ();
+                for (int traceDistance = 100; traceDistance >= 0; traceDistance--) {
+                    byte b0;
+                    if (x_ == x && y_ == y && z_ == z) {
+                        return true;
+                    }
+                    double x0 = 999.0D;
+                    double y0 = 999.0D;
+                    double z0 = 999.0D;
+                    double x1 = 999.0D;
+                    double y1 = 999.0D;
+                    double z1 = 999.0D;
+                    double dx = to.getX() - fromLoc.getX();
+                    double dy = to.getY() - fromLoc.getY();
+                    double dz = to.getZ() - fromLoc.getZ();
+                    if (x > x_) {
+                        x0 = x_ + 1.0D;
+                        x1 = (x0 - fromLoc.getX()) / dx;
+                    } else if (x < x_) {
+                        x0 = x_ + 0.0D;
+                        x1 = (x0 - fromLoc.getX()) / dx;
+                    }
+                    if (y > y_) {
+                        y0 = y_ + 1.0D;
+                        y1 = (y0 - fromLoc.getY()) / dy;
+                    } else if (y < y_) {
+                        y0 = y_ + 0.0D;
+                        y1 = (y0 - fromLoc.getY()) / dy;
+                    }
+                    if (z > z_) {
+                        z0 = z_ + 1.0D;
+                        z1 = (z0 - fromLoc.getZ()) / dz;
+                    } else if (z < z_) {
+                        z0 = z_ + 0.0D;
+                        z1 = (z0 - fromLoc.getZ()) / dz;
+                    }
+                    if (x1 < y1 && x1 < z1) {
+                        if (x > x_) {
+                            b0 = 4;
+                        } else {
+                            b0 = 5;
+                        }
+                        fromLoc.setX(x0);
+                        fromLoc.add(0.0D, dy * x1, dz * x1);
+                    } else if (y1 < z1) {
+                        if (y > y_) {
+                            b0 = 0;
+                        } else {
+                            b0 = 1;
+                        }
+                        fromLoc.add(dx * y1, 0.0D, dz * y1);
+                        fromLoc.setY(y0);
+                    } else {
+                        if (z > z_) {
+                            b0 = 2;
+                        } else {
+                            b0 = 3;
+                        }
+                        fromLoc.add(dx * z1, dy * z1, 0.0D);
+                        fromLoc.setZ(z0);
+                    }
+                    x_ = fromLoc.getBlockX();
+                    y_ = fromLoc.getBlockY();
+                    z_ = fromLoc.getBlockZ();
+                    if (b0 == 5) {
+                        x_--;
+                    }
+                    if (b0 == 1) {
+                        y_--;
+                    }
+                    if (b0 == 3) {
+                        z_--;
+                    }
+                    if (world.getBlockAt(x_, y_, z_).getType().isOccluding()) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            private void a(String name) {
+                GameProfile gameProfile = ((CraftPlayer) getPlayer()).getHandle().getProfile();
+                try {
+                    Field field = gameProfile.getClass().getDeclaredField("name");
+                    field.setAccessible(true);
+                    field.set(gameProfile, name);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public void show(Player player) {
+                if(nameMap.containsKey(player)) a(nameMap.get(player));
+                player.showPlayer(GunWar.getPlugin(), getPlayer());
+                a(oldName);
+            }
+
+            public void hide(Player player) {
+                player.hidePlayer(GunWar.getPlugin(), getPlayer());
+            }
+
+            public void updateName() {
+                Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+                for(Player p : players) {
+                    updateName(p);
+                }
+            }
+
+            public void updateName(Player player) {
+                hide(player);
+                show(player);
+            }
+        };
     }
 
     @Override
@@ -483,5 +647,10 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         } else {
             player.setWalkSpeed(0.2F);
         }
+    }
+
+    @Override
+    public Nanami nanami() {
+        return nanami;
     }
 }

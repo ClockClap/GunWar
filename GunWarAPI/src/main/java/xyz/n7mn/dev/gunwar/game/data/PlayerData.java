@@ -10,6 +10,8 @@ import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.util.Angle;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
 
+import java.util.Map;
+
 public interface PlayerData extends EntityData {
 
     public Player getPlayer();
@@ -59,5 +61,57 @@ public interface PlayerData extends EntityData {
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double far, Angle angle, double separate, GwGunItem gun);
 
     public void giveItem(GwItem item);
+
+    public class Nanami {
+        public String getOldName() {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public void setName(String name) {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public void setName(Player from, String name) {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public void setNameByMap(Map<Player, String> map) {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public void resetName() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public void resetName(Player from) {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public boolean canSee(Player from) {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public String getName(Player player) {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public void show(Player player) {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public void hide(Player player) {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public void updateName() {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public void updateName(Player player) {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+    }
+
+    public Nanami nanami();
 
 }

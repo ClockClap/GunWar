@@ -5,6 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -41,23 +43,27 @@ public interface TargetSelector {
 
         public TargetSelector.Builder withMode(GameMode mode);
 
-        public TargetSelector.Builder with(String key, Object value);
+        public TargetSelector.Builder with(@NotNull String key, Object value);
 
-        public TargetSelector.Builder fromString(String selector);
+        public TargetSelector.Builder fromString(@NotNull String selector);
 
         public TargetSelector build();
     }
 
-    public static TargetSelector.Builder builder(Type selectorType, Player sender, Location source) {
+    public static TargetSelector.Builder builder(@NotNull Type selectorType, Player sender, Location source) {
         return A1.a1.builder(selectorType, sender, source);
     }
 
+    @NotNull
     public Type getSelectorType();
 
+    @Nullable
     public EntityType getType();
 
+    @Nullable
     public String getName();
 
+    @Nullable
     public GameMode getMode();
 
     public String toString();
