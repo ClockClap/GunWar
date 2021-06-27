@@ -44,7 +44,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     private Location loc;
     private boolean zoom;
     private float zoomLevel;
-    private final Nanami nanami;
+    private final PlayerData.Nanami nanami;
 
     public GunWarPlayerData(Player player) {
         super(player);
@@ -59,7 +59,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         this.dead = false;
         this.zoom = false;
         this.zoomLevel = 0F;
-        this.nanami = new Nanami() {
+        this.nanami = new PlayerData.Nanami() {
             private final String oldName = player.getName();
             private Map<Player, String> nameMap;
 
@@ -95,7 +95,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                 setName(getOldName());
             }
 
-            public boolean canSee(Player from) {
+            public boolean canSee(LivingEntity from) {
                 if (from.getWorld() != player.getWorld()) {
                     return false;
                 }
@@ -198,12 +198,22 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                 }
             }
 
+            /**
+             * Shows player of current player data from player
+             *
+             * @param player player
+             */
             public void show(Player player) {
                 if(nameMap.containsKey(player)) a(nameMap.get(player));
                 player.showPlayer(GunWar.getPlugin(), getPlayer());
                 a(oldName);
             }
 
+            /**
+             * Hides player of current player data from player
+             *
+             * @param player player
+             */
             public void hide(Player player) {
                 player.hidePlayer(GunWar.getPlugin(), getPlayer());
             }
@@ -650,7 +660,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     }
 
     @Override
-    public Nanami nanami() {
+    public PlayerData.Nanami nanami() {
         return nanami;
     }
 }

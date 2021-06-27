@@ -11,7 +11,7 @@
         <groupId>xyz.n7mn.dev</groupId>
     </parent>
     <artifactId>gunwar-api</artifactId>
-    <version>1.0</version>
+    <version>1.12.2-R0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>GunWarAPI</name>

@@ -7,6 +7,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.n7mn.dev.gunwar.exception.InvalidTargetSelectorException;
+import xyz.n7mn.dev.gunwar.exception.TargetSelectorException;
 
 import java.util.Collection;
 
@@ -43,11 +45,13 @@ public interface TargetSelector {
 
         public TargetSelector.Builder withMode(GameMode mode);
 
+        public TargetSelector.Builder withCount(int count);
+
         public TargetSelector.Builder with(@NotNull String key, Object value);
 
         public TargetSelector.Builder fromString(@NotNull String selector);
 
-        public TargetSelector build();
+        public TargetSelector build() throws TargetSelectorException;
     }
 
     public static TargetSelector.Builder builder(@NotNull Type selectorType, Player sender, Location source) {
@@ -65,6 +69,8 @@ public interface TargetSelector {
 
     @Nullable
     public GameMode getMode();
+
+    public int getCount();
 
     public String toString();
 

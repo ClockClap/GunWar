@@ -1,12 +1,9 @@
 package xyz.n7mn.dev.gunwar.entity.selector;
 
-import net.minecraft.server.v1_12_R1.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
@@ -14,7 +11,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sun.plugin2.message.ProxyReplyMessage;
+import xyz.n7mn.dev.gunwar.exception.InvalidTargetSelectorException;
+import xyz.n7mn.dev.gunwar.exception.TargetSelectorException;
 
 import java.util.*;
 
@@ -28,6 +26,8 @@ public final class CraftTargetSelector implements TargetSelector {
         private String name;
         private GameMode mode;
         private CraftPlayer sender;
+        private int c;
+        private TargetSelectorException ex;
 
         Builder(@NotNull Type selectorType, CraftPlayer playerSender, Location source) {
             this.source = source;
@@ -36,6 +36,7 @@ public final class CraftTargetSelector implements TargetSelector {
             type = null;
             name = null;
             mode = null;
+            c = 1024;
         }
 
         @Override
@@ -57,6 +58,12 @@ public final class CraftTargetSelector implements TargetSelector {
         }
 
         @Override
+        public TargetSelector.Builder withCount(int count) {
+            this.c = count;
+            return this;
+        }
+
+        @Override
         public TargetSelector.Builder with(@NotNull String key, Object value) {
             if(value != null) {
                 if (key.equalsIgnoreCase("type") && value instanceof EntityType) {
@@ -65,6 +72,8 @@ public final class CraftTargetSelector implements TargetSelector {
                     this.name = (String) value;
                 } else if (key.equalsIgnoreCase("m") && value instanceof GameMode) {
                     this.mode = (GameMode) value;
+                } else if (key.equalsIgnoreCase("c") && value instanceof Integer) {
+                    this.c = (Integer) value;
                 }
             }
             return this;
@@ -115,15 +124,36 @@ public final class CraftTargetSelector implements TargetSelector {
                                 object = GameMode.getByValue(Integer.parseInt(value));
                             } catch (NumberFormatException ignored) { }
                         }
+                        if(key.equalsIgnoreCase("c")) {
+                            try {
+                                object = Integer.parseInt(value);
+                            } catch(NumberFormatException ignored) { }
+                        }
                         with(key, object);
                     }
                 }
+                return this;
             }
+            for(Player p : Bukkit.getOnlinePlayers()) {
+                if(selector.equalsIgnoreCase(p.getName())) {
+                    selectorType = Type.ALL_PLAYER;
+                    withCount(1);
+                    withName(p.getName());
+                    withMode(p.getGameMode());
+                    withType(EntityType.PLAYER);
+                    return this;
+                }
+            }
+            ex = new InvalidTargetSelectorException("invalid format");
             return this;
         }
+
         @Override
-        public TargetSelector build() {
-            return new CraftTargetSelector(selectorType, sender, source, type, name, mode);
+        public TargetSelector build() throws TargetSelectorException {
+            if(ex != null) {
+                throw ex;
+            }
+            return new CraftTargetSelector(selectorType, sender, source, type, name, mode, c);
         }
 
     }
@@ -136,15 +166,20 @@ public final class CraftTargetSelector implements TargetSelector {
     private final EntityType type;
     private final String name;
     private final GameMode mode;
+    private final int count;
     private final List<CraftEntity> targets;
 
-    private CraftTargetSelector(@NotNull Type selectorType, @Nullable CraftPlayer playerSender, @Nullable Location source, @Nullable EntityType type, @Nullable String name, @Nullable GameMode mode) {
+    private CraftTargetSelector(@NotNull Type selectorType, @Nullable CraftPlayer playerSender, @Nullable Location source,
+                                @Nullable EntityType type, @Nullable String name, @Nullable GameMode mode, int count) {
         this.selectorType = selectorType;
         this.type = type;
         this.name = name;
         this.mode = mode;
+        this.count = count;
         this.targets = new ArrayList<>();
+        int c = Math.abs(count);
         List<World> worlds = Bukkit.getWorlds();
+        List<Entity> entities = new ArrayList<>();
         if(source != null) {
             worlds.clear();
             worlds.add(source.getWorld());
@@ -152,37 +187,41 @@ public final class CraftTargetSelector implements TargetSelector {
         }
         double distance = -1;
         CraftEntity nearestEntity = null;
+        int i = 0;
         for(World world : worlds) {
-            Collection<Entity> entities = world.getEntities();
-            if(source != null && world == source.getWorld()) {
-                entities = source.getNearbyEntities(2500, 2500, 2500);
+            if (source != null && world == source.getWorld()) {
+                entities.addAll(source.getNearbyEntities(2500, 2500, 2500));
+                continue;
             }
-            for(Entity entity : entities) {
-                CraftEntity craftEntity = (CraftEntity) entity;
-                if(!(
-                        (type != null && craftEntity.getType() != type) ||
-                                (name != null && craftEntity.getCustomName().equalsIgnoreCase(name)) ||
-                                (mode != null && craftEntity instanceof CraftPlayer && ((CraftPlayer)craftEntity).getGameMode() != mode)
-                )) {
-                    if(this.selectorType == Type.ALL_ENTITY) {
+            entities.addAll(world.getEntities());
+        }
+        if(count < 0) Collections.reverse(entities);
+        for(Entity entity : entities) {
+            if(++i > c) break;
+            CraftEntity craftEntity = (CraftEntity) entity;
+            if(!(
+                    (type != null && craftEntity.getType() != type) ||
+                            (name != null && craftEntity.getCustomName().equalsIgnoreCase(name)) ||
+                            (mode != null && craftEntity instanceof CraftPlayer && ((CraftPlayer)craftEntity).getGameMode() != mode)
+            )) {
+                if(this.selectorType == Type.ALL_ENTITY) {
+                    this.targets.add(craftEntity);
+                } else if(this.selectorType == Type.ALL_PLAYER) {
+                    if(craftEntity instanceof CraftPlayer) {
                         this.targets.add(craftEntity);
-                    } else if(this.selectorType == Type.ALL_PLAYER) {
-                        if(craftEntity instanceof CraftPlayer) {
-                            this.targets.add(craftEntity);
-                        }
-                    } else if(this.selectorType == Type.NEAREST_PLAYER) {
-                        if(craftEntity instanceof CraftPlayer && source != null) {
-                            double d = Math.abs(Math.sqrt(Math.pow(source.getX() - craftEntity.getLocation().getX(), 2) +
-                                    Math.pow(source.getY() - craftEntity.getLocation().getY(), 2) +
-                                    Math.pow(source.getZ() - craftEntity.getLocation().getZ(), 2)));
-                            if(distance == -1 || distance > d) {
-                                distance = d;
-                                nearestEntity = craftEntity;
-                            }
-                        }
-                    } else if(this.selectorType == Type.ACTIVE_ENTITY) {
-                        if(playerSender != null) this.targets.add(playerSender);
                     }
+                } else if(this.selectorType == Type.NEAREST_PLAYER) {
+                    if(craftEntity instanceof CraftPlayer && source != null) {
+                        double d = Math.abs(Math.sqrt(Math.pow(source.getX() - craftEntity.getLocation().getX(), 2) +
+                                Math.pow(source.getY() - craftEntity.getLocation().getY(), 2) +
+                                Math.pow(source.getZ() - craftEntity.getLocation().getZ(), 2)));
+                        if(distance == -1 || distance > d) {
+                            distance = d;
+                            nearestEntity = craftEntity;
+                        }
+                    }
+                } else if(this.selectorType == Type.ACTIVE_ENTITY) {
+                    if(playerSender != null) this.targets.add(playerSender);
                 }
             }
         }
@@ -214,6 +253,11 @@ public final class CraftTargetSelector implements TargetSelector {
     @Nullable
     public GameMode getMode() {
         return mode;
+    }
+
+    @Override
+    public int getCount() {
+        return count;
     }
 
     @Override

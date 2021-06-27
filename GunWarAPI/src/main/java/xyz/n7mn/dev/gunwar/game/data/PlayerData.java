@@ -3,6 +3,7 @@ package xyz.n7mn.dev.gunwar.game.data;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import xyz.n7mn.dev.gunwar.entity.HitEntity;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
@@ -62,7 +63,7 @@ public interface PlayerData extends EntityData {
 
     public void giveItem(GwItem item);
 
-    public class Nanami {
+    public class Nanami extends EntityData.Nanami {
         public String getOldName() {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
@@ -87,7 +88,7 @@ public interface PlayerData extends EntityData {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
 
-        public boolean canSee(Player from) {
+        public boolean canSee(LivingEntity from) {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
 

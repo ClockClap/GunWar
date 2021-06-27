@@ -1,7 +1,9 @@
 package xyz.n7mn.dev.gunwar.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -16,6 +18,7 @@ import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 public class PlayerListener implements Listener {
 
@@ -52,6 +55,12 @@ public class PlayerListener implements Listener {
         watcher.startWatch10Ticks();
         data.setWatcher(watcher);
         ((GunWarGame) GunWar.getGame()).addPlayerData(data.getUniqueId(), data);
+        data.nanami().setName(ChatColor.GREEN + data.nanami().getOldName());
+        Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+        for(Player p : players) {
+            data.nanami().hide(p);
+            data.nanami().show(p);
+        }
     }
 
     @EventHandler
@@ -59,6 +68,7 @@ public class PlayerListener implements Listener {
         e.setQuitMessage(ChatColor.RED + "[-] " + ChatColor.GRAY + e.getPlayer().getName());
         PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
         if(data != null) {
+            data.nanami().resetName();
             PlayerWatcher watcher = data.getWatcher();
             watcher.stopWatch();
             watcher.stopWatch10Ticks();
