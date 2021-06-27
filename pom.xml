@@ -10,6 +10,8 @@
     <packaging>pom</packaging>
 
     <name>GunWarParent</name>
+    <url>https://github.com/nanami-network/GunWar</url>
+    <description>Parent project for all GunWar modules.</description>
 
     <modules>
         <module>GunWarAPI</module>
