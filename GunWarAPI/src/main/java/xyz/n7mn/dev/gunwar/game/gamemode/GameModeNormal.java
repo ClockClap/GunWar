@@ -2,7 +2,10 @@ package xyz.n7mn.dev.gunwar.game.gamemode;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.boss.BarColor;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.n7mn.dev.gunwar.GunWar;
+import xyz.n7mn.dev.gunwar.game.Game;
 
 public class GameModeNormal extends GwGameMode {
 

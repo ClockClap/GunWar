@@ -12,6 +12,7 @@ public final class Reference {
     public static final String CHAT_ABOUT = ChatColor.DARK_GRAY + "[詳細]";
     private static final String CHAT_COMMAND_PERMISSION_ERROR_PRIVATE = ChatColor.RED + "このコマンドを実行する権限がありません";
     public static final String CHAT_COMMAND_ERROR_INVALID_TARGET = ChatColor.RED + "無効なセレクターです。";
+    public static final String CHAT_COMMAND_ERROR_UNKNOWN_PLAYER = ChatColor.RED + "指定したプレイヤーが存在しないか、オンラインではありません。";
     public static final String CHAT_COMMAND_RELOAD = "設定を再読み込みしました";
     public static final String CHAT_COMMAND_GIVE_ITEM = ChatColor.GRAY + "%PLAYER% に %ITEM% を与えました";
 

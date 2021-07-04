@@ -1,11 +1,15 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
+import javafx.beans.property.adapter.ReadOnlyJavaBeanBooleanProperty;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Serializable {
@@ -69,7 +73,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
 
     @Override
     public int getInfectCount() {
-        return Math.max(0, deathCount);
+        return Math.max(0, infectCount);
     }
 
     @Override
@@ -111,22 +115,76 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
         objectOutput.close();
     }
 
+    @SuppressWarnings({"unchecked"})
     @Override
     public void load(File file) throws IOException, ClassNotFoundException {
         if(file.exists()) {
             FileInputStream input = new FileInputStream(file);
             ObjectInputStream objectInput = new ObjectInputStream(input);
             Object object = objectInput.readObject();
-            if (object instanceof PermanentlyPlayerData) {
-                PermanentlyPlayerData data = (PermanentlyPlayerData) object;
-                if (data.getUniqueId() == getUniqueId()) {
-                    this.coins = data.getCoins();
-                    if(data.getItemInProcessions() != null) this.items = data.getItemInProcessions();
-                    if(data.getGifts() != null) this.gifts = data.getGifts();
-                    if(data.getPlayCount() != null) this.playCount = data.getPlayCount();
-                    if(data.getKillCount() != null) this.killCount = data.getKillCount();
-                    this.deathCount = data.getDeathCount();
-                    this.infectCount = data.getInfectCount();
+            Class<?> clazz = object.getClass();
+            boolean passed = false;
+            for(Method m : clazz.getMethods()) {
+                try {
+                    if (m.getName().equalsIgnoreCase("getUniqueId")) {
+                        Object o = m.invoke(object);
+                        if (o instanceof UUID && o == getUniqueId()) {
+                            passed = true;
+                        }
+                    }
+                    if (passed) {
+                        if(m.getName().equalsIgnoreCase("getCoins")) {
+                            Object o = m.invoke(object);
+                            if (o instanceof Integer) {
+                                this.coins = (Integer) o;
+                            }
+                        }
+                        if(m.getName().equalsIgnoreCase("getItemInProcessions")) {
+                            Object o = m.invoke(object);
+                            if(o instanceof List) {
+                                try {
+                                    this.items = (List<GwItem>) o;
+                                } catch(Throwable ignored) { }
+                            }
+                        }
+                        if(m.getName().equalsIgnoreCase("getGifts")) {
+                            Object o = m.invoke(object);
+                            if(o instanceof List) {
+                                try {
+                                    this.gifts = (List<GwItem>) o;
+                                } catch(Throwable ignored) { }
+                            }
+                        }
+                        if(m.getName().equalsIgnoreCase("getPlayCount")) {
+                            Object o = m.invoke(object);
+                            if(o instanceof Map) {
+                                try {
+                                    this.playCount = (Map<GwGunItem, Integer>) o;
+                                } catch(Throwable ignored) { }
+                            }
+                        }
+                        if(m.getName().equalsIgnoreCase("getKillCount")) {
+                            Object o = m.invoke(object);
+                            if(o instanceof Map) {
+                                try {
+                                    this.killCount = (Map<GwGunItem, Integer>) o;
+                                } catch(Throwable ignored) { }
+                            }
+                        }
+                        if(m.getName().equalsIgnoreCase("getDeathCount")) {
+                            Object o = m.invoke(object);
+                            if(o instanceof Integer) {
+                                this.deathCount = (Integer) o;
+                            }
+                        }
+                        if(m.getName().equalsIgnoreCase("getInfectCount")) {
+                            Object o = m.invoke(object);
+                            if(o instanceof Integer) {
+                                this.infectCount = (Integer) o;
+                            }
+                        }
+                    }
+                } catch (InvocationTargetException | IllegalAccessException ignored) {
                 }
             }
             objectInput.close();
