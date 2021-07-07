@@ -8,6 +8,14 @@ public interface GunWarConfiguration {
 
     public FileConfiguration getConfig();
 
+    public FileConfiguration getPermissionSetting();
+
     public File getConfigFile();
+
+    public File getPermissionSettingFile();
+
+    public boolean isNanamiNetwork();
+
+    public void setNanamiNetwork(boolean nanamiNetwork);
 
 }

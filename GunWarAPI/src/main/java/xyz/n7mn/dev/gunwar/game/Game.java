@@ -39,6 +39,14 @@ public interface Game {
 
     public void start(Location loc);
 
+    public void start();
+
     public void stop();
+
+    public Location getLocation();
+
+    public void setLocation(Location location);
+
+    public int getStartingAt();
 
 }

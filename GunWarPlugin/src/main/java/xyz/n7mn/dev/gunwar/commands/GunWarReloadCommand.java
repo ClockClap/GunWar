@@ -14,12 +14,12 @@ import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.NanamiGunWar;
 import xyz.n7mn.dev.gunwar.game.data.GunWarEntityData;
 import xyz.n7mn.dev.gunwar.game.data.GunWarPlayerData;
+import xyz.n7mn.dev.gunwar.mysql.MySQLSettingBuilder;
+import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.PermissionInfo;
 import xyz.n7mn.dev.gunwar.util.Reference;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +31,7 @@ public class GunWarReloadCommand extends Command {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        int required = GunWar.getConfig().getConfig().getInt("permission.command.gunwarreload", 1);
+        int required = GunWar.getConfig().getPermissionSetting().getInt("commands.gunwarreload", 1);
         if(sender instanceof Player) {
             Player p = (Player) sender;
             PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
@@ -46,6 +46,11 @@ public class GunWarReloadCommand extends Command {
     }
 
     private void reload() {
+        reloadConfig();
+        reloadPerm();
+    }
+
+    private void reloadConfig() {
         FileConfiguration newConfig = YamlConfiguration.loadConfiguration(GunWar.getConfig().getConfigFile());
 
         final InputStream defConfigStream = GunWar.getPlugin().getResource("config.yml");
@@ -56,9 +61,58 @@ public class GunWarReloadCommand extends Command {
         newConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
         try {
             GunWar.getConfig().getConfig().load(GunWar.getConfig().getConfigFile());
-        } catch (IOException e) {
+        } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
+        }
+    }
+
+    private void reloadPerm() {
+        String path = GunWar.getConfig().getConfig()
+                .getString("permission-setting", ((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder() + "/permission/default.yml");
+        if(path.startsWith(":nanami-network:>")) {
+            if(MySQLSettingBuilder.isEnabled()) GunWar.getConfig().setNanamiNetwork(true);
+            path = path.substring(17);
+        } else {
+            GunWar.getConfig().setNanamiNetwork(false);
+        }
+        ((NanamiGunWarConfiguration) GunWar.getConfig()).setPermissionFile(new File(path));
+        File permissionFile = GunWar.getConfig().getPermissionSettingFile();
+        boolean b1 = true;
+        if (!permissionFile.exists()) {
+            try {
+                permissionFile.createNewFile();
+            } catch(IOException ex) {
+                return;
+            }
+            b1 = false;
+        }
+        if (!b1) {
+            try {
+                InputStream inputStream = GunWar.getPlugin().getResource("permission/default.yml");
+                File file = permissionFile;
+                OutputStream out = new FileOutputStream(file);
+                byte[] buf = new byte['?'];
+                int length;
+                while ((length = inputStream.read(buf)) > 0) {
+                    out.write(buf, 0, length);
+                }
+                out.close();
+                inputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        FileConfiguration newConfig = YamlConfiguration.loadConfiguration(GunWar.getConfig().getPermissionSettingFile());
+
+        final InputStream defConfigStream = GunWar.getPlugin().getResource("permission/default.yml");
+        if (defConfigStream == null) {
+            return;
+        }
+
+        newConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
+        try {
+            GunWar.getConfig().getPermissionSetting().load(GunWar.getConfig().getPermissionSettingFile());
+        } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }

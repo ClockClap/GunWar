@@ -4,12 +4,14 @@ import javafx.beans.property.adapter.ReadOnlyJavaBeanBooleanProperty;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
+import xyz.n7mn.dev.gunwar.mysql.GwMySQL;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 import java.util.*;
 
 public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Serializable {
@@ -102,24 +104,51 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
     }
 
     private void save(Object obj, File file) throws IOException {
-        if(!file.exists()) {
-            if(!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
+        File f = file;
+        try {
+            GwMySQL.insertPlayerData(getUniqueId(), f.getPath());
+            f = new File(GwMySQL.getPath(getUniqueId()));
+            if(!f.exists()) {
+                f = file;
+                GwMySQL.updatePlayerData(getUniqueId(), f.getPath());
             }
-            file.createNewFile();
+        } catch (SQLException ignored) {
         }
-        FileOutputStream output = new FileOutputStream(file);
+        if(!f.exists()) {
+            if(!f.getParentFile().exists()) {
+                f.getParentFile().mkdirs();
+            }
+            f.createNewFile();
+        }
+        FileOutputStream output = new FileOutputStream(f);
         ObjectOutputStream objectOutput = new ObjectOutputStream(output);
         objectOutput.writeObject(obj);
         objectOutput.flush();
         objectOutput.close();
+        if(file.getPath().equalsIgnoreCase(f.getPath())) {
+            FileOutputStream output_ = new FileOutputStream(file);
+            ObjectOutputStream objectOutput_ = new ObjectOutputStream(output_);
+            objectOutput_.writeObject(obj);
+            objectOutput_.flush();
+            objectOutput_.close();
+        }
     }
 
     @SuppressWarnings({"unchecked"})
     @Override
     public void load(File file) throws IOException, ClassNotFoundException {
-        if(file.exists()) {
-            FileInputStream input = new FileInputStream(file);
+        File f = file;
+        try {
+            GwMySQL.insertPlayerData(getUniqueId(), f.getPath());
+            f = new File(GwMySQL.getPath(getUniqueId()));
+            if(!f.exists()) {
+                f = file;
+                GwMySQL.updatePlayerData(getUniqueId(), f.getPath());
+            }
+        } catch (SQLException ignored) {
+        }
+        if(f.exists()) {
+            FileInputStream input = new FileInputStream(f);
             ObjectInputStream objectInput = new ObjectInputStream(input);
             Object object = objectInput.readObject();
             Class<?> clazz = object.getClass();

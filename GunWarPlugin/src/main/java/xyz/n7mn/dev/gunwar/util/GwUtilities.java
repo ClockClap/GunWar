@@ -54,8 +54,7 @@ public class GwUtilities implements Utilities {
 
     @Override
     public PermissionInfo testPermission(Player player, int required) {
-        int mode = GunWar.getConfig().getConfig().getInt("permission.mode", 0);
-        if(mode == 1) {
+        if(GunWar.getConfig().isNanamiNetwork()) {
             try {
                 String requiredRole = getRoleNameById(required);
                 String nowRole = "";

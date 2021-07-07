@@ -27,7 +27,7 @@ public class AboutGunWarCommand extends Command {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        int required = GunWar.getConfig().getConfig().getInt("permission.command.aboutgunwar", 0);
+        int required = GunWar.getConfig().getPermissionSetting().getInt("commands.aboutgunwar", 0);
         if(sender instanceof Player) {
             Player p = (Player) sender;
             PermissionInfo info = GunWar.getUtilities().testPermission(p, required);

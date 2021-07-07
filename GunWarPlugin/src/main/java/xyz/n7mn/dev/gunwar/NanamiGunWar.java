@@ -5,15 +5,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.n7mn.dev.api.Role;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.n7mn.dev.gunwar.commands.AboutGunWarCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarItemCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
+import xyz.n7mn.dev.gunwar.game.GameState;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
 import xyz.n7mn.dev.gunwar.game.data.GunWarPermanentlyPlayerData;
 import xyz.n7mn.dev.gunwar.game.data.GunWarPlayerData;
@@ -26,7 +25,6 @@ import xyz.n7mn.dev.gunwar.listeners.ItemListener;
 import xyz.n7mn.dev.gunwar.listeners.PlayerListener;
 import xyz.n7mn.dev.gunwar.listeners.ServerListener;
 import xyz.n7mn.dev.gunwar.mysql.GwMySQLPlayerDataUpdater;
-import xyz.n7mn.dev.gunwar.mysql.MySQLSettingBuilder;
 import xyz.n7mn.dev.gunwar.util.GwUtilities;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
@@ -43,6 +41,7 @@ public final class NanamiGunWar extends JavaPlugin {
     private NanamiGunWarConfiguration config;
     public static GwMySQLPlayerDataUpdater updater;
     private GunWarGame game;
+    private BukkitRunnable runnable;
 
     @Override
     public void onEnable() {
@@ -54,12 +53,6 @@ public final class NanamiGunWar extends JavaPlugin {
         config = new NanamiGunWarConfiguration(plugin);
         GunWar.config = config;
         config.init();
-        MySQLSettingBuilder.builder().withSetting(config.getConfig().getString("mysql.host", "localhost"),
-                config.getConfig().getInt("mysql.port", 3306),
-                config.getConfig().getString("mysql.database", ""),
-                config.getConfig().getString("mysql.option", "?allowPublicKeyRetrieval=true&useSSL=false"),
-                config.getConfig().getString("mysql.username", ""),
-                config.getConfig().getString("mysql.password", "")).build();
         GwGameModes.registerDefault();
         game = new GunWarGame(plugin);
         GunWar.game = game;
@@ -96,10 +89,11 @@ public final class NanamiGunWar extends JavaPlugin {
             data.setWatcher(watcher);
             ((GunWarGame) GunWar.getGame()).addPlayerData(data.getUniqueId(), data);
         }
+        startWatch();
     }
 
     private void bossBar() {
-        BossBar bar = Bukkit.getServer().createBossBar(Reference.BOSSBAR_WAITING, BarColor.RED, BarStyle.SOLID);
+        BossBar bar = Bukkit.getServer().createBossBar(Reference.BOSSBAR_WAITING, BarColor.WHITE, BarStyle.SOLID);
         bar.setVisible(true);
         bar.setProgress(1.0);
         game.setBar(bar);
@@ -118,9 +112,30 @@ public final class NanamiGunWar extends JavaPlugin {
         utilities.registerCommand(plugin.getName(), new GunWarItemCommand());
     }
 
+    private void startWatch() {
+        runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                int currentPlayers = Bukkit.getOnlinePlayers().size();
+                int requiredPlayers = GunWar.getConfig().getConfig().getInt("game.required-players", 10);
+                if(GunWar.getGame().getState() == GameState.WAITING && requiredPlayers <= currentPlayers) {
+                    GunWar.getGame().start();
+                }
+            }
+        };
+        runnable.runTaskTimer(this, 0, 5);
+    }
+
+    private void cancelWatch() {
+        if(runnable != null && !runnable.isCancelled()) {
+            runnable.cancel();
+        }
+    }
+
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        cancelWatch();
         for(Player p : Bukkit.getOnlinePlayers()) {
             PlayerData data = GunWar.getGame().getPlayerData(p);
             if(data != null) {

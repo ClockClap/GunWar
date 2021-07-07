@@ -1,9 +1,6 @@
 package xyz.n7mn.dev.gunwar.game;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
@@ -18,6 +15,7 @@ import xyz.n7mn.dev.gunwar.game.data.PlayerData;
 import xyz.n7mn.dev.gunwar.game.gamemode.GwGameMode;
 import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
 import xyz.n7mn.dev.gunwar.util.Reference;
+import xyz.n7mn.dev.gunwar.util.world.Worlds;
 
 import java.util.*;
 
@@ -30,6 +28,8 @@ public class GunWarGame implements Game {
     private GwGameMode gameMode;
     private List<ItemData> itemDataList;
     private BossBar bar;
+    private Location loc;
+    private int startingAt;
 
     public GunWarGame(Plugin plugin) {
         this.plugin = plugin;
@@ -38,6 +38,12 @@ public class GunWarGame implements Game {
         this.permanentlyPlayerDataMap = new HashMap<>();
         this.gameMode = GwGameModes.NORMAL;
         this.itemDataList = new ArrayList<>();
+        World world = Worlds.getWorld(GunWar.getConfig().getConfig().getString("game.startloc.world", "world"));
+        double x = GunWar.getConfig().getConfig().getDouble("game.startloc.x", 0D);
+        double y = GunWar.getConfig().getConfig().getDouble("game.startloc.y", 0D);
+        double z = GunWar.getConfig().getConfig().getDouble("game.startloc.z", 0D);
+        this.loc = new Location(world, x, y, z, 0F, 0F);
+        this.startingAt = GunWar.getConfig().getConfig().getInt("game.prepare", 10);
     }
 
     @Override
@@ -125,24 +131,23 @@ public class GunWarGame implements Game {
 
     @Override
     public void start(Location loc) {
-        int prepare = GunWar.getConfig().getConfig().getInt("", 10);
+        int prepare = GunWar.getConfig().getConfig().getInt("game.prepare", 10);
         setState(GameState.STARTING);
-        final int[] t = { prepare + 1 };
         getBar().setColor(BarColor.YELLOW);
         new BukkitRunnable() {
             @Override
             public void run() {
-                t[0]--;
-                if(t[0] <= 0) {
+                if(startingAt <= 0) {
                     this.cancel();
                     return;
                 }
-                getBar().setTitle(Reference.BOSSBAR_STARTING.replaceAll("%SECOND%", Integer.toString(t[0])));
-                if(t[0] <= 5) {
+                getBar().setTitle(Reference.BOSSBAR_STARTING.replaceAll("%SECOND%", Integer.toString(startingAt)));
+                if(startingAt <= 5) {
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
                     }
                 }
+                startingAt--;
             }
         }.runTaskTimer(GunWar.getPlugin(), 0, 20);
         new BukkitRunnable() {
@@ -150,13 +155,33 @@ public class GunWarGame implements Game {
             public void run() {
                 setState(GameState.PLAYING);
                 getGameMode().start(loc);
+                startingAt = GunWar.getConfig().getConfig().getInt("game.prepare", 10);
             }
         }.runTaskLater(GunWar.getPlugin(), prepare);
+    }
+
+    @Override
+    public void start() {
+        start(loc);
     }
 
     @Override
     public void stop() {
         setState(GameState.WAITING);
         getGameMode().stop();
+    }
+
+    @Override
+    public Location getLocation() {
+        return loc;
+    }
+
+    @Override
+    public void setLocation(Location location) {
+        loc = location;
+    }
+
+    public int getStartingAt() {
+        return startingAt;
     }
 }

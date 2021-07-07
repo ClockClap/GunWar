@@ -20,19 +20,19 @@ public final class Worlds {
     public static final double DEFAULT_MAX_COORDINATE_Y = 0x100;
     public static final double DEFAULT_MAX_COORDINATE_Z = 0x1C9C380;
 
-    public World getWorld(String name) {
+    public static World getWorld(String name) {
         return Bukkit.getWorld(name);
     }
 
-    public World getWorld(UUID id) {
+    public static World getWorld(UUID id) {
         return Bukkit.getWorld(id);
     }
 
-    public List<World> getWorlds() {
+    public static List<World> getWorlds() {
         return Bukkit.getWorlds();
     }
 
-    public List<World> getWorldsByStrings(Collection<String> strings) {
+    public static List<World> getWorldsByStrings(Collection<String> strings) {
         List<World> worlds = new ArrayList<>();
         for(String str : strings) {
             World w = Bukkit.getWorld(str);
@@ -41,7 +41,7 @@ public final class Worlds {
         return worlds;
     }
 
-    public List<World> getWorldsByIdentifiers(Collection<UUID> ids) {
+    public static List<World> getWorldsByIdentifiers(Collection<UUID> ids) {
         List<World> worlds = new ArrayList<>();
         for(UUID id : ids) {
             World w = Bukkit.getWorld(id);
@@ -50,14 +50,14 @@ public final class Worlds {
         return worlds;
     }
 
-    public long getSeed(World world) {
+    public static long getSeed(World world) {
         if(world != null) {
             return world.getSeed();
         }
         return 0;
     }
 
-    public long getSeed(UUID world) {
+    public static long getSeed(UUID world) {
         World w = Bukkit.getWorld(world);
         if(w != null) {
             return w.getSeed();
@@ -65,7 +65,7 @@ public final class Worlds {
         return 0;
     }
 
-    public long getSeed(String world) {
+    public static long getSeed(String world) {
         World w = Bukkit.getWorld(world);
         if(w != null) {
             return w.getSeed();
@@ -73,7 +73,7 @@ public final class Worlds {
         return 0;
     }
 
-    public World create(WorldCreator worldCreator) {
+    public static World create(WorldCreator worldCreator) {
         return Bukkit.createWorld(worldCreator);
     }
 

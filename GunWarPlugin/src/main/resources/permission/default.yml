@@ -1,0 +1,6 @@
+# 権限設定
+# /gwreload をすると適応されます。
+commands:
+  aboutgunwar: 0
+  gunwaritem: 1
+  gunwarreload: 1

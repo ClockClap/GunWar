@@ -6,25 +6,15 @@
 discord: 'https://discord.gg/w2jFt4vA5A'
 
 # 権限設定
-## ここでの数値はななみ鯖のランクレベルです。
-## 接続ができなかった場合は、モード1の場合でも強制的にモード0の変更されます。
-permission:
-  # モード
-  # 0 - 通常モード。1以上にするとその動作はop限定になります。
-  # 1 - ななみ鯖モード。ななみ鯖のランクレベルを指定します。
-  # これら以外の数値を入れるとデフォルト値が適用されます。
-  mode: 0
-  # コマンドの権限
-  command:
-    aboutgunwar: 0
-    gunwarreload: 1
+## 頭に :nanami-network:> と入力するとななみ鯖の権限システムになります。
+## MySQLに接続ができなかった場合は、:nanami-networkになっていた場合でも強制的にデフォルト値に変更されます。
+permission-setting: 'plugins/GunWar/permission/default.yml'
 
-# /gwconf で設定を確認できます。
 # ゲームの設定
 game:
   # 自動でゲームを開始するかどうか。
-  # デフォルトでは有効。
-  auto-start: true
+  # デフォルトでは無効。
+  auto-start: false
   # プレイするゲームモード。
   # NORMAL - 通常モード。チーム戦と個人戦がある
   # ZOMBIE_ESCAPE - ゾンビエスケープ。時間制限以内に逃走者を全員感染させるか、救助場所 (セーフエリア) にゾンビが入るとゾンビの勝利。
@@ -33,9 +23,15 @@ game:
   # 開始人数
   # デフォルト: 10人
   ## この人数に達すると自動的にゲームが開始されます。(無効化可能)
-  requires-players: 10
+  required-players: 10
   # 準備時間 (秒)
   prepare: 10
+  # デフォルト開始位置 (/setstartlocにて座標設定がされてない状態で、/startlocで座標指定がない場合または自動開始モードの場合に適用される)
+  startloc:
+    world: 'world'
+    x: 0
+    y: 0
+    z: 0
   # ゾンビエスケープの設定
   zombie-escape:
     # ゾンビの割合 (10人いるうち何人選ばれるか)
@@ -60,6 +56,8 @@ mysql:
   option: '?allowPublicKeyRetrieval=true&useSSL=false'
   password: ''
 
-# /gwconf で設定を確認できます。
 # デバッグモード
 debug: false
+
+# ここは変更しないでください
+version: '1.7'
