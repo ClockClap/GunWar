@@ -3,8 +3,16 @@ package xyz.n7mn.dev.gunwar.util;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import xyz.n7mn.dev.gunwar.mysql.MySQLSettingBuilder;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 
 public class NanamiGunWarConfiguration implements GunWarConfiguration {
@@ -13,8 +21,12 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
     private File dataFolder;
     private FileConfiguration config;
     private FileConfiguration permissionSetting;
+    private FileConfiguration lang;
+    private Document detailConfig;
     private File configFile;
     private File permissionFile;
+    private File detailConfigFile;
+    private File langFile;
     private boolean nanamiNetwork;
 
     public NanamiGunWarConfiguration(Plugin plugin) {
@@ -26,27 +38,134 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
         try {
             String dataFolder = "plugins/" + plugin.getName();
 
-            File f = new File(dataFolder);
-            if (!f.exists()) {
-                f.mkdir();
+            File pluginFile = new File(dataFolder);
+            if (!pluginFile.exists()) {
+                pluginFile.mkdir();
             }
-            this.dataFolder = f;
-            File f_ = new File(dataFolder + "/players");
-            if(!f_.exists()) {
-                f_.mkdir();
+            this.dataFolder = pluginFile;
+            File playerDataFile = new File(dataFolder + "/players");
+            if(!playerDataFile.exists()) {
+                playerDataFile.mkdir();
             }
-            File f__ = new File(dataFolder + "/permission");
-            if(!f__.exists()) {
-                f__.mkdir();
+            File permissionsFolder = new File(dataFolder + "/permission");
+            if(!permissionsFolder.exists()) {
+                permissionsFolder.mkdir();
+            }
+            File cacheFolder = new File(dataFolder + "/cache");
+            if(!cacheFolder.exists()) {
+                cacheFolder.mkdir();
+            }
+            File langFolder = new File(dataFolder + "/lang");
+            if(!langFolder.exists()) {
+                langFolder.mkdir();
             }
 
+            detailConfigFile = new File(dataFolder + "/detail_config.xml");
+            if(!detailConfigFile.exists()) {
+                detailConfigFile.createNewFile();
+                try {
+                    InputStream inputStream = plugin.getResource("detail_config.xml");
+                    File file = detailConfigFile;
+                    OutputStream out = new FileOutputStream(file);
+                    byte[] buf = new byte['?'];
+                    int length;
+                    while ((length = inputStream.read(buf)) > 0) {
+                        out.write(buf, 0, length);
+                    }
+                    out.close();
+                    inputStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                DocumentBuilder db = dbf.newDocumentBuilder();
+                detailConfig = db.parse(detailConfigFile);
+            } catch(ParserConfigurationException | SAXException throwables) {
+                throwables.printStackTrace();
+            }
+            if(detailConfig != null) {
+                Element element = detailConfig.getDocumentElement();
+                if(element != null && element.getNodeName().equalsIgnoreCase("config")) {
+                    NodeList nodeList1 = element.getChildNodes();
+                    for(int i = 0; i < nodeList1.getLength(); i++) {
+                        Node node1 = nodeList1.item(i);
+                        if(node1.getNodeName().equalsIgnoreCase("chat")) {
+                            NodeList nodeList2 = node1.getChildNodes();
+                            for(int j = 0; j < nodeList2.getLength(); j++) {
+                                Node node2 = nodeList2.item(j);
+                                if(node2.getNodeName().equalsIgnoreCase("lang")) {
+                                    String langPath = node2.getTextContent();
+                                    if(langPath != null && !langPath.isEmpty()) langFile = new File(langPath);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            if(langFile != null) {
+                if(!langFile.exists()) {
+                    langFile.createNewFile();
+                    if(langFile.getName().equalsIgnoreCase("ja_jp.yml")) {
+                        try {
+                            InputStream inputStream = plugin.getResource("lang/ja_jp.yml");
+                            File file = langFile;
+                            OutputStream out = new FileOutputStream(file);
+                            byte[] buf = new byte['?'];
+                            int length;
+                            while ((length = inputStream.read(buf)) > 0) {
+                                out.write(buf, 0, length);
+                            }
+                            out.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            InputStream inputStream = plugin.getResource("lang/en_us.yml");
+                            File file = langFile;
+                            OutputStream out = new FileOutputStream(file);
+                            byte[] buf = new byte['?'];
+                            int length;
+                            while ((length = inputStream.read(buf)) > 0) {
+                                out.write(buf, 0, length);
+                            }
+                            out.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } else {
+                langFile = new File(dataFolder + "/lang/ja_jp.yml");
+                if(!langFile.exists()) {
+                    langFile.createNewFile();
+                    try {
+                        InputStream inputStream = plugin.getResource("lang/ja_jp.yml");
+                        File file = langFile;
+                        OutputStream out = new FileOutputStream(file);
+                        byte[] buf = new byte['?'];
+                        int length;
+                        while ((length = inputStream.read(buf)) > 0) {
+                            out.write(buf, 0, length);
+                        }
+                        out.close();
+                        inputStream.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            lang = YamlConfiguration.loadConfiguration(langFile);
+
             configFile = new File(dataFolder + "/config.yml");
-            boolean b0 = true;
             if (!configFile.exists()) {
                 configFile.createNewFile();
-                b0 = false;
-            }
-            if (!b0) {
                 try {
                     InputStream inputStream = plugin.getResource("config.yml");
                     File file = configFile;
@@ -80,12 +199,8 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
             }
 
             permissionFile = new File(ppath);
-            boolean b1 = true;
             if (!permissionFile.exists()) {
                 permissionFile.createNewFile();
-                b1 = false;
-            }
-            if (!b1) {
                 try {
                     InputStream inputStream = plugin.getResource("permission/default.yml");
                     File file = permissionFile;
@@ -118,6 +233,16 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
     }
 
     @Override
+    public Document getDetailConfig() {
+        return detailConfig;
+    }
+
+    @Override
+    public FileConfiguration getLang() {
+        return lang;
+    }
+
+    @Override
     public File getConfigFile() {
         return configFile;
     }
@@ -125,6 +250,16 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
     @Override
     public File getPermissionSettingFile() {
         return permissionFile;
+    }
+
+    @Override
+    public File getDetailConfigFile() {
+        return detailConfigFile;
+    }
+
+    @Override
+    public File getLangFile() {
+        return langFile;
     }
 
     public void setPermissionFile(File file) {

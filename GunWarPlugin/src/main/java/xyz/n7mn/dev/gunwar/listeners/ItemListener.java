@@ -15,6 +15,7 @@ import xyz.n7mn.dev.gunwar.game.data.GunData;
 import xyz.n7mn.dev.gunwar.game.data.ItemData;
 import xyz.n7mn.dev.gunwar.game.data.PlayerData;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
+import xyz.n7mn.dev.gunwar.item.GwKnifeItem;
 
 import java.util.HashMap;
 import java.util.UUID;

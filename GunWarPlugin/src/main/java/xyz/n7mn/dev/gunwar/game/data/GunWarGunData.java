@@ -143,7 +143,7 @@ public class GunWarGunData extends GunWarItemData implements GunData {
 
     public void updateName() {
         ItemMeta meta = getItem().getItemMeta();
-        meta.setDisplayName(ChatColor.GRAY + getGwItem().getDisplayName() + " " + (reloading ? "▫" : "▪") + " " + (reloading ? ChatColor.DARK_GRAY : ChatColor.WHITE) + "«" + ammo + "»");
+        meta.setDisplayName(ChatColor.GRAY + getGwItem().getDisplayName() + " " + (reloading ? "▫" : "▪") + " " + (reloading ? ChatColor.DARK_GRAY : ChatColor.GRAY) + "«" + ammo + "»");
         getItem().setItemMeta(meta);
         List<ItemStack> items = Arrays.asList(getOwner().getInventory().getContents());
         for(ItemStack i : items) {

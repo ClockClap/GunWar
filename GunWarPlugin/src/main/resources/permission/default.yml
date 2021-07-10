@@ -1,6 +1,9 @@
-# 権限設定
-# /gwreload をすると適応されます。
+# detail permission setting
+# execute /gwreload command to apply setting
+
+# normal permission mode:
+# 0 - all
+# 1 - op
 commands:
-  aboutgunwar: 0
   gunwaritem: 1
   gunwarreload: 1

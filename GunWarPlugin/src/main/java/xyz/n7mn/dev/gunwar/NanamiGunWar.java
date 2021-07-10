@@ -24,6 +24,7 @@ import xyz.n7mn.dev.gunwar.listeners.DamageListener;
 import xyz.n7mn.dev.gunwar.listeners.ItemListener;
 import xyz.n7mn.dev.gunwar.listeners.PlayerListener;
 import xyz.n7mn.dev.gunwar.listeners.ServerListener;
+import xyz.n7mn.dev.gunwar.mysql.GwMySQLDataPath;
 import xyz.n7mn.dev.gunwar.mysql.GwMySQLPlayerDataUpdater;
 import xyz.n7mn.dev.gunwar.util.GwUtilities;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
@@ -107,7 +108,6 @@ public final class NanamiGunWar extends JavaPlugin {
     }
 
     private void registerCommands() {
-        utilities.registerCommand(plugin.getName(), new AboutGunWarCommand());
         utilities.registerCommand(plugin.getName(), new GunWarReloadCommand());
         utilities.registerCommand(plugin.getName(), new GunWarItemCommand());
     }

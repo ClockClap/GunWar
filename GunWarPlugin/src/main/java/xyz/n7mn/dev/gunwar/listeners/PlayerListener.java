@@ -13,6 +13,7 @@ import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.NanamiGunWar;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
 import xyz.n7mn.dev.gunwar.game.data.*;
+import xyz.n7mn.dev.gunwar.mysql.GwMySQLDataPath;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
 
@@ -83,6 +84,7 @@ public class PlayerListener implements Listener {
             }
             ((GunWarGame) GunWar.getGame()).removePermanentlyPlayerData(e.getPlayer().getUniqueId());
         }
+        GwMySQLDataPath.delete(e.getPlayer().getUniqueId());
     }
 
 }

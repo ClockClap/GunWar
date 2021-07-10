@@ -37,7 +37,7 @@ public class AboutGunWarCommand extends Command {
             }
         }
         sender.sendMessage(ChatColor.DARK_GREEN + "=-=-=- ななみ銃撃戦 v" + GunWar.getPlugin().getDescription().getVersion() + " -=-=-=\n" +
-                ChatColor.GRAY + "説明: " + ChatColor.RESET + "ゾンビと逃走者に分かれてやる銃撃戦です。銃撃戦とか言いながらゾンビ側は銃を持てません。\n" +
+                ChatColor.GRAY + "説明: " + ChatColor.RESET + "...\n" +
                 ChatColor.GRAY + "作者: " + ChatColor.RESET + "ClockClap");
         return true;
     }

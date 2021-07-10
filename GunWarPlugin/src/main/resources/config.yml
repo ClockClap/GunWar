@@ -1,54 +1,56 @@
-# 銃撃戦プラグイン設定
-## 設定を変更したら必ず /gwreload を実行してください。
-## mysqlの設定を変更した場合はサーバーを再起動してください。
+# GunWar plugin config
+## PLEASE EXECUTE /gwreload COMMAND AFTER UPDATING CONFIG
+## IF YOU CHANGE MySQL SETTING, YOU NEED TO RESTART THE SERVER
 
-# Discord招待リンク
+# Discord inviting url
 discord: 'https://discord.gg/w2jFt4vA5A'
 
-# 権限設定
-## 頭に :nanami-network:> と入力するとななみ鯖の権限システムになります。
-## MySQLに接続ができなかった場合は、:nanami-networkになっていた場合でも強制的にデフォルト値に変更されます。
+# permission setting
+## if you enter :nanami-network:> at the beginning, permission mode will move to nanami-network permission system mode
+## if the database cannot be connected, permission mode will move to normal permission system mode automatically
 permission-setting: 'plugins/GunWar/permission/default.yml'
 
-# ゲームの設定
+# setting for gun war gaming
 game:
-  # 自動でゲームを開始するかどうか。
-  # デフォルトでは無効。
+  # automatically start
+  # this is disabled by default
   auto-start: false
-  # プレイするゲームモード。
-  # NORMAL - 通常モード。チーム戦と個人戦がある
-  # ZOMBIE_ESCAPE - ゾンビエスケープ。時間制限以内に逃走者を全員感染させるか、救助場所 (セーフエリア) にゾンビが入るとゾンビの勝利。
-  # CASTLE_SIEGE - 攻城戦モード。守り側の大将を倒すと勝利。
+  # game mode to play
+  # NORMAL - normal mode. there are 2 modes, team and solo.
+  # ZOMBIE_ESCAPE - zombie escape mode. zombies win if all survivors are infected or zombies enter the safe area within the time limit
+  # CASTLE_SIEGE - castle siege mode. attackers win if the king of defenders team died.
   gamemode: 'normal'
-  # 開始人数
-  # デフォルト: 10人
-  ## この人数に達すると自動的にゲームが開始されます。(無効化可能)
+  # players count to start game
+  # DEFAULT: 10 players
+  ## if auto-start is enabled, the game will be started automatically when players count reaches this value
   required-players: 10
-  # 準備時間 (秒)
+  # prepare time (sec)
   prepare: 10
-  # デフォルト開始位置 (/setstartlocにて座標設定がされてない状態で、/startlocで座標指定がない場合または自動開始モードの場合に適用される)
+  # default starting location
+  # (applies these values if the starting location is not specified using /setstartloc
+  # and there are no location specified when the game started with /startloc command or if automatically starting mode is enabled)
   startloc:
     world: 'world'
     x: 0
     y: 0
     z: 0
-  # ゾンビエスケープの設定
+  # setting for zombie escape
   zombie-escape:
-    # ゾンビの割合 (10人いるうち何人選ばれるか)
+    # zombie percentage (out of 10)
     zombies: 3
-    # ゾンビが選ばれるまでの時間 (秒)
+    # time to choose zombies (sec)
     choose-zombies: 10
-    # 救助が来るまでの時間 (制限時間 - 秒)
-    game-time: 600
-  # 通常モードの設定
+    # gaming time after arriving safe area (time limit - sec)
+    game-time: 180
+  # setting for normal mode
   normal:
-    # チーム戦の制限時間 - 秒
+    # time limit for team mode - sec
     game-time-team: 900
-    # 個人戦の制限時間 - 秒
+    # tiem limit for solo mode - sec
     game-time-solo: 900
 
 
-# データベースの設定
+# setting for database
 mysql:
   host: 'localhost'
   port: 3306
@@ -56,8 +58,8 @@ mysql:
   option: '?allowPublicKeyRetrieval=true&useSSL=false'
   password: ''
 
-# デバッグモード
+# debugging mode
 debug: false
 
-# ここは変更しないでください
-version: '1.7'
+# DO NOT CHANGE HERE
+version: '2.1'

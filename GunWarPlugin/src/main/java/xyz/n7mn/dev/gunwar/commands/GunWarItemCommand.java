@@ -4,11 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import xyz.n7mn.dev.gunwar.GunWar;
-import xyz.n7mn.dev.gunwar.exception.InvalidTargetSelectorException;
-import xyz.n7mn.dev.gunwar.exception.TargetSelectorException;
 import xyz.n7mn.dev.gunwar.game.data.PlayerData;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.item.GwItems;
@@ -17,7 +14,6 @@ import xyz.n7mn.dev.gunwar.util.Reference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class GunWarItemCommand extends Command {
@@ -40,20 +36,20 @@ public class GunWarItemCommand extends Command {
         if(args.length >= 2) {
             Player p = Bukkit.getPlayer(args[0]);
             if(p == null) {
-                sender.sendMessage(Reference.PREFIX + " " + Reference.CHAT_COMMAND_ERROR_UNKNOWN_PLAYER);
+                sender.sendMessage(Reference.CHAT_PREFIX + " " + Reference.CHAT_COMMAND_ERROR_UNKNOWN_PLAYER);
                 return true;
             }
             PlayerData data = GunWar.getGame().getPlayerData(p);
             for (GwItem i : GwItems.getRegisteredItems()) {
                 if (i.getName().equalsIgnoreCase(args[1])) {
                     data.giveItem(i);
-                    sender.sendMessage(Reference.PREFIX + " " + Reference.CHAT_COMMAND_GIVE_ITEM
+                    sender.sendMessage(Reference.CHAT_PREFIX + " " + Reference.CHAT_COMMAND_GIVE_ITEM
                             .replaceAll("%PLAYER%", p.getName()).replaceAll("%ITEM%", i.getName()));
                     return true;
                 }
             }
         }
-        sender.sendMessage(Reference.PREFIX + " " + ChatColor.GRAY + getUsage());
+        sender.sendMessage(Reference.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
         return true;
     }
 
