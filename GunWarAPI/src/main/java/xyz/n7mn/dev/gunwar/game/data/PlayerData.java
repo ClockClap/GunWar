@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import xyz.n7mn.dev.gunwar.entity.HitEntity;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
+import xyz.n7mn.dev.gunwar.item.GwKnifeItem;
 import xyz.n7mn.dev.gunwar.util.Angle;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
 
@@ -60,6 +61,8 @@ public interface PlayerData extends EntityData {
                                       double separateX, double separateY, double separateZ, GwGunItem gun);
 
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double far, Angle angle, double separate, GwGunItem gun);
+
+    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double far, double separate, GwKnifeItem gun);
 
     public void giveItem(GwItem item);
 

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config version="4.5.21"> <!-- DO NOT CHANGE VERSION -->
+<config version="4.6.30"> <!-- DO NOT CHANGE VERSION -->
     <!-- IF YOU UPDATED DETAIL CONFIG, YOU NEED TO RELOAD SERVER -->
     <!--
     if you want to color texts, you can use this
     %{color.COLOR_CODE}
-    ex. %{color.a} (=green)
-        %{color.l} (=bold)
+    ex. %{color}a (=green)
+        %{color}l (=bold)
     -->
 
     <item>
         <gun_name_format> <!-- %i: gun name, %a: ammo -->
-            <general>%{color.7}%i ▪ «%a»</general>
-            <reloading>%{color.7}%i ▫ %{color.8}«%a»</reloading>
+            <general>%{color}7%i ▪ «%a»</general>
+            <reloading>%{color}7%i ▫ %{color}8«%a»</reloading>
         </gun_name_format>
     </item>
 
@@ -20,10 +20,14 @@
         <japanize>
             <enabled>true</enabled>
             <player_name>false</player_name> <!-- true: japanize player name -->
+            <ime_canceller>!</ime_canceller>
+            <japanize_canceller>#</japanize_canceller>
         </japanize>
-        <format>%{color.7}%p %{color.8}» %{color.r}%m</format> <!-- %p: player name, %m: chat message, %j: japanized message -->
-        <japanize_format>%m %{color.7}%j</japanize_format> <!-- %m: original message, %j: japanized message -->
-        <prefix_format>%{color.8}[%c%t%{color.8}] %c%p</prefix_format> <!-- %p: player name, %t: prefix, %c: prefix color -->
+        <escape>.</escape>
+        <coloured_chat>true</coloured_chat>
+        <format>%{color}7%p %{color}8» %{color}r%m</format> <!-- %p: player name, %m: chat message -->
+        <japanize_format>%m %{color}7%j</japanize_format> <!-- %m: original message, %j: japanized message -->
+        <prefix_format>%{color}8[%c%t%{color}8] %c%p</prefix_format> <!-- %p: player name, %t: prefix, %c: prefix color -->
     </chat>
 
 </config>

@@ -11,7 +11,7 @@ import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.mysql.MySQLSettingBuilder;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.PermissionInfo;
-import xyz.n7mn.dev.gunwar.util.Reference;
+import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
 import java.io.*;
 import java.util.Arrays;
@@ -28,12 +28,12 @@ public class GunWarReloadCommand extends Command {
             Player p = (Player) sender;
             PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
             if(!info.isPassed()) {
-                p.sendMessage(Reference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
+                p.sendMessage(TextUtilities.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                 return true;
             }
         }
         reload();
-        sender.sendMessage(Reference.CHAT_PREFIX + " " + Reference.CHAT_COMMAND_RELOAD);
+        sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_RELOAD);
         return true;
     }
 

@@ -20,12 +20,12 @@ import xyz.n7mn.dev.gunwar.game.gamemode.GameModeNormal;
 import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
+import xyz.n7mn.dev.gunwar.item.GwKnifeItem;
 import xyz.n7mn.dev.gunwar.util.Angle;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
-import xyz.n7mn.dev.gunwar.util.Reference;
+import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
 import java.lang.reflect.Field;
-import java.sql.Ref;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -314,7 +314,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             inf = true;
             moveable = false;
             loc = getPlayer().getLocation();
-            getPlayer().sendTitle(Reference.TITLE_MAIN_INFECT, Reference.TITLE_SUB_INFECT, 0, 100, 20);
+            getPlayer().sendTitle(TextUtilities.TITLE_MAIN_INFECT, TextUtilities.TITLE_SUB_INFECT, 0, 100, 20);
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -343,7 +343,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             moveable = false;
             dead = true;
             loc = getPlayer().getLocation();
-            getPlayer().sendTitle(Reference.TITLE_MAIN_DIED_ZOMBIE, Reference.TITLE_SUB_INFECT, 0, 100, 20);
+            getPlayer().sendTitle(TextUtilities.TITLE_MAIN_DIED_ZOMBIE, TextUtilities.TITLE_SUB_INFECT, 0, 100, 20);
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -556,7 +556,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
                     player.spawnParticle(particle, new Location(c.getWorld(), px, py, pz), 1, 0, 0, 0, 0);
 
-                    for(Entity entity : getPlayer().getNearbyEntities(gun.getRange() + 1, gun.getRange() + 1, gun.getRange() + 1)) {
+                    for(Entity entity : getPlayer().getNearbyEntities(far + 1, far + 1, far + 1)) {
                         if(entity instanceof LivingEntity) {
                             LivingEntity livingEntity = (LivingEntity) entity;
                             if(livingEntity != getPlayer()) {
@@ -617,6 +617,123 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                         if(block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
                             currentDamage /= 3;
                             currentHSDamage /= 3;
+                        }
+                    }
+                }
+                x += separateX;
+                y += separateY;
+                z += separateZ;
+                currentDamage -= separateDamage;
+                currentHSDamage -= separateHSDamage;
+            }
+            return new HitEntity(null, false, 0,
+                    getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
+        }
+        return null;
+    }
+
+    @Override
+    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
+                                      double far, double separate, GwKnifeItem knife) {
+        double yaw = 0;
+        double pitch = 0;
+        double r = separate * Math.cos(pitch);
+        double separateX = r * Math.sin(yaw);
+        double separateY = separate * Math.sin(pitch);
+        double separateZ = r * Math.cos(yaw);;
+        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * far;
+        if(startZ < d) {
+            double times = d / separate;
+            double x = startX;
+            double y = startY;
+            double z = startZ;
+            double currentDamage = knife.getAttackDamage();
+            double currentHSDamage = knife.getAttackDamage();
+            double separateDamage = 0;
+            double separateHSDamage = 0;
+            double px = 0;
+            double py = 0;
+            double pz = 0;
+            while (z < times) {
+                double twopi = 2 * Math.PI;
+                double t = 1 * twopi;
+                double division = twopi / 100;
+                double radius = 2;
+
+                Location c = player.getEyeLocation();
+                Vector nv = c.getDirection().normalize();
+
+                double nx = radius * nv.getX() + c.getX();
+                double ny = radius * nv.getY() + c.getY();
+                double nz = radius * nv.getZ() + c.getZ();
+
+                Vector ya = a(nv, new Vector(0, 1, 0)).normalize();
+                Vector xa = ya.getCrossProduct(nv).normalize();
+
+                for (double theta = 0; theta < t; theta += division) {
+                    double xi = xa.getX() * x + ya.getX() * y + nv.getX() * z;
+                    double yi = xa.getY() * x + ya.getY() * y + nv.getY() * z;
+                    double zi = xa.getZ() * x + ya.getZ() * y + nv.getZ() * z;
+
+                    px = xi + nx;
+                    py = yi + ny;
+                    pz = zi + nz;
+
+                    player.spawnParticle(particle, new Location(c.getWorld(), px, py, pz), 1, 0, 0, 0, 0);
+
+                    for(Entity entity : getPlayer().getNearbyEntities(far + 1, far + 1, far + 1)) {
+                        if(entity instanceof LivingEntity) {
+                            LivingEntity livingEntity = (LivingEntity) entity;
+                            if(livingEntity != getPlayer()) {
+                                double xmin = livingEntity.getLocation().getX() - (livingEntity.getWidth() / 2);
+                                double xmax = livingEntity.getLocation().getX() + (livingEntity.getWidth() / 2);
+                                double ymin = livingEntity.getLocation().getY();
+                                double ymax = livingEntity.getLocation().getY() + livingEntity.getHeight();
+                                double zmin = livingEntity.getLocation().getZ() - (livingEntity.getWidth() / 2);
+                                double zmax = livingEntity.getLocation().getZ() + (livingEntity.getWidth() / 2);
+                                boolean condition1 = xmin <= px && xmax >= px;
+                                boolean condition2 = ymin <= py && ymax >= py;
+                                boolean condition3 = zmin <= pz && zmax >= pz;
+                                if (condition1 && condition2 && condition3) {
+                                    double hxmin = livingEntity.getEyeLocation().getX() - (livingEntity.getEyeHeight() / 2);
+                                    double hxmax = livingEntity.getEyeLocation().getX() + (livingEntity.getEyeHeight() / 2);
+                                    double hymin = livingEntity.getEyeLocation().getY() - (livingEntity.getEyeHeight() / 2);
+                                    double hymax = livingEntity.getEyeLocation().getY() + (livingEntity.getEyeHeight() / 2);
+                                    double hzmin = livingEntity.getEyeLocation().getZ() - (livingEntity.getEyeHeight() / 2);
+                                    double hzmax = livingEntity.getEyeLocation().getZ() + (livingEntity.getEyeHeight() / 2);
+                                    boolean hcondition1 = hxmin <= px && hxmax >= px;
+                                    boolean hcondition2 = hymin <= py && hymax >= py;
+                                    boolean hcondition3 = hzmin <= pz && hzmax >= pz;
+                                    boolean headShot = hcondition1 && hcondition2 && hcondition3;
+                                    boolean passed = true;
+                                    if(livingEntity instanceof Player) {
+                                        if ((GunWar.getGame().getGameMode() == GwGameModes.NORMAL && ((GameModeNormal) GwGameModes.NORMAL).getMode() == GameModeNormal.Mode.TEAM) ||
+                                                GunWar.getGame().getGameMode() == GwGameModes.CASTLE_SIEGE || GunWar.getGame().getGameMode() == GwGameModes.ZOMBIE_ESCAPE) {
+                                            PlayerData data = GunWar.getGame().getPlayerData((Player) livingEntity);
+                                            if(data != null) passed = data.getTeam() == getTeam();
+                                        }
+                                    }
+                                    if(passed) return new HitEntity(livingEntity, headShot, headShot ? currentHSDamage : currentDamage,
+                                            getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), px, py, pz));
+                                }
+                            }
+                        }
+                    }
+                    Location loc = new Location(getPlayer().getWorld(), px, py, pz);
+
+                    Block block = loc.getBlock();
+                    if(block != null) {
+                        if (block.getType() != Material.AIR && block.getType() != Material.LONG_GRASS && block.getType() != Material.DOUBLE_PLANT && block.getType() != Material.GRASS_PATH && block.getType() != Material.LAVA && block.getType() != Material.STATIONARY_LAVA && block.getType() != Material.WATER && block.getType() != Material.STATIONARY_WATER && block.getType() != Material.STRUCTURE_VOID) {
+                            @SuppressWarnings("deprecation")
+                            PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
+                                    new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
+                                    block.getType().getId(), false);
+                            List<Player> players = getPlayer().getWorld().getPlayers();
+                            for(final Player p : players) {
+                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+                            }
+                            return new HitEntity(null, false, 0,
+                                    getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
                         }
                     }
                 }

@@ -25,13 +25,13 @@ public interface PermanentlyPlayerData {
 
     public int getDeathCount();
 
-    public int getInfectCount();
+    public int getInfectedCount();
 
     public void setCoins(int coins);
 
     public void setDeathCount(int deathCount);
 
-    public void setInfectCount(int infectCount);
+    public void setInfectedCount(int infectedCount);
 
     public File getDefaultDataFile();
 

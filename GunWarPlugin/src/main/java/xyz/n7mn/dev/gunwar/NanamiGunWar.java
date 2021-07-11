@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.n7mn.dev.gunwar.commands.AboutGunWarCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarItemCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
 import xyz.n7mn.dev.gunwar.game.GameState;
@@ -24,12 +23,11 @@ import xyz.n7mn.dev.gunwar.listeners.DamageListener;
 import xyz.n7mn.dev.gunwar.listeners.ItemListener;
 import xyz.n7mn.dev.gunwar.listeners.PlayerListener;
 import xyz.n7mn.dev.gunwar.listeners.ServerListener;
-import xyz.n7mn.dev.gunwar.mysql.GwMySQLDataPath;
 import xyz.n7mn.dev.gunwar.mysql.GwMySQLPlayerDataUpdater;
 import xyz.n7mn.dev.gunwar.util.GwUtilities;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
-import xyz.n7mn.dev.gunwar.util.Reference;
+import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,7 +92,7 @@ public final class NanamiGunWar extends JavaPlugin {
     }
 
     private void bossBar() {
-        BossBar bar = Bukkit.getServer().createBossBar(Reference.BOSSBAR_WAITING, BarColor.WHITE, BarStyle.SOLID);
+        BossBar bar = Bukkit.getServer().createBossBar(TextUtilities.BOSSBAR_WAITING, BarColor.WHITE, BarStyle.SOLID);
         bar.setVisible(true);
         bar.setProgress(1.0);
         game.setBar(bar);

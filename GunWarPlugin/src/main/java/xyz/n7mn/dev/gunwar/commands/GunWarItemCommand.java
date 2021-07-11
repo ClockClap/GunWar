@@ -10,7 +10,7 @@ import xyz.n7mn.dev.gunwar.game.data.PlayerData;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.item.GwItems;
 import xyz.n7mn.dev.gunwar.util.PermissionInfo;
-import xyz.n7mn.dev.gunwar.util.Reference;
+import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,27 +29,27 @@ public class GunWarItemCommand extends Command {
             Player p = (Player) sender;
             PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
             if(!info.isPassed()) {
-                p.sendMessage(Reference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
+                p.sendMessage(TextUtilities.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                 return true;
             }
         }
         if(args.length >= 2) {
             Player p = Bukkit.getPlayer(args[0]);
             if(p == null) {
-                sender.sendMessage(Reference.CHAT_PREFIX + " " + Reference.CHAT_COMMAND_ERROR_UNKNOWN_PLAYER);
+                sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_UNKNOWN_PLAYER);
                 return true;
             }
             PlayerData data = GunWar.getGame().getPlayerData(p);
             for (GwItem i : GwItems.getRegisteredItems()) {
                 if (i.getName().equalsIgnoreCase(args[1])) {
                     data.giveItem(i);
-                    sender.sendMessage(Reference.CHAT_PREFIX + " " + Reference.CHAT_COMMAND_GIVE_ITEM
+                    sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_GIVE_ITEM
                             .replaceAll("%PLAYER%", p.getName()).replaceAll("%ITEM%", i.getName()));
                     return true;
                 }
             }
         }
-        sender.sendMessage(Reference.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
+        sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
         return true;
     }
 

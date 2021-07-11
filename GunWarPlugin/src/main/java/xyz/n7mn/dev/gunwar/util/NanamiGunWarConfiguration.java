@@ -3,10 +3,7 @@ package xyz.n7mn.dev.gunwar.util;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import xyz.n7mn.dev.gunwar.mysql.MySQLSettingBuilder;
 
@@ -88,6 +85,9 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
             if(detailConfig != null) {
                 Element element = detailConfig.getDocumentElement();
                 if(element != null && element.getNodeName().equalsIgnoreCase("config")) {
+                    if(!element.getAttribute("version").equalsIgnoreCase(plugin.getDescription().getVersion())) {
+                        element.setAttribute("version", plugin.getDescription().getVersion());
+                    }
                     NodeList nodeList1 = element.getChildNodes();
                     for(int i = 0; i < nodeList1.getLength(); i++) {
                         Node node1 = nodeList1.item(i);

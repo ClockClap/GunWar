@@ -6,7 +6,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.game.GameState;
@@ -29,7 +28,7 @@ public class PlayerWatcher {
         this.data = data;
         this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         this.objective = this.scoreboard.registerNewObjective(data.getUniqueId().toString(), "dummy");
-        this.objective.setDisplayName(Reference.SIDEBAR_TITLE);
+        this.objective.setDisplayName(TextUtilities.SIDEBAR_TITLE);
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
@@ -56,14 +55,14 @@ public class PlayerWatcher {
             public void run() {
                 getObjective().unregister();
                 setObjective(getScoreboard().registerNewObjective(getOwner().getUniqueId().toString(), "dummy"));
-                getObjective().setDisplayName(Reference.SIDEBAR_TITLE);
+                getObjective().setDisplayName(TextUtilities.SIDEBAR_TITLE);
                 getObjective().setDisplaySlot(DisplaySlot.SIDEBAR);
                 if(GunWar.getGame().getState() == GameState.WAITING) {
                     List<String> lines = new ArrayList<>();
                     lines.add("");
-                    lines.add(Reference.SIDEBAR_GAMESTATE + ": " + Reference.SIDEBAR_GAMESTATE_WAITING);
+                    lines.add(TextUtilities.SIDEBAR_GAMESTATE + ": " + TextUtilities.SIDEBAR_GAMESTATE_WAITING);
                     if(GunWar.getConfig().getConfig().getBoolean("game.auto-start", false)) {
-                        lines.add(Reference.SIDEBAR_WAITING_PLAYER
+                        lines.add(TextUtilities.SIDEBAR_WAITING_PLAYER
                                 .replaceAll("%PLAYERS%",
                                         (Math.max(
                                                 0,
@@ -73,13 +72,13 @@ public class PlayerWatcher {
                                                 + ""));
                     } else {
                         if (getOwner().getPlayer().isOp()) {
-                            lines.add(Reference.SIDEBAR_PLEASE_START);
+                            lines.add(TextUtilities.SIDEBAR_PLEASE_START);
                         } else {
-                            lines.add(Reference.SIDEBAR_PLEASE_WAIT);
+                            lines.add(TextUtilities.SIDEBAR_PLEASE_WAIT);
                         }
                     }
                     lines.add(ChatColor.RESET + "");
-                    lines.add(Reference.SIDEBAR_PLAYERS + ": " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.RESET + "/" + ChatColor.GREEN + Bukkit.getMaxPlayers());
+                    lines.add(TextUtilities.SIDEBAR_PLAYERS + ": " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.RESET + "/" + ChatColor.GREEN + Bukkit.getMaxPlayers());
                     lines.add(ChatColor.WHITE + "");
                     lines.add(ChatColor.GOLD + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/w2jFt4vA5A"));
                     int i = lines.size();
@@ -93,10 +92,10 @@ public class PlayerWatcher {
                 if(GunWar.getGame().getState() == GameState.STARTING) {
                     List<String> lines = new ArrayList<>();
                     lines.add("");
-                    lines.add(Reference.SIDEBAR_GAMESTATE + ": " + Reference.SIDEBAR_GAMESTATE_WAITING);
-                    lines.add(Reference.SIDEBAR_STARTING_AT.replaceAll("%SECOND%", GunWar.getGame().getStartingAt() + ""));
+                    lines.add(TextUtilities.SIDEBAR_GAMESTATE + ": " + TextUtilities.SIDEBAR_GAMESTATE_WAITING);
+                    lines.add(TextUtilities.SIDEBAR_STARTING_AT.replaceAll("%SECOND%", GunWar.getGame().getStartingAt() + ""));
                     lines.add(ChatColor.RESET + "");
-                    lines.add(Reference.SIDEBAR_PLAYERS + ": " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.RESET + "/" + ChatColor.GREEN + Bukkit.getMaxPlayers());
+                    lines.add(TextUtilities.SIDEBAR_PLAYERS + ": " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.RESET + "/" + ChatColor.GREEN + Bukkit.getMaxPlayers());
                     lines.add(ChatColor.WHITE + "");
                     lines.add(ChatColor.GOLD + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/w2jFt4vA5A"));
                     int i = lines.size();

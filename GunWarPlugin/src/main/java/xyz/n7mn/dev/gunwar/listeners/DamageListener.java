@@ -5,14 +5,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.game.data.GunData;
 import xyz.n7mn.dev.gunwar.game.data.ItemData;
@@ -20,8 +18,6 @@ import xyz.n7mn.dev.gunwar.game.data.PermanentlyPlayerData;
 import xyz.n7mn.dev.gunwar.game.data.PlayerData;
 import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
-import xyz.n7mn.dev.gunwar.item.GwItem;
-import xyz.n7mn.dev.gunwar.util.Reference;
 
 public class DamageListener implements Listener {
 
@@ -43,7 +39,7 @@ public class DamageListener implements Listener {
                     if (ddata.getTeam() == 1 && vdata.getTeam() == 0) {
                         e.setCancelled(true);
                         vdata.infect();
-                        ddata_.setInfectCount(ddata_.getInfectCount() + 1);
+                        ddata_.setInfectedCount(ddata_.getInfectedCount() + 1);
                     }
                 }
                 if(vdata.getHealth() <= 0) {

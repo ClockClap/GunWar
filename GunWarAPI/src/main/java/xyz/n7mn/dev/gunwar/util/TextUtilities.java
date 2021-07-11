@@ -1,0 +1,190 @@
+package xyz.n7mn.dev.gunwar.util;
+
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import xyz.n7mn.dev.gunwar.GunWar;
+import xyz.n7mn.dev.gunwar.util.japanize.Japanizer;
+
+import java.io.UnsupportedEncodingException;
+
+public final class TextUtilities {
+
+    private static final FileConfiguration lang = GunWar.getConfig().getLang();
+
+    public static final String CHAT_PREFIX = format("chat.prefix", "&2[銃撃戦]&7");
+
+    public static final String CHAT_ABOUT = format("chat.about", "&8[詳細]");
+    private static final String CHAT_COMMAND_PERMISSION_ERROR_PRIVATE = format("chat.command.error.permission", "&cこのコマンドを実行する権限がありません");
+    public static final String CHAT_COMMAND_ERROR_UNKNOWN_PLAYER = format("chat.command.error.unknown_player", "&c指定したプレイヤーが存在しないか、オンラインではありません。");
+    public static final String CHAT_COMMAND_RELOAD = format("chat.command.reload", "設定を再読み込みしました");
+    public static final String CHAT_COMMAND_GIVE_ITEM = format("chat.command.give_item", "&7%PLAYER% に %ITEM% を与えました");
+    public static final String CHAT_DETAIL_YOUR_PERMISSION = format("chat.detail.your_permission", "&7あなたの権限: &a%CURRENT%");
+    public static final String CHAT_DETAIL_REQUIRED_PERMISSION = format("chat.detail.required_permission", "&7必要な権限: &a%REQUIRED%");
+
+    public static final String TITLE_MAIN_INFECT = format("ui.title.main.infect", "&2ゾンビに感染してしまった...");
+    public static final String TITLE_MAIN_DIED_ZOMBIE = format("ui.title.main.died_zombie", "&2死んでしまった...");
+    public static final String TITLE_SUB_INFECT = format("ui.title.sub.infect", "&75秒後にゾンビとして復活します");
+
+    public static final String SIDEBAR_TITLE = format("ui.sidebar.title", "&2[ななみ銃撃戦]");
+    public static final String SIDEBAR_GAMESTATE = format("ui.sidebar.game_state.current", "&6ステータス");
+    public static final String SIDEBAR_PLEASE_START = format("ui.sidebar.please_start", "&eゲームを開始してください");
+    public static final String SIDEBAR_PLEASE_WAIT = format("ui.sidebar.please_wait", "&r開始までしばらくお待ち下さい");
+    public static final String SIDEBAR_STARTING_AT = format("ui.sidebar.starting_at", "&r開始まであと&a%SECOND%&r秒");
+    public static final String SIDEBAR_WAITING_PLAYER = format("ui.sidebar.waiting_player", "&r開始にはあと&a%PLAYERS%&r人必要です");
+    public static final String SIDEBAR_REMAINING_TIME = format("ui.sidebar.remaining_time", "&r残りあと&c%SECOND%&r秒");
+    public static final String SIDEBAR_DEFENDED_TIME = format("ui.sidebar.defended_time", "&r耐久時間");
+    public static final String SIDEBAR_REMAINING_PLAYERS = format("ui.sidebar.remaining_players", "&r残り人数");
+    public static final String SIDEBAR_PLAYERS = format("ui.sidebar.players", "&rプレイヤー数");
+    public static final String SIDEBAR_TEAM_BLUE = format("ui.sidebar.team.blue", "&9&l青チーム");
+    public static final String SIDEBAR_TEAM_RED = format("ui.sidebar.team.red", "&c&l赤チーム");
+    public static final String SIDEBAR_CURRENT_TURN = format("ui.sidebar.current_turn", "&r現在のターン");
+    public static final String SIDEBAR_DEFENDERS = format("ui.sidebar.defenders", "&a守り");
+    public static final String SIDEBAR_ATTACKERS = format("ui.sidebar.attackers", "&a攻め");
+
+    public static final String SIDEBAR_GAMESTATE_WAITING = format("ui.sidebar.game_state.waiting", "&a待機中");
+    public static final String SIDEBAR_GAMESTATE_GAMING = format("ui.sidebar.game_state.playing", "&aゲーム中");
+    public static final String SIDEBAR_GAMESTATE_ENDING = format("ui.sidebar.game_state.ending", "&a終了処理中");
+
+    public static final String BOSSBAR_WAITING = format("ui.bossbar.waiting", "&c待機中 - 人数が集まるまでしばらくお待ち下さい");
+    public static final String BOSSBAR_STARTING = format("ui.bossbar.starting", "&6残り%SECOND%秒でゲームが開始します");
+
+    public static final String MISC_RULE_DEFENDER = format("misc.rule.team.defender", "攻め側の攻撃から大将を護衛しましょう。大将は倒されないように隠れましょう。");
+    public static final String MISC_RULE_ATTACKER = format("misc.rule.team.attacker", "要塞を攻略し、守り側の大将を倒しましょう。");
+    public static final String MISC_RULE_SURVIVOR = format("misc.rule.team.survivor", "セーフエリアに行って制限時間まで耐え、ゾンビから逃げ切りましょう。");
+    public static final String MISC_RULE_ZOMBIE = format("misc.rule.team.zombie", "生存者を左クリックで全員感染させましょう。またはセーフエリアを占拠しましょう。");
+    public static final String MISC_RULE_TEAM = format("misc.rule.mode.team", "２チームに分かれて、制限時間になるとスコアの多いチームの勝利になります。");
+    public static final String MISC_RULE_SOLO = format("misc.rule.mode.solo", "チームには分かれず、制限時間になるとスコアの最も多いプレイヤーの優勝になります。");
+    public static final String MISC_RULE_ZOMBIE_ESCAPE = format("misc.rule.mode.zombie_escape", "ゾンビから逃げるゲームです。ゾンビは武器を持っていません。");
+    public static final String MISC_RULE_CASTLE_SIEGE = format("misc.rule.mode.castle_siege", "攻め側と守り側に分かれて行う攻城戦です。");
+
+    public static String chat(String playerName, String message) {
+        return chat(ChatColor.RESET, "", playerName, message);
+    }
+
+    public static String chat(ChatColor prefixColor, String prefix, String playerName, String message) {
+        String format = "%{color}7%p %{color}8» %{color}r%m";
+        String japanizeFormat = "%m %{color}7%j";
+        String prefixFormat = "%{color}8[%c%t%{color}8] %c%p";
+        String japanizeCanceller = "#";
+        String imeCanceller = "!";
+        String escape = ".";
+        boolean japanizeText = false;
+        boolean japanizePlayerName = false;
+        boolean colouredChat = true;
+        Element element = GunWar.getConfig().getDetailConfig().getDocumentElement();
+        if(element != null && element.getNodeName().equalsIgnoreCase("config")) {
+            if(!element.getAttribute("version").equalsIgnoreCase(GunWar.getPlugin().getDescription().getVersion())) {
+                element.setAttribute("version", GunWar.getPlugin().getDescription().getVersion());
+            }
+            NodeList nodeList1 = element.getChildNodes();
+            for(int i = 0; i < nodeList1.getLength(); i++) {
+                Node node1 = nodeList1.item(i);
+                if(node1.getNodeName().equalsIgnoreCase("chat")) {
+                    NodeList nodeList2 = node1.getChildNodes();
+                    for(int j = 0; j < nodeList2.getLength(); j++) {
+                        Node node2 = nodeList2.item(j);
+                        if(node2.getNodeName().equalsIgnoreCase("japanize")) {
+                            NodeList nodeList3 = node2.getChildNodes();
+                            for(int k = 0; k < nodeList3.getLength(); k++) {
+                                Node node3 = nodeList3.item(k);
+                                if(node3.getNodeName().equalsIgnoreCase("enabled")) {
+                                    String s = node3.getTextContent();
+                                    japanizeText = Boolean.parseBoolean(s);
+                                    continue;
+                                }
+                                if(node3.getNodeName().equalsIgnoreCase("player_name")) {
+                                    String s = node3.getTextContent();
+                                    japanizePlayerName = Boolean.parseBoolean(s);
+                                    continue;
+                                }
+                                if(node3.getNodeName().equalsIgnoreCase("ime_canceller")) {
+                                    String s = node3.getTextContent();
+                                    imeCanceller = s;
+                                    continue;
+                                }
+                                if(node3.getNodeName().equalsIgnoreCase("japanize_canceller")) {
+                                    String s = node3.getTextContent();
+                                    japanizeCanceller = s;
+                                }
+                            }
+                        }
+                        if(node2.getNodeName().equalsIgnoreCase("format")) {
+                            format = node2.getTextContent();
+                            continue;
+                        }
+                        if(node2.getNodeName().equalsIgnoreCase("japanize_format")) {
+                            japanizeFormat = node2.getTextContent();
+                            continue;
+                        }
+                        if(node2.getNodeName().equalsIgnoreCase("prefix_format")) {
+                            prefixFormat = node2.getTextContent();
+                            continue;
+                        }
+                        if(node2.getNodeName().equalsIgnoreCase("escape")) {
+                            escape = node2.getTextContent();
+                            continue;
+                        }
+                        if(node2.getNodeName().equalsIgnoreCase("coloured_chat")) {
+                            colouredChat = Boolean.parseBoolean(node2.getTextContent());
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        format = translateAlternateColorCodes("%{color}", format);
+        japanizeFormat = translateAlternateColorCodes("%{color}", japanizeFormat);
+        prefixFormat = translateAlternateColorCodes("%{color}", prefixFormat);
+        String p = playerName;
+        if(!prefix.isEmpty()) p = prefixFormat.replaceAll("%c", prefixColor + "").replaceAll("%t", prefix).replaceAll("%p", playerName);
+        String m = message;
+        if(japanizeText) {
+            try {
+                m = Japanizer.japanize(message, japanizeCanceller, imeCanceller, escape, colouredChat, japanizePlayerName, japanizeFormat);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return format.replaceAll("%p", p).replaceAll("%m", m);
+    }
+
+    public static String translateAlternateColorCodes(String regex, String textToTranslate) {
+        char[] color = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".toCharArray();
+        String b = textToTranslate;
+        for(char c : color) {
+            b = b.replaceAll(regex + c, ChatColor.COLOR_CHAR + c + "");
+        }
+        return b;
+    }
+
+    public static BaseComponent getChatCommandPermissionError(String required, String now) {
+        TextComponent component = new TextComponent();
+        TextComponent component1 = new TextComponent();
+        component.setText(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_PERMISSION_ERROR_PRIVATE + " ");
+        component1.setText(TextUtilities.CHAT_ABOUT);
+        component1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{
+                new TextComponent(TextUtilities.CHAT_ABOUT + "\n"),
+                new TextComponent(CHAT_DETAIL_YOUR_PERMISSION.replaceAll("%CURRENT%", now) + "\n"),
+                new TextComponent(CHAT_DETAIL_REQUIRED_PERMISSION.replaceAll("%REQUIRED%", required))
+        }));
+        component.addExtra(component1);
+        return component;
+    }
+
+    public static String format(String unformattedText) {
+        return ChatColor.translateAlternateColorCodes('&',
+                lang.getString(unformattedText,unformattedText));
+    }
+
+    public static String format(String unformattedText, String defaultText) {
+        return ChatColor.translateAlternateColorCodes('&',
+                lang.getString(unformattedText,defaultText));
+    }
+
+}

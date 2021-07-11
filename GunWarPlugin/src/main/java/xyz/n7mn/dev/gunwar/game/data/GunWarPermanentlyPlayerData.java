@@ -1,6 +1,5 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
-import javafx.beans.property.adapter.ReadOnlyJavaBeanBooleanProperty;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
@@ -9,9 +8,6 @@ import xyz.n7mn.dev.gunwar.mysql.GwMySQLDataPath;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 
 import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -25,7 +21,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
     private Map<GwGunItem, Integer> playCount;
     private Map<GwGunItem, Integer> killCount;
     private int deathCount;
-    private int infectCount;
+    private int infectedCount;
 
     public GunWarPermanentlyPlayerData(UUID uniqueId) {
         this.uniqueId = uniqueId;
@@ -35,7 +31,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
         this.playCount = new HashMap<>();
         this.killCount = new HashMap<>();
         this.deathCount = 0;
-        this.infectCount = 0;
+        this.infectedCount = 0;
         this.dataFile = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/players/" + uniqueId);
     }
 
@@ -75,8 +71,8 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
     }
 
     @Override
-    public int getInfectCount() {
-        return Math.max(0, infectCount);
+    public int getInfectedCount() {
+        return Math.max(0, infectedCount);
     }
 
     @Override
@@ -90,13 +86,57 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
     }
 
     @Override
-    public void setInfectCount(int infectCount) {
-        this.infectCount = infectCount;
+    public void setInfectedCount(int infectedCount) {
+        this.infectedCount = infectedCount;
     }
 
     @Override
     public File getDefaultDataFile() {
         return dataFile;
+    }
+
+    private Map<String, Object> toMap() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("uniqueId", uniqueId);
+        result.put("coins", coins);
+        result.put("items", items);
+        result.put("gifts", gifts);
+        result.put("playCount", playCount);
+        result.put("killCount", killCount);
+        result.put("deathCount", deathCount);
+        result.put("infectCount", infectedCount);
+        return result;
+    }
+
+    private void initialize() {
+        this.coins = 0;
+        this.items.clear();
+        this.gifts.clear();
+        this.playCount.clear();
+        this.killCount.clear();
+        this.deathCount = 0;
+        this.infectedCount = 0;
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private void fromMap(Map<String, Object> map) {
+        if(map.get("uniqueId") == uniqueId) {
+            initialize();
+            int a = (Integer) map.get("coins");
+            List<GwItem> b = (List<GwItem>) map.get("items");
+            List<GwItem> c = (List<GwItem>) map.get("gifts");
+            Map<GwGunItem, Integer> d = (Map<GwGunItem, Integer>) map.get("playCount");
+            Map<GwGunItem, Integer> e = (Map<GwGunItem, Integer>) map.get("killCount");
+            int f = (Integer) map.get("deathCount");
+            int g = (Integer) map.get("infectCount");
+            this.coins = a;
+            if(b != null) this.items = b;
+            if(c != null) this.gifts = c;
+            if(d != null) this.playCount = d;
+            if(e != null) this.killCount = e;
+            this.deathCount = f;
+            this.infectedCount = g;
+        }
     }
 
     @Override
@@ -144,13 +184,9 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
                 ois.close();
                 fis.close();
                 String str = "";
-                try {
-                    Class<?> clazz = obj.getClass();
-                    Field field = clazz.getField("path");
-                    field.setAccessible(true);
-                    str = (String) field.get(obj_);
-                } catch(Throwable throwable) {
-                    ex.printStackTrace();
+                if(obj_ instanceof GwMySQLDataPath) {
+                    GwMySQLDataPath p = (GwMySQLDataPath) obj_;
+                    str = p.getPath();
                 }
                 if(!str.isEmpty() && !str.equalsIgnoreCase(f.getPath())) {
                     f = new File(str);
@@ -163,16 +199,17 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
             }
             f.createNewFile();
         }
+        Map<String, Object> map = toMap();
         FileOutputStream output = new FileOutputStream(f);
         ObjectOutputStream objectOutput = new ObjectOutputStream(output);
-        objectOutput.writeObject(obj);
+        objectOutput.writeObject(map);
         objectOutput.flush();
         objectOutput.close();
         output.close();
         if(!file.getPath().equalsIgnoreCase(f.getPath())) {
             FileOutputStream output_ = new FileOutputStream(file);
             ObjectOutputStream objectOutput_ = new ObjectOutputStream(output_);
-            objectOutput_.writeObject(obj);
+            objectOutput_.writeObject(map);
             objectOutput_.flush();
             objectOutput_.close();
             output_.close();
@@ -190,85 +227,52 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
                 f = file;
                 GwMySQL.updatePlayerData(getUniqueId(), f.getPath());
             }
-        } catch (SQLException ignored) {
+            GwMySQLDataPath.insert(getUniqueId(), f.getPath());
+            File f_ = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
+            if(!f_.exists()) {
+                f_.createNewFile();
+            }
+            FileOutputStream fos = new FileOutputStream(f_);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(GwMySQLDataPath.get(getUniqueId()));
+            oos.flush();
+            oos.close();
+            fos.close();
+        } catch (SQLException ex) {
+            File f_ = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
+            if(!f_.exists()) {
+                f_.createNewFile();
+                GwMySQLDataPath.insert(getUniqueId(), ((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath()
+                        + "/players/" + getUniqueId().toString());
+                FileOutputStream fos = new FileOutputStream(f_);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(GwMySQLDataPath.get(getUniqueId()));
+                oos.flush();
+                oos.close();
+                fos.close();
+            }
+            try {
+                FileInputStream fis = new FileInputStream(f_);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                Object obj_ = ois.readObject();
+                ois.close();
+                fis.close();
+                String str = "";
+                if(obj_ instanceof GwMySQLDataPath) {
+                    GwMySQLDataPath p = (GwMySQLDataPath) obj_;
+                    str = p.getPath();
+                }
+                if(!str.isEmpty() && !str.equalsIgnoreCase(f.getPath())) {
+                    f = new File(str);
+                }
+            } catch (ClassNotFoundException ignored) { }
         }
         if(f.exists()) {
             FileInputStream input = new FileInputStream(f);
             ObjectInputStream objectInput = new ObjectInputStream(input);
             Object object = objectInput.readObject();
             Class<?> clazz = object.getClass();
-            boolean passed = false;
-            for(Field fi : clazz.getFields()) {
-                try {
-                    if (fi.getName().equalsIgnoreCase("uniqueId")) {
-                        fi.setAccessible(true);
-                        Object o = fi.get(object);
-                        if (o instanceof UUID && o == getUniqueId()) {
-                            passed = true;
-                        }
-                    }
-                    if (passed) {
-                        if(fi.getName().equalsIgnoreCase("coins")) {
-                            fi.setAccessible(true);
-                            Object o = fi.get(object);
-                            if (o instanceof Integer) {
-                                this.coins = (Integer) o;
-                            }
-                        }
-                        if(fi.getName().equalsIgnoreCase("items")) {
-                            fi.setAccessible(true);
-                            Object o = fi.get(object);
-                            if(o instanceof List) {
-                                try {
-                                    this.items = (List<GwItem>) o;
-                                } catch(Throwable ignored) { }
-                            }
-                        }
-                        if(fi.getName().equalsIgnoreCase("gifts")) {
-                            fi.setAccessible(true);
-                            Object o = fi.get(object);
-                            if(o instanceof List) {
-                                try {
-                                    this.gifts = (List<GwItem>) o;
-                                } catch(Throwable ignored) { }
-                            }
-                        }
-                        if(fi.getName().equalsIgnoreCase("playCount")) {
-                            fi.setAccessible(true);
-                            Object o = fi.get(object);
-                            if(o instanceof Map) {
-                                try {
-                                    this.playCount = (Map<GwGunItem, Integer>) o;
-                                } catch(Throwable ignored) { }
-                            }
-                        }
-                        if(fi.getName().equalsIgnoreCase("killCount")) {
-                            fi.setAccessible(true);
-                            Object o = fi.get(object);
-                            if(o instanceof Map) {
-                                try {
-                                    this.killCount = (Map<GwGunItem, Integer>) o;
-                                } catch(Throwable ignored) { }
-                            }
-                        }
-                        if(fi.getName().equalsIgnoreCase("deathCount")) {
-                            fi.setAccessible(true);
-                            Object o = fi.get(object);
-                            if(o instanceof Integer) {
-                                this.deathCount = (Integer) o;
-                            }
-                        }
-                        if(fi.getName().equalsIgnoreCase("infectCount")) {
-                            fi.setAccessible(true);
-                            Object o = fi.get(object);
-                            if(o instanceof Integer) {
-                                this.infectCount = (Integer) o;
-                            }
-                        }
-                    }
-                } catch (IllegalAccessException ignored) {
-                }
-            }
+            if(object instanceof Map) fromMap((Map<String, Object>) object);
             objectInput.close();
             input.close();
         }

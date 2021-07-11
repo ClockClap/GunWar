@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.util.PermissionInfo;
-import xyz.n7mn.dev.gunwar.util.Reference;
+import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
 import java.util.Arrays;
 
@@ -26,7 +26,7 @@ public class GunWarConfigCommand extends Command {
             Player p = (Player) sender;
             PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
             if(!info.isPassed()) {
-                p.sendMessage(Reference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
+                p.sendMessage(TextUtilities.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                 return true;
             }
         }
