@@ -9,7 +9,7 @@ public final class GwGameModes {
     private static List<GwGameMode> registeredGameMode = new ArrayList<>();
 
     public static GwGameMode NORMAL = new GameModeNormal();
-    public static GwGameMode CASTLE_SIEGE = new GameModeCastleSiege();
+    public static GwGameMode GENERAL_SIEGE = new GameModeGeneralSiege();
     public static GwGameMode ZOMBIE_ESCAPE = new GameModeZombieEscape();
 
     public static Collection<GwGameMode> getRegisteredGameModes() {
@@ -57,7 +57,7 @@ public final class GwGameModes {
     public static void registerDefault() {
         register(NORMAL);
         register(ZOMBIE_ESCAPE);
-        register(CASTLE_SIEGE);
+        register(GENERAL_SIEGE);
     }
 
     public static void clear() {

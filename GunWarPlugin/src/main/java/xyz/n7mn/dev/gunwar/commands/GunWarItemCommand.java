@@ -19,7 +19,7 @@ import java.util.List;
 public class GunWarItemCommand extends Command {
 
     public GunWarItemCommand() {
-        super("gunwaritem", "ななみ銃撃戦のアイテムを入手します。", "使用法: /gunwaritem <player> <item>", Arrays.asList("gwitem", "gwi"));
+        super("gunwaritem", TextUtilities.MISC_DESCRIPTION_COMMAND_GUNWARITEM, "使用法: /gunwaritem <player> <item>", Arrays.asList("gwitem", "gwi"));
     }
 
     @Override

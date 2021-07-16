@@ -22,6 +22,8 @@ public final class TextUtilities {
     public static final String CHAT_ABOUT = format("chat.about", "&8[詳細]");
     private static final String CHAT_COMMAND_PERMISSION_ERROR_PRIVATE = format("chat.command.error.permission", "&cこのコマンドを実行する権限がありません");
     public static final String CHAT_COMMAND_ERROR_UNKNOWN_PLAYER = format("chat.command.error.unknown_player", "&c指定したプレイヤーが存在しないか、オンラインではありません。");
+    public static final String CHAT_COMMAND_ERROR_DEBUG = format("chat.command.error.debug", "&cデバッグ中にエラーが発生しました");
+    public static final String CHAT_COMMAND_ERROR_NOT_DEBUGGING_MODE = format("chat.command.error.not_debugging_mode", "&cデバッグモードが有効ではありません");
     public static final String CHAT_COMMAND_RELOAD = format("chat.command.reload", "設定を再読み込みしました");
     public static final String CHAT_COMMAND_GIVE_ITEM = format("chat.command.give_item", "&7%PLAYER% に %ITEM% を与えました");
     public static final String CHAT_DETAIL_YOUR_PERMISSION = format("chat.detail.your_permission", "&7あなたの権限: &a%CURRENT%");
@@ -30,6 +32,16 @@ public final class TextUtilities {
     public static final String TITLE_MAIN_INFECT = format("ui.title.main.infect", "&2ゾンビに感染してしまった...");
     public static final String TITLE_MAIN_DIED_ZOMBIE = format("ui.title.main.died_zombie", "&2死んでしまった...");
     public static final String TITLE_SUB_INFECT = format("ui.title.sub.infect", "&75秒後にゾンビとして復活します");
+    public static final String TITLE_MAIN_INFECTION_RESPAWN = format("ui.title.main.infection_respawn", "&2ゾンビとして復活しました");
+    public static final String TITLE_SUB_INFECTION_RESPAWN = format("ui.title.sub.infection_respawn", "&7残りの生存者を感染させよう");
+    public static final String TITLE_MAIN_SURVIVOR = format("ui.title.main.survivor", "&3感染から逃れられた");
+    public static final String TITLE_SUB_SURVIVOR = format("ui.title.sub.survivor", "&7ゾンビから逃げ切ろう");
+    public static final String TITLE_MAIN_VICTORY = format("ui.title.main.victory", "&6勝利");
+    public static final String TITLE_MAIN_GAMEOVER = format("ui.title.main.gameover", "&c敗北");
+    public static final String TITLE_SUB_VICTORY_SURVIVOR = format("ui.title.sub.victory.survivor", "&3生存者側の勝利");
+    public static final String TITLE_SUB_VICTORY_ZOMBIE = format("ui.title.sub.victory.zombie", "&2ゾンビ側の勝利");
+    public static final String TITLE_SUB_VICTORY_BLUE = format("ui.title.sub.victory.blue", "&9青チームの勝利");
+    public static final String TITLE_SUB_VICTORY_RED = format("ui.title.sub.victory.red", "&c赤チームの勝利");
 
     public static final String SIDEBAR_TITLE = format("ui.sidebar.title", "&2[ななみ銃撃戦]");
     public static final String SIDEBAR_GAMESTATE = format("ui.sidebar.game_state.current", "&6ステータス");
@@ -61,83 +73,33 @@ public final class TextUtilities {
     public static final String MISC_RULE_TEAM = format("misc.rule.mode.team", "２チームに分かれて、制限時間になるとスコアの多いチームの勝利になります。");
     public static final String MISC_RULE_SOLO = format("misc.rule.mode.solo", "チームには分かれず、制限時間になるとスコアの最も多いプレイヤーの優勝になります。");
     public static final String MISC_RULE_ZOMBIE_ESCAPE = format("misc.rule.mode.zombie_escape", "ゾンビから逃げるゲームです。ゾンビは武器を持っていません。");
-    public static final String MISC_RULE_CASTLE_SIEGE = format("misc.rule.mode.castle_siege", "攻め側と守り側に分かれて行う攻城戦です。");
+    public static final String MISC_RULE_CASTLE_SIEGE = format("misc.rule.mode.general_siege", "攻め側と守り側に分かれて行う大将戦です。");
+
+    public static final String SLOT_WEAPON = format("slot.weapon", "武器スロット");
+
+    public static final String MISC_WEAPON_MAIN = format("misc.weapon.main", "メイン武器");
+    public static final String MISC_WEAPON_SUB = format("misc.weapon.sub", "サブ武器");
+    public static final String MISC_WEAPON_KNIFE = format("misc.weapon.knife", "ナイフ");
+
+    public static final String MISC_DESCRIPTION_COMMAND_GUNWARITEM = format("misc.description.command.gunwaritem", "ななみ銃撃戦のアイテムを与えます。");
+    public static final String MISC_DESCRIPTION_COMMAND_GUNWARRELOAD = format("misc.description.command.gunwarreload", "銃撃戦プラグインの設定を再読み込みします。");
+    public static final String MISC_DESCRIPTION_COMMAND_GWDEBUG = format("misc.description.command.gwdebug", "銃撃戦プラグインのデバッグをします。デバッグモードが有効である必要があります。");
 
     public static String chat(String playerName, String message) {
         return chat(ChatColor.RESET, "", playerName, message);
     }
 
     public static String chat(ChatColor prefixColor, String prefix, String playerName, String message) {
-        String format = "%{color}7%p %{color}8» %{color}r%m";
-        String japanizeFormat = "%m %{color}7%j";
-        String prefixFormat = "%{color}8[%c%t%{color}8] %c%p";
-        String japanizeCanceller = "#";
-        String imeCanceller = "!";
-        String escape = ".";
-        boolean japanizeText = false;
-        boolean japanizePlayerName = false;
-        boolean colouredChat = true;
-        Element element = GunWar.getConfig().getDetailConfig().getDocumentElement();
-        if(element != null && element.getNodeName().equalsIgnoreCase("config")) {
-            if(!element.getAttribute("version").equalsIgnoreCase(GunWar.getPlugin().getDescription().getVersion())) {
-                element.setAttribute("version", GunWar.getPlugin().getDescription().getVersion());
-            }
-            NodeList nodeList1 = element.getChildNodes();
-            for(int i = 0; i < nodeList1.getLength(); i++) {
-                Node node1 = nodeList1.item(i);
-                if(node1.getNodeName().equalsIgnoreCase("chat")) {
-                    NodeList nodeList2 = node1.getChildNodes();
-                    for(int j = 0; j < nodeList2.getLength(); j++) {
-                        Node node2 = nodeList2.item(j);
-                        if(node2.getNodeName().equalsIgnoreCase("japanize")) {
-                            NodeList nodeList3 = node2.getChildNodes();
-                            for(int k = 0; k < nodeList3.getLength(); k++) {
-                                Node node3 = nodeList3.item(k);
-                                if(node3.getNodeName().equalsIgnoreCase("enabled")) {
-                                    String s = node3.getTextContent();
-                                    japanizeText = Boolean.parseBoolean(s);
-                                    continue;
-                                }
-                                if(node3.getNodeName().equalsIgnoreCase("player_name")) {
-                                    String s = node3.getTextContent();
-                                    japanizePlayerName = Boolean.parseBoolean(s);
-                                    continue;
-                                }
-                                if(node3.getNodeName().equalsIgnoreCase("ime_canceller")) {
-                                    String s = node3.getTextContent();
-                                    imeCanceller = s;
-                                    continue;
-                                }
-                                if(node3.getNodeName().equalsIgnoreCase("japanize_canceller")) {
-                                    String s = node3.getTextContent();
-                                    japanizeCanceller = s;
-                                }
-                            }
-                        }
-                        if(node2.getNodeName().equalsIgnoreCase("format")) {
-                            format = node2.getTextContent();
-                            continue;
-                        }
-                        if(node2.getNodeName().equalsIgnoreCase("japanize_format")) {
-                            japanizeFormat = node2.getTextContent();
-                            continue;
-                        }
-                        if(node2.getNodeName().equalsIgnoreCase("prefix_format")) {
-                            prefixFormat = node2.getTextContent();
-                            continue;
-                        }
-                        if(node2.getNodeName().equalsIgnoreCase("escape")) {
-                            escape = node2.getTextContent();
-                            continue;
-                        }
-                        if(node2.getNodeName().equalsIgnoreCase("coloured_chat")) {
-                            colouredChat = Boolean.parseBoolean(node2.getTextContent());
-                        }
-                    }
-                    break;
-                }
-            }
-        }
+        XmlConfiguration conf = GunWar.getConfig().getDetailConfig();
+        String format = conf.getString("config.chat.format", "%{color}7%p %{color}8» %{color}r%m");
+        String japanizeFormat = conf.getString("config.chat.japanize_format", "%m %{color}7%j");
+        String prefixFormat = conf.getString("config.chat.prefix_format", "%{color}8[%c%t%{color}8] %c%p");
+        String japanizeCanceller = conf.getString("config.chat.japanize.japanize_canceller", "#");
+        String imeCanceller = conf.getString("config.chat.japanize.ime_canceller", "!");
+        String escape = conf.getString("config.chat.escape", ".");
+        boolean japanizeText = conf.getBoolean("config.chat.japanize.enabled", true);
+        boolean japanizePlayerName = conf.getBoolean("config.chat.japanize.player_name", false);
+        boolean colouredChat = conf.getBoolean("config.chat.coloured_chat", true);
         format = translateAlternateColorCodes("%{color}", format);
         japanizeFormat = translateAlternateColorCodes("%{color}", japanizeFormat);
         prefixFormat = translateAlternateColorCodes("%{color}", prefixFormat);

@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 public class GunWarReloadCommand extends Command {
     public GunWarReloadCommand() {
-        super("gunwarreload", "銃撃戦プラグインの設定を再読み込みします", "Usage: /gunwarreload", Arrays.asList("gwreload"));
+        super("gunwarreload", TextUtilities.MISC_DESCRIPTION_COMMAND_GUNWARRELOAD, "Usage: /gunwarreload", Arrays.asList("gwreload"));
     }
 
     @Override

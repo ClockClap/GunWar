@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.n7mn.dev.gunwar.commands.GWDebugCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarItemCommand;
 import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
 import xyz.n7mn.dev.gunwar.game.GameState;
@@ -108,6 +109,7 @@ public final class NanamiGunWar extends JavaPlugin {
     private void registerCommands() {
         utilities.registerCommand(plugin.getName(), new GunWarReloadCommand());
         utilities.registerCommand(plugin.getName(), new GunWarItemCommand());
+        utilities.registerCommand(plugin.getName(), new GWDebugCommand());
     }
 
     private void startWatch() {

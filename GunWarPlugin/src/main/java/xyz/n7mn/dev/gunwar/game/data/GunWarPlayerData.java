@@ -583,7 +583,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                                     boolean passed = true;
                                     if(livingEntity instanceof Player) {
                                         if ((GunWar.getGame().getGameMode() == GwGameModes.NORMAL && ((GameModeNormal) GwGameModes.NORMAL).getMode() == GameModeNormal.Mode.TEAM) ||
-                                                GunWar.getGame().getGameMode() == GwGameModes.CASTLE_SIEGE || GunWar.getGame().getGameMode() == GwGameModes.ZOMBIE_ESCAPE) {
+                                                GunWar.getGame().getGameMode() == GwGameModes.GENERAL_SIEGE || GunWar.getGame().getGameMode() == GwGameModes.ZOMBIE_ESCAPE) {
                                             PlayerData data = GunWar.getGame().getPlayerData((Player) livingEntity);
                                             if(data != null) passed = data.getTeam() == getTeam();
                                         }
@@ -708,7 +708,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                                     boolean passed = true;
                                     if(livingEntity instanceof Player) {
                                         if ((GunWar.getGame().getGameMode() == GwGameModes.NORMAL && ((GameModeNormal) GwGameModes.NORMAL).getMode() == GameModeNormal.Mode.TEAM) ||
-                                                GunWar.getGame().getGameMode() == GwGameModes.CASTLE_SIEGE || GunWar.getGame().getGameMode() == GwGameModes.ZOMBIE_ESCAPE) {
+                                                GunWar.getGame().getGameMode() == GwGameModes.GENERAL_SIEGE || GunWar.getGame().getGameMode() == GwGameModes.ZOMBIE_ESCAPE) {
                                             PlayerData data = GunWar.getGame().getPlayerData((Player) livingEntity);
                                             if(data != null) passed = data.getTeam() == getTeam();
                                         }

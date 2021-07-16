@@ -19,7 +19,7 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
     private FileConfiguration config;
     private FileConfiguration permissionSetting;
     private FileConfiguration lang;
-    private Document detailConfig;
+    private XmlConfiguration detailConfig;
     private File configFile;
     private File permissionFile;
     private File detailConfigFile;
@@ -75,36 +75,10 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
                     e.printStackTrace();
                 }
             }
-            try {
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                detailConfig = db.parse(detailConfigFile);
-            } catch(ParserConfigurationException | SAXException throwables) {
-                throwables.printStackTrace();
-            }
+            detailConfig = XmlConfiguration.loadXml(detailConfigFile);
             if(detailConfig != null) {
-                Element element = detailConfig.getDocumentElement();
-                if(element != null && element.getNodeName().equalsIgnoreCase("config")) {
-                    if(!element.getAttribute("version").equalsIgnoreCase(plugin.getDescription().getVersion())) {
-                        element.setAttribute("version", plugin.getDescription().getVersion());
-                    }
-                    NodeList nodeList1 = element.getChildNodes();
-                    for(int i = 0; i < nodeList1.getLength(); i++) {
-                        Node node1 = nodeList1.item(i);
-                        if(node1.getNodeName().equalsIgnoreCase("chat")) {
-                            NodeList nodeList2 = node1.getChildNodes();
-                            for(int j = 0; j < nodeList2.getLength(); j++) {
-                                Node node2 = nodeList2.item(j);
-                                if(node2.getNodeName().equalsIgnoreCase("lang")) {
-                                    String langPath = node2.getTextContent();
-                                    if(langPath != null && !langPath.isEmpty()) langFile = new File(langPath);
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
+                String langPath = detailConfig.getString("config.chat.lang", "plugins/GunWar/lang/ja_jp.yml");
+                langFile = new File(langPath);
             }
             if(langFile != null) {
                 if(!langFile.exists()) {
@@ -233,7 +207,7 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
     }
 
     @Override
-    public Document getDetailConfig() {
+    public XmlConfiguration getDetailConfig() {
         return detailConfig;
     }
 

@@ -11,7 +11,7 @@ public interface GunWarConfiguration {
 
     public FileConfiguration getPermissionSetting();
 
-    public Document getDetailConfig();
+    public XmlConfiguration getDetailConfig();
 
     public FileConfiguration getLang();
 

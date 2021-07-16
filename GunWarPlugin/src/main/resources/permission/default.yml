@@ -7,3 +7,4 @@
 commands:
   gunwaritem: 1
   gunwarreload: 1
+  gwdebug: 1

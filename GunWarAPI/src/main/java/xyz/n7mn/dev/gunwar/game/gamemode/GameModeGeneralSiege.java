@@ -4,12 +4,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import xyz.n7mn.dev.gunwar.GunWar;
 
-public class GameModeCastleSiege extends GwGameMode {
+public class GameModeGeneralSiege extends GwGameMode {
 
-    public GameModeCastleSiege() {
+    public GameModeGeneralSiege() {
         super(2);
-        setName("CASTLE_SIEGE");
-        setDisplayName(ChatColor.AQUA + "Castle Siege");
+        setName("GENERAL_SIEGE");
+        setDisplayName(ChatColor.AQUA + "General Siege");
         setGameTime(0);
     }
 
