@@ -28,10 +28,7 @@ import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
 import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
@@ -64,7 +61,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         this.zoomLevel = 0F;
         this.nanami = new PlayerData.Nanami() {
             private final String oldName = player.getName();
-            private Map<Player, String> nameMap;
+            private Map<Player, String> nameMap = new HashMap<>();
 
             public String getOldName() {
                 return oldName;
