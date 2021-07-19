@@ -117,10 +117,12 @@ public final class TextUtilities {
     }
 
     public static String translateAlternateColorCodes(String regex, String textToTranslate) {
-        char[] color = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".toCharArray();
         String b = textToTranslate;
-        for(char c : color) {
-            b = b.replaceAll(regex + c, ChatColor.COLOR_CHAR + c + "");
+        String r = "\\Q" + regex + "\\E";
+        char[] colors = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".toCharArray();
+        for(char c : colors) {
+            String s = Character.toString(c);
+            b = b.replaceAll(r + s, ChatColor.COLOR_CHAR + s);
         }
         return b;
     }

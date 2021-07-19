@@ -19,6 +19,7 @@ public class XmlConfiguration {
 
     private XmlConfiguration() {
         map = new HashMap<>();
+        attributes = new HashMap<>();
     }
 
     public static XmlConfiguration load(String path) throws ParserConfigurationException, SAXException, IOException {

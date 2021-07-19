@@ -6,6 +6,8 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutWorldEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 
+import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -29,6 +31,7 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
@@ -554,7 +557,10 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     py = yi + ny;
                     pz = zi + nz;
 
-                    player.spawnParticle(particle, new Location(c.getWorld(), px, py, pz), 1, 0, 0, 0, 0);
+                    Random rand = new Random();
+                    double d_ = rand.nextDouble() * 0.2 - 0.1;
+
+                    player.spawnParticle(particle, new Location(c.getWorld(), px * d_, py * d_, pz * d_), 1, 0, 0, 0, 0);
 
                     for(Entity entity : getPlayer().getNearbyEntities(far + 1, far + 1, far + 1)) {
                         if(entity instanceof LivingEntity) {
@@ -598,7 +604,16 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
                     Block block = loc.getBlock();
                     if(block != null) {
-                        if (block.getType() != Material.AIR && block.getType() != Material.LONG_GRASS && block.getType() != Material.DOUBLE_PLANT && block.getType() != Material.GRASS_PATH && block.getType() != Material.LAVA && block.getType() != Material.STATIONARY_LAVA && block.getType() != Material.WATER && block.getType() != Material.STATIONARY_WATER && block.getType() != Material.STRUCTURE_VOID) {
+                        if (block.getType() != Material.AIR && block.getType() != Material.LONG_GRASS &&
+                                block.getType() != Material.DOUBLE_PLANT && block.getType() != Material.GRASS_PATH && block.getType() != Material.LAVA &&
+                                block.getType() != Material.STATIONARY_LAVA && block.getType() != Material.WATER &&
+                                block.getType() != Material.STATIONARY_WATER && block.getType() != Material.STRUCTURE_VOID &&
+                                block.getType() != Material.RED_ROSE && block.getType() != Material.YELLOW_FLOWER &&
+                                block.getType() != Material.BROWN_MUSHROOM && block.getType() != Material.RED_MUSHROOM && block.getType() != Material.VINE &&
+                                block.getType() != Material.SAPLING && block.getType() != Material.WEB &&
+                                block.getType() != Material.TORCH && block.getType() != Material.REDSTONE_TORCH_ON && block.getType() != Material.REDSTONE_TORCH_OFF &&
+                                block.getType() != Material.DEAD_BUSH && block.getType() != Material.TRIPWIRE_HOOK &&
+                                block.getType() != Material.TRIPWIRE && block.getType() != Material.STRING && block.getType() != Material.REDSTONE_WIRE) {
                             @SuppressWarnings("deprecation")
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
                                     new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
@@ -617,6 +632,9 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                         if(block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
                             currentDamage /= 3;
                             currentHSDamage /= 3;
+                        }
+                        if(block.getType() == Material.WEB) {
+                            block.setType(Material.AIR);
                         }
                     }
                 }
@@ -723,17 +741,37 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
                     Block block = loc.getBlock();
                     if(block != null) {
-                        if (block.getType() != Material.AIR && block.getType() != Material.LONG_GRASS && block.getType() != Material.DOUBLE_PLANT && block.getType() != Material.GRASS_PATH && block.getType() != Material.LAVA && block.getType() != Material.STATIONARY_LAVA && block.getType() != Material.WATER && block.getType() != Material.STATIONARY_WATER && block.getType() != Material.STRUCTURE_VOID) {
-                            @SuppressWarnings("deprecation")
-                            PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
-                                    new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
-                                    block.getType().getId(), false);
-                            List<Player> players = getPlayer().getWorld().getPlayers();
-                            for(final Player p : players) {
-                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+                        if (block.getType() != Material.AIR && block.getType() != Material.LONG_GRASS &&
+                                block.getType() != Material.DOUBLE_PLANT && block.getType() != Material.GRASS_PATH && block.getType() != Material.LAVA &&
+                                block.getType() != Material.STATIONARY_LAVA && block.getType() != Material.WATER &&
+                                block.getType() != Material.STATIONARY_WATER && block.getType() != Material.STRUCTURE_VOID &&
+                                block.getType() != Material.RED_ROSE && block.getType() != Material.YELLOW_FLOWER &&
+                                block.getType() != Material.BROWN_MUSHROOM && block.getType() != Material.RED_MUSHROOM && block.getType() != Material.VINE &&
+                                block.getType() != Material.SAPLING && block.getType() != Material.WEB &&
+                                block.getType() != Material.TORCH && block.getType() != Material.REDSTONE_TORCH_ON && block.getType() != Material.REDSTONE_TORCH_OFF &&
+                                block.getType() != Material.DEAD_BUSH && block.getType() != Material.TRIPWIRE_HOOK &&
+                                block.getType() != Material.TRIPWIRE && block.getType() != Material.STRING && block.getType() != Material.REDSTONE_WIRE) {
+                            boolean passed = true;
+                            if(block.getType() == Material.STONE_SLAB2 || block.getType() == Material.STEP ||
+                                    block.getType() == Material.WOOD_STEP || block.getType() == Material.PURPUR_SLAB) {
+                                if(block.getData() >= 8 && y >= 0.5) {
+                                    passed = false;
+                                } else if(block.getData() < 8 && y <= 0.5) {
+                                    passed = false;
+                                }
                             }
-                            return new HitEntity(null, false, 0,
-                                    getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
+                            if(passed) {
+                                @SuppressWarnings("deprecation")
+                                PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
+                                        new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
+                                        block.getType().getId(), false);
+                                List<Player> players = getPlayer().getWorld().getPlayers();
+                                for (final Player p : players) {
+                                    ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+                                }
+                                return new HitEntity(null, false, 0,
+                                        getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
+                            }
                         }
                     }
                 }
@@ -752,8 +790,13 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     @Override
     public void giveItem(GwItem item) {
         ItemStack i = item.getItem().clone();
-        ((GunWarGame) GunWar.getGame()).addItemData(item instanceof GwGunItem ? new GunWarGunData((GwGunItem) item, i, getPlayer()) :
-                new GunWarItemData(item, i, getPlayer()));
+        if(item instanceof GwGunItem) {
+            ((GunWarGame) GunWar.getGame()).addItemData(new GunWarGunData((GwGunItem) item, i, getPlayer()));
+        } else if(item instanceof GwKnifeItem) {
+            ((GunWarGame) GunWar.getGame()).addItemData(new GunWarKnifeData((GwKnifeItem) item, i, getPlayer()));
+        } else {
+            ((GunWarGame) GunWar.getGame()).addItemData(new GunWarItemData(item, i, getPlayer()));
+        }
         if (GunWar.getGame().getItemData(i) != null) i = GunWar.getGame().getItemData(i).getItem();
         getPlayer().getInventory().addItem(i);
         getPlayer().updateInventory();

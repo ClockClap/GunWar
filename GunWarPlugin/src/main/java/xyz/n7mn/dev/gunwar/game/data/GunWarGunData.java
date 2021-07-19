@@ -12,9 +12,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.entity.HitEntity;
+import xyz.n7mn.dev.gunwar.item.GunReloadingType;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.util.Angle;
+import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
 import java.util.*;
 
@@ -67,11 +69,11 @@ public class GunWarGunData extends GunWarItemData implements GunData {
                 accuracy = ((GwGunItem) getGwItem()).getAccuracyOnSneak();
             }
 
-            double yaw = random.nextDouble() * (16 / accuracy) - (8 / accuracy);
-            double pitch = random.nextDouble() * (16 / accuracy) - (8 / accuracy);
+            double yaw = random.nextDouble() * (32 / accuracy) - (16 / accuracy);
+            double pitch = random.nextDouble() * (32 / accuracy) - (16 / accuracy);
 
             HitEntity hitEntity = GunWar.getGame().getPlayerData(getOwner()).drawParticleLine(
-                    Particle.CRIT, 0, 0, 0.1, ((GwGunItem) getGwItem()).getRange(),
+                    Particle.SUSPENDED_DEPTH, yaw, pitch, 0.1, ((GwGunItem) getGwItem()).getRange(),
                     new Angle(yaw, pitch), 0.25, (GwGunItem) getGwItem());
             if(hitEntity != null) {
                 double subX = hitEntity.getHitLocation().getX() - hitEntity.getFrom().getX();
@@ -128,22 +130,44 @@ public class GunWarGunData extends GunWarItemData implements GunData {
             reloading = true;
             canFire = false;
             updateName();
-            reload = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    reloading = false;
-                    setAmmo(((GwGunItem) getGwItem()).getAmmo());
-                    updateName();
-                    canFire = true;
-                }
-            };
-            reload.runTaskLater(GunWar.getPlugin(), ((GwGunItem) getGwItem()).getReload());
+            if(((GwGunItem) getGwItem()).getReloadingType() == GunReloadingType.SINGLE) {
+                reload = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if(getAmmo() >= ((GwGunItem) getGwItem()).getAmmo()) {
+                            setAmmo(((GwGunItem) getGwItem()).getAmmo());
+                            reloading = false;
+                            canFire = true;
+                            this.cancel();
+                            return;
+                        }
+                        setAmmo(getAmmo() + 1);
+                        updateName();
+                    }
+                };
+                reload.runTaskTimer(GunWar.getPlugin(), 0, ((GwGunItem) getGwItem()).getReload());
+            } else {
+                reload = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        reloading = false;
+                        setAmmo(((GwGunItem) getGwItem()).getAmmo());
+                        updateName();
+                        canFire = true;
+                    }
+                };
+                reload.runTaskLater(GunWar.getPlugin(), ((GwGunItem) getGwItem()).getReload());
+            }
         }
     }
 
     public void updateName() {
         ItemMeta meta = getItem().getItemMeta();
-        meta.setDisplayName(ChatColor.GRAY + getGwItem().getDisplayName() + " " + (reloading ? "▫" : "▪") + " " + (reloading ? ChatColor.DARK_GRAY : ChatColor.GRAY) + "«" + ammo + "»");
+        String s = GunWar.getConfig().getDetailConfig().getString("item.gun_name_format.general", "%{color}7%i ▪ «%a»");
+        if(reloading) s = GunWar.getConfig().getDetailConfig().getString("item.gun_name_format.reloading", "%{color}7%i ▫ %{color}8«%a»");
+            s = TextUtilities.translateAlternateColorCodes("%{color}", s);
+            s = s.replaceAll("%i", getGwItem().getDisplayName()).replaceAll("%a", ammo + "");
+            meta.setDisplayName(s);
         getItem().setItemMeta(meta);
         List<ItemStack> items = Arrays.asList(getOwner().getInventory().getContents());
         for(ItemStack i : items) {

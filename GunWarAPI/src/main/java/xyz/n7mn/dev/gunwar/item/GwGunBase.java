@@ -21,16 +21,22 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
     private float accuracySneaking;
     private float knockback;
     private GwGunType gunType;
+    private GunReloadingType type;
 
     protected GwGunBase() {
         this(0, Material.STONE, "", "", "",
                 new ArrayList<>(), 0F, 0F, 0, 0,
-                0F, 0F, 0L, 0L, 0F, 0F, 0F, 0F,  GwGunType.ASSAULT_RIFLE);
+                0F, 0F, 0L, 0L, 0F, 0F, 0F, 0F,  GwGunType.ASSAULT_RIFLE, GunReloadingType.ONCE);
+    }
+    protected GwGunBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage, float damageHeadShot,
+                        int ammo, double range, float recoil, float recoilSneaking, long reload, long fire, float zoom, float accuracy,
+                        float accuracySneaking, float knockback, GwGunType gunType) {
+        this(index, type, name, displayName, id, description, damage, damageHeadShot, ammo, range, recoil, recoilSneaking, reload, fire, zoom, accuracy, accuracySneaking, knockback, gunType, GunReloadingType.ONCE);
     }
 
     protected GwGunBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage, float damageHeadShot,
                         int ammo, double range, float recoil, float recoilSneaking, long reload, long fire, float zoom, float accuracy,
-                        float accuracySneaking, float knockback, GwGunType gunType) {
+                        float accuracySneaking, float knockback, GwGunType gunType, GunReloadingType reloadingType) {
         super(index, type, name, displayName, id, description, damage);
         this.ammo = ammo;
         this.range = range;
@@ -44,6 +50,7 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
         this.accuracySneaking = accuracySneaking;
         this.knockback = knockback;
         this.gunType = gunType;
+        this.type = reloadingType;
         a();
     }
 
@@ -95,6 +102,11 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
         return gunType;
     }
 
+    @Override
+    public GunReloadingType getReloadingType() {
+        return type;
+    }
+
     protected void setAmmo(int ammo) {
         this.ammo = ammo;
     }
@@ -141,6 +153,10 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
 
     protected void setGunType(GwGunType gunType) {
         this.gunType = gunType;
+    }
+    
+    protected void setReloadingType(GunReloadingType type) {
+        this.type = type;
     }
 
     protected void setDescription(List<String> description) {

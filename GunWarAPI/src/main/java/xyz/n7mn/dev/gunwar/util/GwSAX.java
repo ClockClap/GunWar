@@ -45,7 +45,7 @@ final class GwSAX extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) {
-        this.tmp = this.tmp.substring(0, this.tmp.length() - qName.length() - 1);
+        this.tmp = this.tmp.substring(0, Math.max(0, this.tmp.length() - qName.length() - 1));
     }
 
     public void characters(char[] ch, int start, int length) {

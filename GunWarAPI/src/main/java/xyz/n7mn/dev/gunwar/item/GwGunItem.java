@@ -91,6 +91,13 @@ public interface GwGunItem extends GwWeaponItem {
      */
     public GwGunType getGunType();
 
+    /**
+     * Gets type of the gun reloading.
+     *
+     * @return gun reloading type
+     */
+    public GunReloadingType getReloadingType();
+
     public default void onShoot(Player player) { }
 
     public default void onHit(Player player, Entity entity, float damage) { }

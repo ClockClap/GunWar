@@ -20,6 +20,12 @@ public final class Worlds {
     public static final double DEFAULT_MAX_COORDINATE_Y = 0x100;
     public static final double DEFAULT_MAX_COORDINATE_Z = 0x1C9C380;
 
+    public static final double BLOCK_16x16_1PIXEL = 0.0625;
+
+    public static double toCoordinate(int pixel) {
+        return BLOCK_16x16_1PIXEL * pixel;
+    }
+
     public static World getWorld(String name) {
         return Bukkit.getWorld(name);
     }

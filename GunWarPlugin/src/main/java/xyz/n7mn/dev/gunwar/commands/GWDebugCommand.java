@@ -39,7 +39,7 @@ public class GWDebugCommand extends Command {
                         return true;
                     }
                     if(args[1].equalsIgnoreCase("attrMap") && args.length >= 4) {
-                        sender.sendMessage(TextUtilities.CHAT_PREFIX + " Debug [GETVAL]: configMap(" + args[2] + ") = " + GunWar.getConfig().getDetailConfig().getAttribute(args[2], args[3]));
+                        sender.sendMessage(TextUtilities.CHAT_PREFIX + " Debug [GETVAL]: attrMap(" + args[2] + ") = " + GunWar.getConfig().getDetailConfig().getAttribute(args[2], args[3]));
                         return true;
                     }
                 }
@@ -49,6 +49,9 @@ public class GWDebugCommand extends Command {
                 }
                 if(args[0].equalsIgnoreCase("CHAT2") && args.length >= 5) {
                     sender.sendMessage(TextUtilities.chat(ChatColor.valueOf(args[1]), args[2], args[3], args[4]));
+                }
+                if(args[0].equalsIgnoreCase("COLOR")) {
+                    sender.sendMessage(TextUtilities.translateAlternateColorCodes("%{color}", "%{color}ctest"));
                 }
             }
             return true;

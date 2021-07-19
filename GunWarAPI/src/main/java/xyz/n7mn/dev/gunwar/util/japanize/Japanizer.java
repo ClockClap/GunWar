@@ -104,10 +104,10 @@ public class Japanizer {
                 for (Player p : players) {
                     String name = p.getName();
                     String japanizedName = KanaConverter.conv(name);
-                    if(ime) japanizedName = GoogleIME.convByGoogleIME(japanizedName);
                     result = result.replaceAll(japanizedName, name);
                 }
             }
+            if(ime) result = GoogleIME.convByGoogleIME(result);
             if(color) {
                 result = result.replaceAll("§０", "§0");
                 result = result.replaceAll("§１", "§1");

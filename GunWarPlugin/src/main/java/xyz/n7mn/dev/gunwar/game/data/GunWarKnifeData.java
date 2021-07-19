@@ -26,11 +26,11 @@ public class GunWarKnifeData extends GunWarItemData implements KnifeData {
     private BukkitRunnable fire;
     private BukkitRunnable reload;
 
-    public GunWarKnifeData(GwGunItem gwitem, ItemStack item, Player owner) {
+    public GunWarKnifeData(GwKnifeItem gwitem, ItemStack item, Player owner) {
         super(gwitem, item, owner);
         reloading = false;
         canFire = true;
-        ammo = gwitem.getAmmo();
+        ammo = 1;
         updateName();
     }
 
