@@ -3,7 +3,7 @@
 ## IF YOU CHANGE MySQL SETTING, YOU NEED TO RESTART THE SERVER
 
 # Discord inviting url
-discord: 'https://discord.gg/w2jFt4vA5A'
+discord: 'https://discord.gg/nbRUAmmypS'
 
 # permission setting
 ## if you enter :nanami-network:> at the beginning, permission mode will move to nanami-network permission system mode
@@ -18,7 +18,7 @@ game:
   # game mode to play
   # NORMAL - normal mode. there are 2 modes, team and solo.
   # ZOMBIE_ESCAPE - zombie escape mode. zombies win if all survivors are infected or zombies enter the safe area within the time limit
-  # CASTLE_SIEGE - castle siege mode. attackers win if the king of defenders team died.
+  # GENERAL_SIEGE - general siege mode. attackers win if the king of defenders team died.
   gamemode: 'normal'
   # players count to start game
   # DEFAULT: 10 players
@@ -27,8 +27,8 @@ game:
   # prepare time (sec)
   prepare: 10
   # default starting location
-  # (applies these values if the starting location is not specified using /setstartloc
-  # and there are no location specified when the game started with /startloc command or if automatically starting mode is enabled)
+  # (applies these values as the survivors starting location in zombie escape mode or the players starting location in solo mode if the starting location is not specified using "/setloc default <world> <x> <y> <z>"
+  # and there are no location specified when the game started with "/startloc" command or if automatically starting mode is enabled)
   startloc:
     world: 'world'
     x: 0
@@ -40,15 +40,51 @@ game:
     zombies: 3
     # time to choose zombies (sec)
     choose-zombies: 10
+    # location of zombies spawning when start
+    # (applies these values if the starting location is not specified using "/setloc zombies <world> <x> <y> <z>"
+    # and there are no location specified when the game started with "/startloc" command or if automatically starting mode is enabled)
+    zombie-start:
+      world: 'world'
+      x: 0
+      y: 0
+      z: 0
+    # range of goal
+    # (applies these values if the starting location is not specified using "/setstartloc ze-goal <world> <x> <y> <z> <dx> <dy> <dz>"
+    # and there are no location specified when the game started with "/startloc" command or if automatically starting mode is enabled)
+    goal:
+      world: 'world'
+      x: 0
+      y: 0
+      z: 0
+      dx: 0
+      dy: 0
+      dz: 0
     # gaming time after arriving safe area (time limit - sec)
     game-time: 180
   # setting for normal mode
   normal:
     # time limit for team mode - sec
     game-time-team: 900
-    # tiem limit for solo mode - sec
+    # time limit for solo mode - sec
     game-time-solo: 900
-
+    # starting location of red team
+    # (applies these values as the members of red's team starting and respawning location in team mode
+    # if the starting location is not specified using "/setloc red <world> <x> <y> <z>"
+    # and there are no location specified when the game started with "/startloc" command or if automatically starting mode is enabled)
+    startloc-red:
+      world: 'world'
+      x: 0
+      y: 0
+      z: 0
+    # starting location of blue team
+    # (applies these values as the members of blue's team starting and respawning location in team mode
+    # if the starting location is not specified using "/setloc blue <world> <x> <y> <z>"
+    # and there are no location specified when the game started with "/startloc" command or if automatically starting mode is enabled)
+    startloc-blue:
+      world: 'world'
+      x: 0
+      y: 0
+      z: 0
 
 # setting for database
 mysql:

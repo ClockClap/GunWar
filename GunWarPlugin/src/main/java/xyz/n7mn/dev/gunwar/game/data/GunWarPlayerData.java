@@ -24,6 +24,7 @@ import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.item.GwKnifeItem;
 import xyz.n7mn.dev.gunwar.util.Angle;
+import xyz.n7mn.dev.gunwar.util.BlockShape;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
 import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
@@ -507,7 +508,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
     @Override
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
-                                      double far, Angle angle, double separate, GwGunItem gun) {
+                                      double far, Angle angle, double separate, GwGunItem gun, boolean aim) {
         double yaw = angle.getYaw();
         double pitch = angle.getPitch();
         double r = separate * Math.cos(pitch);
@@ -520,10 +521,11 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             double x = startX;
             double y = startY;
             double z = startZ;
-            double damageMin = gun.getAttackDamage() / 1.1;
-            double hsdamageMin = gun.getHeadShotDamage() / 1.1;
-            double currentDamage = gun.getAttackDamage();
-            double currentHSDamage = gun.getHeadShotDamage();
+            double ad = aim ? gun.getAttackDamage() + gun.getDamageAimed() : gun.getAttackDamage();
+            double damageMin = ad / 1.1;
+            double hsdamageMin = (ad + gun.getHeadShotDamage()) / 1.1;
+            double currentDamage = ad;
+            double currentHSDamage = ad + gun.getHeadShotDamage();
             double separateDamage = currentDamage - damageMin / times;
             double separateHSDamage = currentHSDamage - hsdamageMin / times;
             double px = 0;
@@ -555,9 +557,14 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     pz = zi + nz;
 
                     Random rand = new Random();
-                    double d_ = rand.nextDouble() * 0.2 - 0.1;
+                    double dx_ = rand.nextDouble() * 0.2 - 0.1;
+                    double dy_ = rand.nextDouble() * 0.2 - 0.1;
+                    double dz_ = rand.nextDouble() * 0.2 - 0.1;
 
-                    player.spawnParticle(particle, new Location(c.getWorld(), px * d_, py * d_, pz * d_), 1, 0, 0, 0, 0);
+                    int count = 1;
+                    if(particle == Particle.SUSPENDED_DEPTH) count = 8;
+
+                    player.spawnParticle(particle, new Location(c.getWorld(), px + dx_, py + dy_, pz + dz_), count, 0, 0, 0, 0);
 
                     for(Entity entity : getPlayer().getNearbyEntities(far + 1, far + 1, far + 1)) {
                         if(entity instanceof LivingEntity) {
@@ -601,16 +608,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
                     Block block = loc.getBlock();
                     if(block != null) {
-                        if (block.getType() != Material.AIR && block.getType() != Material.LONG_GRASS &&
-                                block.getType() != Material.DOUBLE_PLANT && block.getType() != Material.GRASS_PATH && block.getType() != Material.LAVA &&
-                                block.getType() != Material.STATIONARY_LAVA && block.getType() != Material.WATER &&
-                                block.getType() != Material.STATIONARY_WATER && block.getType() != Material.STRUCTURE_VOID &&
-                                block.getType() != Material.RED_ROSE && block.getType() != Material.YELLOW_FLOWER &&
-                                block.getType() != Material.BROWN_MUSHROOM && block.getType() != Material.RED_MUSHROOM && block.getType() != Material.VINE &&
-                                block.getType() != Material.SAPLING && block.getType() != Material.WEB &&
-                                block.getType() != Material.TORCH && block.getType() != Material.REDSTONE_TORCH_ON && block.getType() != Material.REDSTONE_TORCH_OFF &&
-                                block.getType() != Material.DEAD_BUSH && block.getType() != Material.TRIPWIRE_HOOK &&
-                                block.getType() != Material.TRIPWIRE && block.getType() != Material.STRING && block.getType() != Material.REDSTONE_WIRE) {
+                        if (a(block, px, py, pz)) {
                             @SuppressWarnings("deprecation")
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
                                     new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
@@ -621,17 +619,18 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                             }
                             return new HitEntity(null, false, 0,
                                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
-                        }
-                        if(block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) {
-                            currentDamage /= 2;
-                            currentHSDamage /= 2;
-                        }
-                        if(block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
-                            currentDamage /= 3;
-                            currentHSDamage /= 3;
-                        }
-                        if(block.getType() == Material.WEB) {
-                            block.setType(Material.AIR);
+                        } else {
+                            if(block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) {
+                                currentDamage /= 2;
+                                currentHSDamage /= 2;
+                            }
+                            if(block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
+                                currentDamage /= 3;
+                                currentHSDamage /= 3;
+                            }
+                            if(block.getType() == Material.WEB) {
+                                block.setType(Material.AIR);
+                            }
                         }
                     }
                 }
@@ -694,7 +693,15 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     py = yi + ny;
                     pz = zi + nz;
 
-                    player.spawnParticle(particle, new Location(c.getWorld(), px, py, pz), 1, 0, 0, 0, 0);
+                    Random rand = new Random();
+                    double dx_ = rand.nextDouble() * 0.2 - 0.1;
+                    double dy_ = rand.nextDouble() * 0.2 - 0.1;
+                    double dz_ = rand.nextDouble() * 0.2 - 0.1;
+
+                    int count = 1;
+                    if(particle == Particle.SUSPENDED_DEPTH) count = 8;
+
+                    player.spawnParticle(particle, new Location(c.getWorld(), px + dx_, py + dy_, pz + dz_), count, 0, 0, 0, 0);
 
                     for(Entity entity : getPlayer().getNearbyEntities(far + 1, far + 1, far + 1)) {
                         if(entity instanceof LivingEntity) {
@@ -738,37 +745,17 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
                     Block block = loc.getBlock();
                     if(block != null) {
-                        if (block.getType() != Material.AIR && block.getType() != Material.LONG_GRASS &&
-                                block.getType() != Material.DOUBLE_PLANT && block.getType() != Material.GRASS_PATH && block.getType() != Material.LAVA &&
-                                block.getType() != Material.STATIONARY_LAVA && block.getType() != Material.WATER &&
-                                block.getType() != Material.STATIONARY_WATER && block.getType() != Material.STRUCTURE_VOID &&
-                                block.getType() != Material.RED_ROSE && block.getType() != Material.YELLOW_FLOWER &&
-                                block.getType() != Material.BROWN_MUSHROOM && block.getType() != Material.RED_MUSHROOM && block.getType() != Material.VINE &&
-                                block.getType() != Material.SAPLING && block.getType() != Material.WEB &&
-                                block.getType() != Material.TORCH && block.getType() != Material.REDSTONE_TORCH_ON && block.getType() != Material.REDSTONE_TORCH_OFF &&
-                                block.getType() != Material.DEAD_BUSH && block.getType() != Material.TRIPWIRE_HOOK &&
-                                block.getType() != Material.TRIPWIRE && block.getType() != Material.STRING && block.getType() != Material.REDSTONE_WIRE) {
-                            boolean passed = true;
-                            if(block.getType() == Material.STONE_SLAB2 || block.getType() == Material.STEP ||
-                                    block.getType() == Material.WOOD_STEP || block.getType() == Material.PURPUR_SLAB) {
-                                if(block.getData() >= 8 && y >= 0.5) {
-                                    passed = false;
-                                } else if(block.getData() < 8 && y <= 0.5) {
-                                    passed = false;
-                                }
+                        if(a(block, px, py, pz)) {
+                            @SuppressWarnings("deprecation")
+                            PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
+                                    new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
+                                    block.getType().getId(), false);
+                            List<Player> players = getPlayer().getWorld().getPlayers();
+                            for (final Player p : players) {
+                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
                             }
-                            if(passed) {
-                                @SuppressWarnings("deprecation")
-                                PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
-                                        new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
-                                        block.getType().getId(), false);
-                                List<Player> players = getPlayer().getWorld().getPlayers();
-                                for (final Player p : players) {
-                                    ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-                                }
-                                return new HitEntity(null, false, 0,
-                                        getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
-                            }
+                            return new HitEntity(null, false, 0,
+                                    getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
                         }
                     }
                 }
@@ -782,6 +769,32 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
         }
         return null;
+    }
+
+    private boolean a(Block block, double x, double y, double z) {
+        boolean result = true;
+        if(block != null && block.getType() != null) {
+            Material type = block.getType();
+            int xa = block.getLocation().getBlockX();
+            int ya = block.getLocation().getBlockY();
+            int za = block.getLocation().getBlockZ();
+
+            double xb = x - xa;
+            double yb = y - ya;
+            double zb = z - za;
+            if(!BlockShape.isTransparent(type)) {
+                if (BlockShape.isSlab(type)) {
+                    if (block.getData() >= 8 && yb >= 0.5) {
+                        result = false;
+                    } else if (block.getData() < 8 && yb <= 0.5) {
+                        result = false;
+                    }
+                }
+            } else {
+                result = false;
+            }
+        }
+        return result;
     }
 
     @Override

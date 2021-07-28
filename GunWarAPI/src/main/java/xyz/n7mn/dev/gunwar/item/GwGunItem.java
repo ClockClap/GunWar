@@ -62,6 +62,13 @@ public interface GwGunItem extends GwWeaponItem {
     public float getHeadShotDamage();
 
     /**
+     * Gets health value of damage when the gun holder sneaking.
+     *
+     * @return health value of damage
+     */
+    public float getDamageAimed();
+
+    /**
      * Gets accuracy of the gun ammo. <br>
      * 500F is max value.
      *

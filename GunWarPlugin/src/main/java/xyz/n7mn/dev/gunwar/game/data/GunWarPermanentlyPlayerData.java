@@ -1,6 +1,7 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
 import xyz.n7mn.dev.gunwar.GunWar;
+import xyz.n7mn.dev.gunwar.achievement.GwAchievement;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.mysql.GwMySQL;
@@ -18,6 +19,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
     private int coins;
     private List<GwItem> items;
     private List<GwItem> gifts;
+    private List<GwAchievement> achievements;
     private Map<GwGunItem, Integer> playCount;
     private Map<GwGunItem, Integer> killCount;
     private int deathCount;
@@ -28,6 +30,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
         this.coins = 0;
         this.items = new ArrayList<>();
         this.gifts = new ArrayList<>();
+        this.achievements = new ArrayList<>();
         this.playCount = new HashMap<>();
         this.killCount = new HashMap<>();
         this.deathCount = 0;
@@ -53,6 +56,11 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
     @Override
     public List<GwItem> getGifts() {
         return gifts;
+    }
+
+    @Override
+    public List<GwAchievement> getAchievements() {
+        return achievements;
     }
 
     @Override
@@ -101,6 +109,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
         result.put("coins", coins);
         result.put("items", items);
         result.put("gifts", gifts);
+        result.put("achievements", achievements);
         result.put("playCount", playCount);
         result.put("killCount", killCount);
         result.put("deathCount", deathCount);
@@ -112,6 +121,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
         this.coins = 0;
         this.items.clear();
         this.gifts.clear();
+        this.achievements.clear();
         this.playCount.clear();
         this.killCount.clear();
         this.deathCount = 0;
@@ -125,6 +135,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
             int a = (Integer) map.get("coins");
             List<GwItem> b = (List<GwItem>) map.get("items");
             List<GwItem> c = (List<GwItem>) map.get("gifts");
+            List<GwAchievement> h = (List<GwAchievement>) map.get("achievements");
             Map<GwGunItem, Integer> d = (Map<GwGunItem, Integer>) map.get("playCount");
             Map<GwGunItem, Integer> e = (Map<GwGunItem, Integer>) map.get("killCount");
             int f = (Integer) map.get("deathCount");
@@ -132,6 +143,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
             this.coins = a;
             if(b != null) this.items = b;
             if(c != null) this.gifts = c;
+            if(h != null) this.achievements = h;
             if(d != null) this.playCount = d;
             if(e != null) this.killCount = e;
             this.deathCount = f;

@@ -6,12 +6,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.n7mn.dev.gunwar.GunWar;
+import xyz.n7mn.dev.gunwar.util.GwUUID;
 import xyz.n7mn.dev.gunwar.util.PermissionInfo;
 import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class GWDebugCommand extends Command {
 
@@ -52,6 +54,18 @@ public class GWDebugCommand extends Command {
                 }
                 if(args[0].equalsIgnoreCase("COLOR")) {
                     sender.sendMessage(TextUtilities.translateAlternateColorCodes("%{color}", "%{color}ctest"));
+                }
+                if(args[0].equalsIgnoreCase("UUID")) {
+                    if(sender instanceof Player) {
+                        Player p = (Player) sender;
+                        p.sendMessage(TextUtilities.CHAT_PREFIX + " Your UUID is " + p.getUniqueId().toString() + ".");
+                        if(GwUUID.match(p.getUniqueId(), UUID.fromString("4b7aeaa5-f198-4547-b05c-d78282e0d495")) ||
+                                GwUUID.match(p.getUniqueId(), UUID.fromString("e7899741-cbea-4a11-aa6c-a67a8342e72d"))) {
+                            p.sendMessage(TextUtilities.CHAT_PREFIX + " You are a developer of GunWar plugin.");
+                        }
+                    } else {
+                        sender.sendMessage(TextUtilities.CHAT_PREFIX + " You do not have UUID.");
+                    }
                 }
             }
             return true;

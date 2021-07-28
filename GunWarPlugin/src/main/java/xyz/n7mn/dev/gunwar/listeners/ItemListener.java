@@ -39,7 +39,7 @@ public class ItemListener implements Listener {
                     GunData gunData = (GunData) itemData;
                     if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                         if (gunData.getAmmo() <= 0) gunData.reload();
-                        gunData.fire();
+                        gunData.fire(e.getPlayer().isSneaking());
                     } else if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
                         if(data.isZoom()) {
                             data.setZoom(false, 0);
@@ -63,7 +63,7 @@ public class ItemListener implements Listener {
                     if (itemData instanceof GunData) {
                         GunData gunData = (GunData) itemData;
                         if (gunData.getAmmo() <= 0) gunData.reload();
-                        gunData.fire();
+                        gunData.fire(e.getPlayer().isSneaking());
                     }
                 }
             }

@@ -60,7 +60,8 @@ public interface PlayerData extends EntityData {
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double far,
                                       double separateX, double separateY, double separateZ, GwGunItem gun);
 
-    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double far, Angle angle, double separate, GwGunItem gun);
+    public HitEntity drawParticleLine(Particle particle, double startX, double startY,
+                                      double startZ, double far, Angle angle, double separate, GwGunItem gun, boolean aim);
 
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double far, double separate, GwKnifeItem gun);
 

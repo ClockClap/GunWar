@@ -28,6 +28,8 @@ public final class TextUtilities {
     public static final String CHAT_COMMAND_GIVE_ITEM = format("chat.command.give_item", "&7%PLAYER% に %ITEM% を与えました");
     public static final String CHAT_DETAIL_YOUR_PERMISSION = format("chat.detail.your_permission", "&7あなたの権限: &a%CURRENT%");
     public static final String CHAT_DETAIL_REQUIRED_PERMISSION = format("chat.detail.required_permission", "&7必要な権限: &a%REQUIRED%");
+    public static final String CHAT_ACHIEVEMENT_EARNED = format("chat.achievement.earned", "%PLAYER%は実績 %ACHIEVEMENT% を達成しました。");
+    public static final String CHAT_ACHIEVEMENT_TAKEN = format("chat.achievement.taken", "&c管理者に実績 %ACHIEVEMENT% が剥奪されました。");
 
     public static final String TITLE_MAIN_INFECT = format("ui.title.main.infect", "&2ゾンビに感染してしまった...");
     public static final String TITLE_MAIN_DIED_ZOMBIE = format("ui.title.main.died_zombie", "&2死んでしまった...");
@@ -66,6 +68,8 @@ public final class TextUtilities {
     public static final String BOSSBAR_WAITING = format("ui.bossbar.waiting", "&c待機中 - 人数が集まるまでしばらくお待ち下さい");
     public static final String BOSSBAR_STARTING = format("ui.bossbar.starting", "&6残り%SECOND%秒でゲームが開始します");
 
+    public static final String MISC_WEAPON_SET = format("misc.weapon-set", "武器セット");
+
     public static final String MISC_RULE_DEFENDER = format("misc.rule.team.defender", "攻め側の攻撃から大将を護衛しましょう。大将は倒されないように隠れましょう。");
     public static final String MISC_RULE_ATTACKER = format("misc.rule.team.attacker", "要塞を攻略し、守り側の大将を倒しましょう。");
     public static final String MISC_RULE_SURVIVOR = format("misc.rule.team.survivor", "セーフエリアに行って制限時間まで耐え、ゾンビから逃げ切りましょう。");
@@ -77,9 +81,10 @@ public final class TextUtilities {
 
     public static final String SLOT_WEAPON = format("slot.weapon", "武器スロット");
 
-    public static final String MISC_WEAPON_MAIN = format("misc.weapon.main", "メイン武器");
-    public static final String MISC_WEAPON_SUB = format("misc.weapon.sub", "サブ武器");
-    public static final String MISC_WEAPON_KNIFE = format("misc.weapon.knife", "ナイフ");
+    public static final String SLOT_WEAPON_MAIN = format("slot.weapon.main", "メイン武器");
+    public static final String SLOT_WEAPON_SUB = format("slot.weapon.sub", "サブ武器");
+    public static final String SLOT_WEAPON_KNIFE = format("slot.weapon.knife", "ナイフ");
+
 
     public static final String MISC_DESCRIPTION_COMMAND_GUNWARITEM = format("misc.description.command.gunwaritem", "ななみ銃撃戦のアイテムを与えます。");
     public static final String MISC_DESCRIPTION_COMMAND_GUNWARRELOAD = format("misc.description.command.gunwarreload", "銃撃戦プラグインの設定を再読み込みします。");

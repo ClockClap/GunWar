@@ -8,6 +8,8 @@ chat.command.reload: 'Reloaded configuration successfully.'
 chat.command.give_item: '&7Given %ITEM% to %PLAYER%.'
 chat.detail.your_permission: '&7Your Permission: &a%CURRENT%'
 chat.detail.required_permission: '&7Required Permission: &a%REQUIRED%'
+chat.achievement.earned: '%PLAYER% earned the achievement %ACHIEVEMENT%.'
+chat.achievement.taken: '&cYou have been taken the achievement %ACHIEVEMENT% by an administrator.'
 
 ui.title.main.infect: '&2YOU ARE INFECTED...'
 ui.title.main.died_zombie: '&2YOU DIED...'
@@ -45,6 +47,8 @@ ui.sidebar.game_state.ending: '&aEnding'
 ui.bossbar.waiting: '&cWaiting - Please wait for a moment'
 ui.bossbar.starting: 'Starting at %SECOND% seconds'
 
+misc.weapon-set: 'Weapon Set'
+
 misc.rule.team.defender: 'Defend your king from attackers attack. If you are king, hide so as not to be defeated.'
 misc.rule.team.attacker: 'Capture the fortress and knock down the king of defenders team.'
 misc.rule.team.survivor: 'Go to the safe area, endure the time limit and escape from the zombies.'
@@ -56,9 +60,12 @@ misc.rule.mode.general_siege: 'A general siege divided into attackers and defend
 
 slot.weapon: 'Weapon Slot'
 
-misc.weapon.main: 'Main Weapon'
-misc.weapon.sub: 'Sub Weapon'
-misc.weapon.knife: 'Knife'
+slot.weapon.main: 'Main Weapon'
+slot.weapon.sub: 'Sub Weapon'
+slot.weapon.knife: 'Knife'
+
+achievement.master_killer.name: 'Master Killer'
+achievement.master_killer.description: 'Kill 50 players in a game'
 
 misc.description.command.gunwaritem: 'Gives specific player a GunWar item.'
 misc.description.command.gunwarreload: 'Reloads the configuration of GunWar plugin.'

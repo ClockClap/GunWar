@@ -59,7 +59,7 @@ public class GunWarGunData extends GunWarItemData implements GunData {
     }
 
     @Override
-    public void fire() {
+    public void fire(boolean aim) {
         if(canFire && getAmmo() > 0) {
             canFire = false;
 
@@ -74,7 +74,7 @@ public class GunWarGunData extends GunWarItemData implements GunData {
 
             HitEntity hitEntity = GunWar.getGame().getPlayerData(getOwner()).drawParticleLine(
                     Particle.SUSPENDED_DEPTH, yaw, pitch, 0.1, ((GwGunItem) getGwItem()).getRange(),
-                    new Angle(yaw, pitch), 0.25, (GwGunItem) getGwItem());
+                    new Angle(yaw, pitch), 0.25, (GwGunItem) getGwItem(), aim);
             if(hitEntity != null) {
                 double subX = hitEntity.getHitLocation().getX() - hitEntity.getFrom().getX();
                 double subY = hitEntity.getHitLocation().getY() - hitEntity.getFrom().getY();
@@ -169,6 +169,15 @@ public class GunWarGunData extends GunWarItemData implements GunData {
             s = s.replaceAll("%i", getGwItem().getDisplayName()).replaceAll("%a", ammo + "");
             meta.setDisplayName(s);
         getItem().setItemMeta(meta);
+        if(getOwner().getInventory().getItemInMainHand() != null) {
+            ItemStack hand = getOwner().getInventory().getItemInMainHand();
+            if(hand.getType() != null && hand.getType() == getGwItem().getType() && hand.hasItemMeta() &&
+                    hand.getItemMeta().getLore() != null && hand.getItemMeta().getLore().contains(getGwItem().getId())) {
+                getOwner().getInventory().setItem(getOwner().getInventory().getHeldItemSlot(), getItem());
+                getOwner().updateInventory();
+                return;
+            }
+        }
         List<ItemStack> items = Arrays.asList(getOwner().getInventory().getContents());
         for(ItemStack i : items) {
             if(i == null) {
@@ -177,6 +186,7 @@ public class GunWarGunData extends GunWarItemData implements GunData {
             if(i.hasItemMeta()) {
                 if(i.getItemMeta().getLore() != null && i.getItemMeta().getLore().contains(getGwItem().getId())); {
                     getOwner().getInventory().setItem(items.indexOf(i), getItem());
+                    break;
                 }
             }
         }

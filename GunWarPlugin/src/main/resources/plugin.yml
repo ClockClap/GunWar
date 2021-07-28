@@ -2,5 +2,5 @@ name: GunWar
 version: ${project.version}
 main: xyz.n7mn.dev.gunwar.NanamiGunWar
 load: STARTUP
-authors: [ ClockClap ]
-description: 銃撃戦とか言いながら実はゾンエス
+authors: [ tubqme ]
+description: この銃撃戦には様々なゲームモードがあり、自分好みのモードで楽しめます。

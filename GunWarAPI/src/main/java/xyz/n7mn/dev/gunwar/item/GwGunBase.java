@@ -17,6 +17,7 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
     private long fire;
     private float zoom;
     private float damageHeadShot;
+    private float damageAimed;
     private float accuracy;
     private float accuracySneaking;
     private float knockback;
@@ -25,16 +26,16 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
 
     protected GwGunBase() {
         this(0, Material.STONE, "", "", "",
-                new ArrayList<>(), 0F, 0F, 0, 0,
+                new ArrayList<>(), 0F, 0F, 0F, 0, 0,
                 0F, 0F, 0L, 0L, 0F, 0F, 0F, 0F,  GwGunType.ASSAULT_RIFLE, GunReloadingType.ONCE);
     }
-    protected GwGunBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage, float damageHeadShot,
+    protected GwGunBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage, float damageAimed, float damageHeadShot,
                         int ammo, double range, float recoil, float recoilSneaking, long reload, long fire, float zoom, float accuracy,
                         float accuracySneaking, float knockback, GwGunType gunType) {
-        this(index, type, name, displayName, id, description, damage, damageHeadShot, ammo, range, recoil, recoilSneaking, reload, fire, zoom, accuracy, accuracySneaking, knockback, gunType, GunReloadingType.ONCE);
+        this(index, type, name, displayName, id, description, damage, damageAimed, damageHeadShot, ammo, range, recoil, recoilSneaking, reload, fire, zoom, accuracy, accuracySneaking, knockback, gunType, GunReloadingType.ONCE);
     }
 
-    protected GwGunBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage, float damageHeadShot,
+    protected GwGunBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage, float damageAimed, float damageHeadShot,
                         int ammo, double range, float recoil, float recoilSneaking, long reload, long fire, float zoom, float accuracy,
                         float accuracySneaking, float knockback, GwGunType gunType, GunReloadingType reloadingType) {
         super(index, type, name, displayName, id, description, damage);
@@ -46,6 +47,7 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
         this.fire = fire;
         this.zoom = zoom;
         this.damageHeadShot = damageHeadShot;
+        this.damageAimed = damageAimed;
         this.accuracy = accuracy;
         this.accuracySneaking = accuracySneaking;
         this.knockback = knockback;
@@ -86,6 +88,10 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
         return damageHeadShot;
     }
 
+    public float getDamageAimed() {
+        return damageAimed;
+    }
+
     public float getAccuracy() {
         return accuracy;
     }
@@ -102,7 +108,6 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
         return gunType;
     }
 
-    @Override
     public GunReloadingType getReloadingType() {
         return type;
     }
@@ -137,6 +142,10 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
 
     protected void setHeadShotDamage(float damageHeadShot) {
         this.damageHeadShot = damageHeadShot;
+    }
+
+    protected void setDamageAimed(float damageAimed) {
+        this.damageAimed = damageAimed;
     }
 
     protected void setAccuracy(float accuracy) {
@@ -189,10 +198,14 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
             case HAND_GUN:
                 guntype = "Hand Gun";
                 break;
+            case ORIGIN:
+                guntype = getDisplayName();
+                break;
         }
         lore.add("");
-        lore.add(ChatColor.GRAY + "攻撃力 (ヘッドショット): " + ChatColor.GOLD + getAttackDamage()
-                + ChatColor.GRAY + "(" + ChatColor.GOLD + getHeadShotDamage() + ChatColor.GRAY + ")");
+        lore.add(ChatColor.GRAY + "攻撃力: " + ChatColor.GOLD + getAttackDamage()
+                + ChatColor.GRAY + "(HS: " + ChatColor.GOLD + "+" + getHeadShotDamage() + ChatColor.GRAY + ", " +
+                "AIM: " + ChatColor.GOLD + "+" + getDamageAimed() + ")");
         lore.add(ChatColor.GRAY + "射程: " + ChatColor.GOLD + getRange());
         lore.add(ChatColor.GRAY + "連射: " + ChatColor.GOLD + getFire());
         lore.add(ChatColor.GRAY + "精度 (スニーク時): " + ChatColor.GOLD + getAccuracy()

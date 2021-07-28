@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
+import xyz.n7mn.dev.gunwar.achievement.GwAchievement;
 import xyz.n7mn.dev.gunwar.item.GwGunItem;
 import xyz.n7mn.dev.gunwar.item.GwItem;
 
@@ -18,6 +19,8 @@ public interface PermanentlyPlayerData {
     public List<GwItem> getItemInProcessions();
 
     public List<GwItem> getGifts();
+
+    public List<GwAchievement> getAchievements();
 
     public Map<GwGunItem, Integer> getPlayCount();
 

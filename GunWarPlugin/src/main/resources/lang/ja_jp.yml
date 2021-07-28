@@ -8,6 +8,8 @@ chat.command.reload: '設定を再読み込みしました'
 chat.command.give_item: '&7%PLAYER% に %ITEM% を与えました'
 chat.detail.your_permission: '&7あなたの権限: &a%CURRENT%'
 chat.detail.required_permission: '&7必要な権限: &a%REQUIRED%'
+chat.achievement.earned: '%PLAYER%は実績 %ACHIEVEMENT% を達成しました。'
+chat.achievement.taken: '&c管理者に実績 %ACHIEVEMENT% が剥奪されました。'
 
 ui.title.main.infect: '&2ゾンビに感染してしまった...'
 ui.title.main.died_zombie: '&2死んでしまった...'
@@ -45,6 +47,8 @@ ui.sidebar.game_state.ending: '&a終了処理中'
 ui.bossbar.waiting: '&c待機中 - 人数が集まるまでしばらくお待ち下さい'
 ui.bossbar.starting: '&6残り%SECOND%秒でゲームが開始します'
 
+misc.weapon-set: '武器セット'
+
 misc.rule.team.defender: '攻め側の攻撃から大将を護衛しましょう。大将は倒されないように隠れましょう。'
 misc.rule.team.attacker: '要塞を攻略し、守り側の大将を倒しましょう。'
 misc.rule.team.survivor: 'セーフエリアに行って制限時間まで耐え、ゾンビから逃げ切りましょう。'
@@ -56,9 +60,12 @@ misc.rule.mode.general_siege: '攻め側と守り側に分かれて行う大将�
 
 slot.weapon: '武器スロット'
 
-misc.weapon.main: 'メイン武器'
-misc.weapon.sub: 'サブ武器'
-misc.weapon.knife: 'ナイフ'
+slot.weapon.main: 'メイン武器'
+slot.weapon.sub: 'サブ武器'
+slot.weapon.knife: 'ナイフ'
+
+achievement.master_killer.name: 'マスターキラー'
+achievement.master_killer.description: '1試合で50キル'
 
 misc.description.command.gunwaritem: 'ななみ銃撃戦のアイテムを与えます。'
 misc.description.command.gunwarreload: '銃撃戦プラグインの設定を再読み込みします。'

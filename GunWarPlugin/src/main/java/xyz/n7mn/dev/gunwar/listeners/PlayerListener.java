@@ -13,13 +13,16 @@ import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.NanamiGunWar;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
 import xyz.n7mn.dev.gunwar.game.data.*;
+import xyz.n7mn.dev.gunwar.mysql.GwMySQL;
 import xyz.n7mn.dev.gunwar.mysql.GwMySQLDataPath;
+import xyz.n7mn.dev.gunwar.util.GwUUID;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 
 public class PlayerListener implements Listener {
 
@@ -42,25 +45,27 @@ public class PlayerListener implements Listener {
                     ChatColor.GRAY + "解決策: " + ChatColor.WHITE + "Discordの" + ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE + "にて報告してください。\n" +
                     "\n" +
                     ChatColor.WHITE + "詳細はななみ鯖公式Discordをご確認ください。\n" +
-                    ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord"));
+                    ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/nbRUAmmypS"));
             ex.printStackTrace();
         }
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        e.setJoinMessage(ChatColor.GREEN + "[+] " + ChatColor.GRAY + e.getPlayer().getName());
-        GunWarPlayerData data = new GunWarPlayerData(e.getPlayer());
+        Player p = e.getPlayer();
+        e.setJoinMessage(ChatColor.GREEN + "[+] " + ChatColor.GRAY + p.getName());
+        GunWarPlayerData data = new GunWarPlayerData(p);
         PlayerWatcher watcher = new PlayerWatcher(GunWar.getPlugin(), data);
         watcher.startWatch();
         watcher.startWatch10Ticks();
         data.setWatcher(watcher);
         ((GunWarGame) GunWar.getGame()).addPlayerData(data.getUniqueId(), data);
         data.nanami().setName(ChatColor.GREEN + data.nanami().getOldName());
+        p.setPlayerListName(ChatColor.GREEN + data.nanami().getOldName());
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-        for(Player p : players) {
-            data.nanami().hide(p);
-            data.nanami().show(p);
+        for(Player pl : players) {
+            data.nanami().hide(pl);
+            data.nanami().show(pl);
         }
     }
 

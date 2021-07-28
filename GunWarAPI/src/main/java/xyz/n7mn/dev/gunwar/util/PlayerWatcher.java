@@ -80,7 +80,7 @@ public class PlayerWatcher {
                     lines.add(ChatColor.RESET + "");
                     lines.add(TextUtilities.SIDEBAR_PLAYERS + ": " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.RESET + "/" + ChatColor.GREEN + Bukkit.getMaxPlayers());
                     lines.add(ChatColor.WHITE + "");
-                    lines.add(ChatColor.GOLD + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/w2jFt4vA5A"));
+                    lines.add(ChatColor.GOLD + "nanami-network");
                     int i = lines.size();
                     for(String line : lines) {
                         getObjective().getScore(line).setScore(i);
@@ -97,7 +97,7 @@ public class PlayerWatcher {
                     lines.add(ChatColor.RESET + "");
                     lines.add(TextUtilities.SIDEBAR_PLAYERS + ": " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.RESET + "/" + ChatColor.GREEN + Bukkit.getMaxPlayers());
                     lines.add(ChatColor.WHITE + "");
-                    lines.add(ChatColor.GOLD + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/w2jFt4vA5A"));
+                    lines.add(ChatColor.GOLD + "nanami-network");
                     int i = lines.size();
                     for(String line : lines) {
                         getObjective().getScore(line).setScore(i);
@@ -112,6 +112,7 @@ public class PlayerWatcher {
     }
 
     public void startWatch() {
+        startWatch10Ticks();
         runnable1tick = new BukkitRunnable() {
             @Override
             public void run() {

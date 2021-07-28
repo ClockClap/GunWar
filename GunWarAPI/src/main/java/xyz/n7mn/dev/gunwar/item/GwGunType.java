@@ -6,7 +6,8 @@ public enum GwGunType {
     SNIPER_RIFLE(1, "SNIPER_RIFLE"),
     SUBMACHINE_GUN(2, "SUBMACHINE_GUN"),
     SHOTGUN(3, "SHOTGUN"),
-    HAND_GUN(4, "HAND_GUN");
+    HAND_GUN(4, "HAND_GUN"),
+    ORIGIN(5, "ORIGIN");
 
     private int index;
     private String name;

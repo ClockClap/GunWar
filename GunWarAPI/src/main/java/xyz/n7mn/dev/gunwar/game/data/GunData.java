@@ -10,7 +10,7 @@ public interface GunData extends ItemData {
 
     public void setAmmo(int ammo);
 
-    public void fire();
+    public void fire(boolean aim);
 
     public void cancelFireCooldown();
 
