@@ -10,6 +10,7 @@ import xyz.n7mn.dev.gunwar.item.GwItem;
 import xyz.n7mn.dev.gunwar.util.GunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.Utilities;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public final class GunWar {
@@ -46,6 +47,10 @@ public final class GunWar {
     @Deprecated
     public static PlayerData getPlayerData(String name) {
         return getGame().getPlayerData(Bukkit.getPlayer(name));
+    }
+
+    public static Collection<PlayerData> getOnlinePlayerData() {
+        return getGame().getOnlinePlayerData();
     }
 
 }

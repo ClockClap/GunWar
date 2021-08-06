@@ -7,7 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.game.Game;
 
-public class GameModeNormal extends GwGameMode {
+public class GameModeNormal extends GwGameMode implements Shoutable {
 
     public enum Mode {
         TEAM, SOLO
@@ -21,6 +21,10 @@ public class GameModeNormal extends GwGameMode {
         setDisplayName(ChatColor.GREEN + "Normal");
         this.mode = Mode.SOLO;
         setGameTime(GunWar.getConfig().getConfig().getInt("normal.game-time-solo"));
+        getTeamNames().put(0, "RED");
+        getTeamColors().put(0, ChatColor.RED);
+        getTeamNames().put(1, "BLUE");
+        getTeamColors().put(1, ChatColor.BLUE);
     }
 
     @Override

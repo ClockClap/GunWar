@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.n7mn.dev.gunwar.GunWar;
 import xyz.n7mn.dev.gunwar.NanamiGunWar;
+import xyz.n7mn.dev.gunwar.event.GwAchievementEarnEvent;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
 import xyz.n7mn.dev.gunwar.game.data.*;
 import xyz.n7mn.dev.gunwar.mysql.GwMySQL;
@@ -18,6 +19,7 @@ import xyz.n7mn.dev.gunwar.mysql.GwMySQLDataPath;
 import xyz.n7mn.dev.gunwar.util.GwUUID;
 import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
+import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,12 +41,12 @@ public class PlayerListener implements Listener {
             ((GunWarGame) GunWar.getGame()).addPermanentlyPlayerData(permanentlyPlayerData);
         } catch(Throwable ex) {
             e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "" +
-                    ChatColor.DARK_GREEN + "=== ななみ銃撃戦 ===\n" +
-                    ChatColor.RED + "接続に失敗しました。\n" +
-                    ChatColor.GRAY + "原因: " + ChatColor.WHITE + "ログイン時のエラー発生\n" +
-                    ChatColor.GRAY + "解決策: " + ChatColor.WHITE + "Discordの" + ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE + "にて報告してください。\n" +
+                    ChatColor.DARK_GREEN + "=== " + TextUtilities.MISC_TITLE + " ===\n" +
+                    ChatColor.RED + TextUtilities.MISC_FAILED_TO_CONNECT + "\n" +
+                    ChatColor.GRAY + TextUtilities.MISC_CAUSE + ": " + ChatColor.WHITE + TextUtilities.ERROR_ON_LOGGING_IN + "\n" +
+                    ChatColor.GRAY + TextUtilities.MISC_SOLUTION + ": " + ChatColor.WHITE + TextUtilities.MISC_PLEASE_REPORT.replaceAll("%CHANNEL%", ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE) + "\n" +
                     "\n" +
-                    ChatColor.WHITE + "詳細はななみ鯖公式Discordをご確認ください。\n" +
+                    ChatColor.WHITE + TextUtilities.MISC_MORE + "\n" +
                     ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/nbRUAmmypS"));
             ex.printStackTrace();
         }
@@ -53,15 +55,21 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        e.setJoinMessage(ChatColor.GREEN + "[+] " + ChatColor.GRAY + p.getName());
+        if(p.hasPlayedBefore()) {
+            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_join.raw", false) ? "" : TextUtilities.CHAT_PREFIX + " ") +
+                    TextUtilities.CHAT_PLAYER_JOIN.replaceAll("%PLAYER%", p.getName()));
+        } else {
+            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_first_join.raw", false) ? "" : TextUtilities.CHAT_PREFIX + " ") +
+                    TextUtilities.CHAT_PLAYER_FIRST_JOIN.replaceAll("%PLAYER%", p.getName()));
+        }
         GunWarPlayerData data = new GunWarPlayerData(p);
         PlayerWatcher watcher = new PlayerWatcher(GunWar.getPlugin(), data);
         watcher.startWatch();
         watcher.startWatch10Ticks();
         data.setWatcher(watcher);
         ((GunWarGame) GunWar.getGame()).addPlayerData(data.getUniqueId(), data);
-        data.nanami().setName(ChatColor.GREEN + data.nanami().getOldName());
-        p.setPlayerListName(ChatColor.GREEN + data.nanami().getOldName());
+        data.nanami().setName(ChatColor.GRAY + data.nanami().getOldName());
+        p.setPlayerListName(ChatColor.GRAY + data.nanami().getOldName());
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         for(Player pl : players) {
             data.nanami().hide(pl);
@@ -71,7 +79,8 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        e.setQuitMessage(ChatColor.RED + "[-] " + ChatColor.GRAY + e.getPlayer().getName());
+        e.setQuitMessage((GunWar.getConfig().getLang().getBoolean("chat.player_quit.raw", false) ? "" : TextUtilities.CHAT_PREFIX + " ") +
+                TextUtilities.CHAT_PLAYER_QUIT.replaceAll("%PLAYER%", e.getPlayer().getName()));
         PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
         if(data != null) {
             data.nanami().resetName();

@@ -11,6 +11,10 @@ public class GameModeZombieEscape extends GwGameMode {
         setName("ZOMBIE_ESCAPE");
         setDisplayName(ChatColor.DARK_GREEN + "Zombie Escape");
         setGameTime(GunWar.getConfig().getConfig().getInt("zombie-escape.game-time"));
+        getTeamNames().put(0, "SURVIVOR");
+        getTeamColors().put(0, ChatColor.DARK_AQUA);
+        getTeamNames().put(1, "ZOMBIE");
+        getTeamColors().put(1, ChatColor.DARK_GREEN);
     }
 
     @Override

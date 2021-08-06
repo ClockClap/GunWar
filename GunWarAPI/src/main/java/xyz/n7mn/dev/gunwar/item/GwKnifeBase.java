@@ -12,7 +12,7 @@ public abstract class GwKnifeBase extends GwWeaponBase implements GwKnifeItem {
     }
 
     protected GwKnifeBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage) {
-        super(index, type, name, displayName, id, description, damage);
+        super(index, type, name, displayName, id, description, damage, WeaponType.KNIFE);
     }
 
 }

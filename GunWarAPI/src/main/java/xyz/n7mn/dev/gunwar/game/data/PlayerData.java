@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -116,6 +117,14 @@ public interface PlayerData extends EntityData {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
     }
+
+    public void sendMessage(String message);
+
+    public void sendMessage(BaseComponent component);
+
+    public void sendMessage(BaseComponent... components);
+
+    public void sendMessage(String[] messages);
 
     public Nanami nanami();
 

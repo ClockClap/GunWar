@@ -38,7 +38,7 @@ public abstract class GwGunBase extends GwWeaponBase implements GwGunItem {
     protected GwGunBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage, float damageAimed, float damageHeadShot,
                         int ammo, double range, float recoil, float recoilSneaking, long reload, long fire, float zoom, float accuracy,
                         float accuracySneaking, float knockback, GwGunType gunType, GunReloadingType reloadingType) {
-        super(index, type, name, displayName, id, description, damage);
+        super(index, type, name, displayName, id, description, damage, WeaponType.GUN);
         this.ammo = ammo;
         this.range = range;
         this.recoil = recoil;

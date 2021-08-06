@@ -7,4 +7,6 @@ public interface GwWeaponItem extends GwItem {
 
     public float getAttackDamage();
 
+    public WeaponType getWeaponType();
+
 }

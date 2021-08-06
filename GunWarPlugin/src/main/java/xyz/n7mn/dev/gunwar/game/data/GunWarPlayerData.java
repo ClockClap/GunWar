@@ -1,13 +1,12 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
 import com.mojang.authlib.GameProfile;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_12_R1.BlockPosition;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 
-import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -31,6 +30,7 @@ import xyz.n7mn.dev.gunwar.util.TextUtilities;
 import java.lang.reflect.Field;
 import java.util.*;
 
+@SuppressWarnings({"all"})
 public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
     private final Player player;
@@ -275,6 +275,11 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         return dead;
     }
 
+    @SuppressWarnings({"unused"})
+    public boolean isMoveable() {
+        return moveable;
+    }
+
     @Override
     public void setDead(boolean dead) {
         this.dead = dead;
@@ -283,6 +288,10 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     @Override
     public void setClickable(boolean clickable) {
         this.clickable = clickable;
+    }
+
+    public void setMoveable(boolean moveable) {
+        this.moveable = moveable;
     }
 
     @Override
@@ -514,7 +523,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         double r = separate * Math.cos(pitch);
         double separateX = r * Math.sin(yaw);
         double separateY = separate * Math.sin(pitch);
-        double separateZ = r * Math.cos(yaw);;
+        double separateZ = r * Math.cos(yaw);
         double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * far;
         if(startZ < d) {
             double times = d / separate;
@@ -654,7 +663,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         double r = separate * Math.cos(pitch);
         double separateX = r * Math.sin(yaw);
         double separateY = separate * Math.sin(pitch);
-        double separateZ = r * Math.cos(yaw);;
+        double separateZ = r * Math.cos(yaw);
         double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * far;
         if(startZ < d) {
             double times = d / separate;
@@ -782,6 +791,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             double xb = x - xa;
             double yb = y - ya;
             double zb = z - za;
+
             if(!BlockShape.isTransparent(type)) {
                 if (BlockShape.isSlab(type)) {
                     if (block.getData() >= 8 && yb >= 0.5) {
@@ -789,8 +799,150 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     } else if (block.getData() < 8 && yb <= 0.5) {
                         result = false;
                     }
+                } else if (BlockShape.isStairs(type)) {
+                    if (block.getData() == 0 || block.getData() == 8) {
+                        if(yb <= 0.5) {
+                            result = false;
+                        } else if(xb >= 0.5) {
+                            result = false;
+                        }
+                    } else if (block.getData() == 1 || block.getData() == 9) {
+                        if(yb <= 0.5) {
+                            result = false;
+                        } else if(xb <= 0.5) {
+                            result = false;
+                        }
+                    } else if (block.getData() == 2 || block.getData() == 10) {
+                        if(yb <= 0.5) {
+                            result = false;
+                        } else if(zb >= 0.5) {
+                            result = false;
+                        }
+                    } else if (block.getData() == 3 || block.getData() == 11) {
+                        if(yb <= 0.5) {
+                            result = false;
+                        } else if(zb <= 0.5) {
+                            result = false;
+                        }
+                    } else if (block.getData() == 4 || block.getData() == 12) {
+                        if(yb >= 0.5) {
+                            result = false;
+                        } else if(xb >= 0.5) {
+                            result = false;
+                        }
+                    } else if ((block.getData() == 5 || block.getData() == 13)) {
+                        if(yb >= 0.5) {
+                            result = false;
+                        } else if(xb <= 0.5) {
+                            result = false;
+                        }
+                    } else if ((block.getData() == 6 || block.getData() == 14)) {
+                        if(yb >= 0.5) {
+                            result = false;
+                        } else if(zb >= 0.5) {
+                            result = false;
+                        }
+                    } else if ((block.getData() == 7 || block.getData() == 15)) {
+                        if(yb >= 0.5) {
+                            result = false;
+                        } else if(zb <= 0.5) {
+                            result = false;
+                        }
+                    }
+                } else if(BlockShape.isDoor(type)) {
+                    World w = block.getLocation().getWorld();
+                    Block bottom = w.getBlockAt(xa, ya - 1, za);
+                    Block b = block;
+                    if(bottom != null && bottom.getType() != null && BlockShape.isDoor(bottom.getType())) b = bottom;
+                    if((b.getData() == 0 || b.getData() == 7) && xb <= 0.1875) {
+                        result = false;
+                    } else if((b.getData() == 1 || b.getData() == 4) && zb <= 0.1875) {
+                        result = false;
+                    } else if((b.getData() == 2 || b.getData() == 5) && xb >= 0.8125) {
+                        result = false;
+                    } else if((b.getData() == 3 || b.getData() == 6) && zb >= 0.8125) {
+                        result = false;
+                    }
+                } else if(BlockShape.isFence(type)) {
+                    World w = block.getLocation().getWorld();
+                    Block x0 = w.getBlockAt(xa + 1, ya, za);
+                    Block x1 = w.getBlockAt(xa - 1, ya, za);
+                    Block z0 = w.getBlockAt(xa, ya, za + 1);
+                    Block z1 = w.getBlockAt(xa, ya, za - 1);
+                    boolean b = true;
+                    if(x0 != null && x0.getType() == block.getType()) {
+                        if(xb >= 0.375 && zb >= 0.375 && zb <= 0.625) {
+                            b = false;
+                        }
+                    }
+                    if(x1 != null && x1.getType() == block.getType()) {
+                        if(xb <= 0.625 && zb >= 0.375 && zb <= 0.625) {
+                            b = false;
+                        }
+                    }
+                    if(z0 != null && z0.getType() == block.getType()) {
+                        if(zb >= 0.375 && xb >= 0.375 && xb <= 0.625) {
+                            b = false;
+                        }
+                    }
+                    if(z1 != null && z1.getType() == block.getType()) {
+                        if(zb <= 0.625 && xb >= 0.375 && xb <= 0.625) {
+                            b = false;
+                        }
+                    }
+                    result = b;
+                } else if(type == Material.COBBLE_WALL) {
+                    World w = block.getLocation().getWorld();
+                    Block x0 = w.getBlockAt(xa + 1, ya, za);
+                    Block x1 = w.getBlockAt(xa - 1, ya, za);
+                    Block z0 = w.getBlockAt(xa, ya, za + 1);
+                    Block z1 = w.getBlockAt(xa, ya, za - 1);
+                    boolean b = true;
+                    if(x0 != null && x0.getType() == block.getType()) {
+                        if(xb >= 0.3125 && zb >= 0.3125 && zb <= 0.6875) {
+                            b = false;
+                        }
+                    }
+                    if(x1 != null && x1.getType() == block.getType()) {
+                        if(xb <= 0.6875 && zb >= 0.3125 && zb <= 0.6875) {
+                            b = false;
+                        }
+                    }
+                    if(z0 != null && z0.getType() == block.getType()) {
+                        if(zb >= 0.3125 && xb >= 0.3125 && xb <= 0.6875) {
+                            b = false;
+                        }
+                    }
+                    if(z1 != null && z1.getType() == block.getType()) {
+                        if(zb <= 0.6875 && xb >= 0.3125 && xb <= 0.6875) {
+                            b = false;
+                        }
+                    }
+                    result = b;
+                } else if(BlockShape.isFenceGate(type)) {
+                    if((block.getData() == 0 || block.getData() == 2 || block.getData() == 8 || block.getData() == 10) && zb >= 0.375 && zb <= 0.625) {
+                        result = false;
+                    } else if((block.getData() == 1 || block.getData() == 3 || block.getData() == 9 || block.getData() == 11) && xb >= 0.375 && xb <= 0.625) {
+                        result = false;
+                    }
+                } else if(BlockShape.isTrapdoor(type)) {
+                    if((block.getData() >= 0 && block.getData() <= 3) && yb <= 0.1875) {
+                        result = false;
+                    } else if((block.getData() == 4 || block.getData() == 12) && zb >= 0.8125) {
+                        result = false;
+                    } else if((block.getData() == 5 || block.getData() == 13) && zb <= 0.1875) {
+                        result = false;
+                    } else if((block.getData() == 6 || block.getData() == 14) && xb >= 0.8125) {
+                        result = false;
+                    } else if((block.getData() == 7 || block.getData() == 15) && xb <= 0.1825) {
+                        result = false;
+                    } else if((block.getData() >= 8 && block.getData() <= 11) && yb >= 0.8125) {
+                        result = false;
+                    }
+                } else if(type == Material.ENCHANTMENT_TABLE || type == Material.ENDER_PORTAL_FRAME) {
+                    if(yb <= 0.8125) result = false;
                 }
-            } else {
+            } else if(!BlockShape.isTransparent(type)) {
                 result = false;
             }
         }
@@ -810,6 +962,26 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         if (GunWar.getGame().getItemData(i) != null) i = GunWar.getGame().getItemData(i).getItem();
         getPlayer().getInventory().addItem(i);
         getPlayer().updateInventory();
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        getPlayer().sendMessage(message);
+    }
+
+    @Override
+    public void sendMessage(BaseComponent component) {
+        getPlayer().sendMessage(component);
+    }
+
+    @Override
+    public void sendMessage(BaseComponent... components) {
+        getPlayer().sendMessage(components);
+    }
+
+    @Override
+    public void sendMessage(String[] messages) {
+        getPlayer().sendMessage(messages);
     }
 
     @Override

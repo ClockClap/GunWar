@@ -57,6 +57,9 @@ public final class BlockShape {
             case DARK_OAK_FENCE:
             case JUNGLE_FENCE:
             case NETHER_FENCE:
+            case STAINED_GLASS_PANE:
+            case END_ROD:
+            case THIN_GLASS:
             case SPRUCE_FENCE:
                 return true;
             default:
@@ -105,5 +108,4 @@ public final class BlockShape {
                 return false;
         }
     }
-
 }

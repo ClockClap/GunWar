@@ -25,9 +25,10 @@
         </japanize>
         <escape>.</escape>
         <coloured_chat>true</coloured_chat>
-        <format>%{color}7%p %{color}8» %{color}r%m</format> <!-- %p: player name, %m: chat message -->
+        <format>%{color}7%p%{color}8: %{color}r%m</format> <!-- %p: player name, %m: chat message -->
         <japanize_format>%m %{color}7%j</japanize_format> <!-- %m: original message, %j: japanized message -->
         <prefix_format>%{color}8[%c%t%{color}8] %c%p</prefix_format> <!-- %p: player name, %t: prefix, %c: prefix color -->
+        <private_format>%{color7}[%p -> %t]%{color}r %m</private_format> <!-- %p: from, %t to, %m japanized message -->
     </chat>
 
 </config>

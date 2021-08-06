@@ -9,9 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.n7mn.dev.gunwar.commands.GWDebugCommand;
-import xyz.n7mn.dev.gunwar.commands.GunWarItemCommand;
-import xyz.n7mn.dev.gunwar.commands.GunWarReloadCommand;
+import xyz.n7mn.dev.gunwar.commands.*;
 import xyz.n7mn.dev.gunwar.game.GameState;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
 import xyz.n7mn.dev.gunwar.game.data.GunWarPermanentlyPlayerData;
@@ -73,13 +71,13 @@ public final class NanamiGunWar extends JavaPlugin {
                 ((GunWarGame) GunWar.getGame()).addPermanentlyPlayerData(permanentlyPlayerData);
             } catch(Throwable ex) {
                 p.kickPlayer("" +
-                        ChatColor.DARK_GREEN + "=== ななみ銃撃戦 ===\n" +
-                        ChatColor.RED + "接続が切れました。\n" +
-                        ChatColor.GRAY + "原因: " + ChatColor.WHITE + "プレイヤーデータ読み込み時のエラー発生\n" +
-                        ChatColor.GRAY + "解決策: " + ChatColor.WHITE + "Discordの" + ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE + "にて報告してください。\n" +
+                        ChatColor.DARK_GREEN + "=== " + TextUtilities.MISC_TITLE + " ===\n" +
+                        ChatColor.RED + TextUtilities.MISC_LOST_CONNECTION + "\n" +
+                        ChatColor.GRAY + TextUtilities.MISC_CAUSE + ": " + ChatColor.WHITE + TextUtilities.ERROR_LOADING_PLAYERDATA + "\n" +
+                        ChatColor.GRAY + TextUtilities.MISC_SOLUTION + ": " + ChatColor.WHITE + TextUtilities.MISC_PLEASE_REPORT.replaceAll("%CHANNEL%", ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE) + "\n" +
                         "\n" +
-                        ChatColor.WHITE + "詳細はななみ鯖公式Discordをご確認ください。\n" +
-                        ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord"));
+                        ChatColor.WHITE + TextUtilities.MISC_MORE + "\n" +
+                        ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/nbRUAmmypS"));
                 ex.printStackTrace();
             }
             GunWarPlayerData data = new GunWarPlayerData(p);
@@ -108,8 +106,11 @@ public final class NanamiGunWar extends JavaPlugin {
 
     private void registerCommands() {
         utilities.registerCommand(plugin.getName(), new GunWarReloadCommand());
-        utilities.registerCommand(plugin.getName(), new GunWarItemCommand());
+        utilities.registerCommand(plugin.getName() + "-op", new GunWarItemCommand());
         utilities.registerCommand(plugin.getName(), new GWDebugCommand());
+        utilities.registerCommand(plugin.getName() + "-game", new ShoutCommand());
+        utilities.registerCommand(plugin.getName() + "-chat", new JapanizedTellCommand());
+        utilities.registerCommand(plugin.getName() + "-chat", new ReplyCommand());
     }
 
     private void startWatch() {

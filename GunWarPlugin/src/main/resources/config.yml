@@ -26,6 +26,13 @@ game:
   required-players: 10
   # prepare time (sec)
   prepare: 10
+  # default spawning location
+  # this values will be applied when a player joins.
+  default-spawn:
+    world: 'world'
+    x: 0
+    y: 0
+    z: 0
   # default starting location
   # (applies these values as the survivors starting location in zombie escape mode or the players starting location in solo mode if the starting location is not specified using "/setloc default <world> <x> <y> <z>"
   # and there are no location specified when the game started with "/startloc" command or if automatically starting mode is enabled)

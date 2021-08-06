@@ -17,10 +17,12 @@ public class GwAchievementEarnEvent extends GwAchievementEvent implements Cancel
 
     private boolean cancel;
     private BaseComponent message;
+    private boolean showMessage;
 
     public GwAchievementEarnEvent(Player who, GwAchievement achievement) {
         super(who, achievement);
         cancel = false;
+        showMessage = true;
         String msg = TextUtilities.CHAT_ACHIEVEMENT_EARNED.replaceAll("%PLAYER%", GunWar.getPlayerData(who).nanami().getOldName());
         String[] array = msg.split("%ACHIEVEMENT%");
         TextComponent component = new TextComponent();
@@ -51,6 +53,14 @@ public class GwAchievementEarnEvent extends GwAchievementEvent implements Cancel
 
     public BaseComponent getEarnMessageComponent() {
         return message;
+    }
+
+    public boolean isShowingMessage() {
+        return showMessage;
+    }
+
+    public void setShowingMessage(boolean showMessage) {
+        this.showMessage = showMessage;
     }
 
     public boolean isCancelled() {

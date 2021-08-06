@@ -4,12 +4,24 @@ chat.command.error.permission: '&cこのコマンドを実行する権限があ�
 chat.command.error.unknown_player: '&c指定したプレイヤーが存在しないか、オンラインではありません。'
 chat.command.error.debug: '&cデバッグ中にエラーが発生しました'
 chat.command.error.not_debugging_mode: '&cデバッグモードが有効ではありません'
+chat.command.error.cant_use_this_mode: '現在のモードではこのコマンドを使用することはできません。'
+chat.command.error.game_not_started: 'ゲームがまだ開始されていません。'
+chat.command.error.only_player: 'このコマンドはプレイヤーからのみ実行できます。'
+chat.command.error.no_final_message_target: '返信しようとしている相手がオンラインではない、またはプレイヤーではありません。'
+chat.command.error.cant_use_spectator: 'スペクテイターでは使用できません。'
 chat.command.reload: '設定を再読み込みしました'
 chat.command.give_item: '&7%PLAYER% に %ITEM% を与えました'
 chat.detail.your_permission: '&7あなたの権限: &a%CURRENT%'
 chat.detail.required_permission: '&7必要な権限: &a%REQUIRED%'
 chat.achievement.earned: '%PLAYER%は実績 %ACHIEVEMENT% を達成しました。'
 chat.achievement.taken: '&c管理者に実績 %ACHIEVEMENT% が剥奪されました。'
+
+chat.player_first_join: '&e%PLAYER%&eが初めてサーバーに参加しました！'
+chat.player_first_join.raw: false
+chat.player_join: '%PLAYER%&7がサーバーに参加しました。'
+chat.player_join.raw: false
+chat.player_quit: '%PLAYER%&7がサーバーから退出しました。'
+chat.player_quit.raw: false
 
 ui.title.main.infect: '&2ゾンビに感染してしまった...'
 ui.title.main.died_zombie: '&2死んでしまった...'
@@ -70,3 +82,14 @@ achievement.master_killer.description: '1試合で50キル'
 misc.description.command.gunwaritem: 'ななみ銃撃戦のアイテムを与えます。'
 misc.description.command.gunwarreload: '銃撃戦プラグインの設定を再読み込みします。'
 misc.description.command.gwdebug: '銃撃戦プラグインのデバッグをします。デバッグモードが有効である必要があります。'
+
+misc.title: 'ななみ銃撃戦'
+misc.lost_connection: '接続が切れました。'
+misc.failed_to_connect: '接続に失敗しました。'
+misc.cause: '原因'
+misc.solution: '解決策'
+misc.more: '詳細はななみ鯖公式Discordをご確認ください。'
+misc.please_report: 'Discordの%CHANNEL%にて報告してください。'
+
+error.loading_playerdata: 'プレイヤーデータ読み込み時のエラー発生'
+error.logging_in: 'ログイン時のエラー発生'

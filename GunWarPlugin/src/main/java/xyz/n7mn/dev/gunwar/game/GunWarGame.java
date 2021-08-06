@@ -9,12 +9,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.n7mn.dev.gunwar.GunWar;
+import xyz.n7mn.dev.gunwar.game.data.GunWarPlayerData;
 import xyz.n7mn.dev.gunwar.game.data.ItemData;
 import xyz.n7mn.dev.gunwar.game.data.PermanentlyPlayerData;
 import xyz.n7mn.dev.gunwar.game.data.PlayerData;
 import xyz.n7mn.dev.gunwar.game.gamemode.GwGameMode;
 import xyz.n7mn.dev.gunwar.game.gamemode.GwGameModes;
 import xyz.n7mn.dev.gunwar.mysql.GwMySQL;
+import xyz.n7mn.dev.gunwar.util.DataList;
 import xyz.n7mn.dev.gunwar.util.TextUtilities;
 import xyz.n7mn.dev.gunwar.util.world.Worlds;
 
@@ -169,6 +171,26 @@ public class GunWarGame implements Game {
     @Override
     public void stop() {
         setState(GameState.WAITING);
+        String world = GunWar.getConfig().getConfig().getString("game.default-spawn.world");
+        double x = GunWar.getConfig().getConfig().getDouble("game.default-spawn.x");
+        double y = GunWar.getConfig().getConfig().getDouble("game.default-spawn.y");
+        double z = GunWar.getConfig().getConfig().getDouble("game.default-spawn.z");
+        World w = Bukkit.getWorld(world);
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            if(p != null) {
+                GunWarPlayerData data = (GunWarPlayerData) GunWar.getPlayerData(p);
+                p.teleport(new Location(w, x, y, z));
+                data.setTeam(-1);
+                data.setDead(false);
+                data.setHealth(100);
+                data.setMaxHealth(100);
+                data.setSpectator(true);
+                data.setMoveable(true);
+            }
+        }
+        for(Location l : DataList.brokenGlasses) {
+            l.getBlock().setType(Material.GLASS);
+        }
         getGameMode().stop();
     }
 

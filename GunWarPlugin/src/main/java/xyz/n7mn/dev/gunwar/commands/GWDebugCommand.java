@@ -68,6 +68,7 @@ public class GWDebugCommand extends Command {
                     }
                 }
             }
+            sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_DEBUG);
             return true;
         }
         sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_NOT_DEBUGGING_MODE);

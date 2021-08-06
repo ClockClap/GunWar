@@ -24,12 +24,21 @@ public final class TextUtilities {
     public static final String CHAT_COMMAND_ERROR_UNKNOWN_PLAYER = format("chat.command.error.unknown_player", "&c指定したプレイヤーが存在しないか、オンラインではありません。");
     public static final String CHAT_COMMAND_ERROR_DEBUG = format("chat.command.error.debug", "&cデバッグ中にエラーが発生しました");
     public static final String CHAT_COMMAND_ERROR_NOT_DEBUGGING_MODE = format("chat.command.error.not_debugging_mode", "&cデバッグモードが有効ではありません");
+    public static final String CHAT_COMMAND_ERROR_CANT_USE_THIS_MODE = format("chat.command.error.cant_use_this_mode", "現在のモードではこのコマンドを使用することはできません。");
+    public static final String CHAT_COMMAND_ERROR_GAME_NOT_STARTED = format("chat.command.error.game_not_started", "ゲームがまだ開始されていません。");
+    public static final String CHAT_COMMAND_ERROR_ONLY_PLAYER = format("chat.command.error.only_player", "このコマンドはプレイヤーからのみ実行できます。");
+    public static final String CHAT_COMMAND_ERROR_NO_FINAL_MESSAGE_TARGET = format("chat.command.error.no_final_message_target", "返信しようとしている相手がオンラインではない、またはプレイヤーではありません。");
+    public static final String CHAT_COMMAND_ERROR_CANT_USE_SPECTATOR = format("chat.command.error_cant_use_spectator", "スペクテイターでは使用できません。");
     public static final String CHAT_COMMAND_RELOAD = format("chat.command.reload", "設定を再読み込みしました");
     public static final String CHAT_COMMAND_GIVE_ITEM = format("chat.command.give_item", "&7%PLAYER% に %ITEM% を与えました");
     public static final String CHAT_DETAIL_YOUR_PERMISSION = format("chat.detail.your_permission", "&7あなたの権限: &a%CURRENT%");
     public static final String CHAT_DETAIL_REQUIRED_PERMISSION = format("chat.detail.required_permission", "&7必要な権限: &a%REQUIRED%");
     public static final String CHAT_ACHIEVEMENT_EARNED = format("chat.achievement.earned", "%PLAYER%は実績 %ACHIEVEMENT% を達成しました。");
     public static final String CHAT_ACHIEVEMENT_TAKEN = format("chat.achievement.taken", "&c管理者に実績 %ACHIEVEMENT% が剥奪されました。");
+
+    public static final String CHAT_PLAYER_FIRST_JOIN = format("chat.player_first_join", "&e%PLAYER%が初めてサーバーに参加しました！");
+    public static final String CHAT_PLAYER_JOIN = format("chat.player_join", "%PLAYER%がサーバーに参加しました。");
+    public static final String CHAT_PLAYER_QUIT = format("chat.player_quit", "%PLAYER%がサーバーから退出しました。");
 
     public static final String TITLE_MAIN_INFECT = format("ui.title.main.infect", "&2ゾンビに感染してしまった...");
     public static final String TITLE_MAIN_DIED_ZOMBIE = format("ui.title.main.died_zombie", "&2死んでしまった...");
@@ -90,13 +99,24 @@ public final class TextUtilities {
     public static final String MISC_DESCRIPTION_COMMAND_GUNWARRELOAD = format("misc.description.command.gunwarreload", "銃撃戦プラグインの設定を再読み込みします。");
     public static final String MISC_DESCRIPTION_COMMAND_GWDEBUG = format("misc.description.command.gwdebug", "銃撃戦プラグインのデバッグをします。デバッグモードが有効である必要があります。");
 
+    public static final String MISC_TITLE = format("misc.title", "ななみ銃撃戦");
+    public static final String MISC_LOST_CONNECTION = format("misc.lost_connection", "接続が切れました。");
+    public static final String MISC_FAILED_TO_CONNECT = format("misc.failed_to_connect", "接続に失敗しました。");
+    public static final String MISC_CAUSE = format("misc.cause", "原因");
+    public static final String MISC_SOLUTION = format("misc.solution", "解決策");
+    public static final String MISC_MORE = format("misc.more", "詳細はななみ鯖公式Discordをご確認ください。");
+    public static final String MISC_PLEASE_REPORT = format("misc.please_report", "Discordの%CHANNEL%にて報告してください。");
+
+    public static final String ERROR_LOADING_PLAYERDATA = format("error.loading_playerdata", "プレイヤーデータ読み込み時のエラー発生");
+    public static final String ERROR_ON_LOGGING_IN = format("error.logging_in", "ログイン時のエラー発生");
+
     public static String chat(String playerName, String message) {
         return chat(ChatColor.RESET, "", playerName, message);
     }
 
     public static String chat(ChatColor prefixColor, String prefix, String playerName, String message) {
         XmlConfiguration conf = GunWar.getConfig().getDetailConfig();
-        String format = conf.getString("config.chat.format", "%{color}7%p %{color}8» %{color}r%m");
+        String format = conf.getString("config.chat.format", "%{color}7%p%{color}8: %{color}r%m");
         String japanizeFormat = conf.getString("config.chat.japanize_format", "%m %{color}7%j");
         String prefixFormat = conf.getString("config.chat.prefix_format", "%{color}8[%c%t%{color}8] %c%p");
         String japanizeCanceller = conf.getString("config.chat.japanize.japanize_canceller", "#");
@@ -119,6 +139,29 @@ public final class TextUtilities {
             }
         }
         return format.replaceAll("%p", p).replaceAll("%m", m);
+    }
+
+    public static String privateChat(String from, String to, String message) {
+        XmlConfiguration conf = GunWar.getConfig().getDetailConfig();
+        String format = conf.getString("config.chat.private_format", "%{color7}[%p -> %t]%{color}r %m");
+        String japanizeFormat = conf.getString("config.chat.japanize_format", "%m %{color}7%j");
+        String japanizeCanceller = conf.getString("config.chat.japanize.japanize_canceller", "#");
+        String imeCanceller = conf.getString("config.chat.japanize.ime_canceller", "!");
+        String escape = conf.getString("config.chat.escape", ".");
+        boolean japanizeText = conf.getBoolean("config.chat.japanize.enabled", true);
+        boolean japanizePlayerName = conf.getBoolean("config.chat.japanize.player_name", false);
+        boolean colouredChat = conf.getBoolean("config.chat.coloured_chat", true);
+        format = translateAlternateColorCodes("%{color}", format);
+        japanizeFormat = translateAlternateColorCodes("%{color}", japanizeFormat);
+        String m = message;
+        if(japanizeText) {
+            try {
+                m = Japanizer.japanize(message, japanizeCanceller, imeCanceller, escape, colouredChat, japanizePlayerName, japanizeFormat);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return format.replaceAll("%p", from).replaceAll("%t", to).replaceAll("%m", m);
     }
 
     public static String translateAlternateColorCodes(String regex, String textToTranslate) {

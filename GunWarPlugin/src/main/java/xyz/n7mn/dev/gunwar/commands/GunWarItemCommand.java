@@ -19,7 +19,7 @@ import java.util.List;
 public class GunWarItemCommand extends Command {
 
     public GunWarItemCommand() {
-        super("gunwaritem", TextUtilities.MISC_DESCRIPTION_COMMAND_GUNWARITEM, "使用法: /gunwaritem <player> <item>", Arrays.asList("gwitem", "gwi"));
+        super("gunwaritem", TextUtilities.MISC_DESCRIPTION_COMMAND_GUNWARITEM, "Usage: /gunwaritem <player> <item>", Arrays.asList("gwitem", "gwi"));
     }
 
     @Override
@@ -42,7 +42,22 @@ public class GunWarItemCommand extends Command {
             PlayerData data = GunWar.getGame().getPlayerData(p);
             for (GwItem i : GwItems.getRegisteredItems()) {
                 if (i.getName().equalsIgnoreCase(args[1])) {
-                    data.giveItem(i);
+                    int amount = 1;
+                    if(args[2] != null) {
+                        try {
+                            int am = Integer.parseInt(args[2]);
+                            if(am < 1) {
+                                sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
+                                return true;
+                            }
+                            amount = am;
+                        } catch(NumberFormatException e) {
+                            sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
+                            e.printStackTrace();
+                            return true;
+                        }
+                    }
+                    for(int j = 0; j < amount; j++) data.giveItem(i);
                     sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_GIVE_ITEM
                             .replaceAll("%PLAYER%", p.getName()).replaceAll("%ITEM%", i.getName()));
                     return true;

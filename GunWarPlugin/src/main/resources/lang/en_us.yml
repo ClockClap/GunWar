@@ -4,12 +4,24 @@ chat.command.error.permission: '&cYou do not have the permission to execute this
 chat.command.error.unknown_player: '&cSpecific player is not exist or not online.'
 chat.command.error.debug: '&cI''m sorry but an error occurred while debugging.'
 chat.command.error.not_debugging_mode: '&cDebugging mode has not been enabled.'
+chat.command.error.cant_use_this_mode: 'You cannot use this command on this mode.'
+chat.command.error.game_not_started: 'The game has not started yet.'
+chat.command.error.only_player: 'This command can be only used by a player.'
+chat.command.error.no_final_message_target: 'The target you are trying to reply is not online or not a player.'
+chat.command.error.cant_use_spectator: 'You cannot use this command on spectator.'
 chat.command.reload: 'Reloaded configuration successfully.'
 chat.command.give_item: '&7Given %ITEM% to %PLAYER%.'
 chat.detail.your_permission: '&7Your Permission: &a%CURRENT%'
 chat.detail.required_permission: '&7Required Permission: &a%REQUIRED%'
 chat.achievement.earned: '%PLAYER% earned the achievement %ACHIEVEMENT%.'
 chat.achievement.taken: '&cYou have been taken the achievement %ACHIEVEMENT% by an administrator.'
+
+chat.player_first_join: '&e%PLAYER%&e joined the server for the first time!'
+chat.player_first_join.raw: false
+chat.player_join: '%PLAYER%&7 joined the server.'
+chat.player_join.raw: false
+chat.player_quit: '%PLAYER%&7 left the server.'
+chat.player_quit.raw: false
 
 ui.title.main.infect: '&2YOU ARE INFECTED...'
 ui.title.main.died_zombie: '&2YOU DIED...'
@@ -70,3 +82,14 @@ achievement.master_killer.description: 'Kill 50 players in a game'
 misc.description.command.gunwaritem: 'Gives specific player a GunWar item.'
 misc.description.command.gunwarreload: 'Reloads the configuration of GunWar plugin.'
 misc.description.command.gwdebug: 'Debugs GunWar plugin system. Needs to enable debugging mode.'
+
+misc.title: 'Nanami GunWar'
+misc.lost_connection: 'Lost connection.'
+misc.failed_to_connect: 'Failed to connect.'
+misc.cause: 'Cause'
+misc.solution: 'Solution'
+misc.more: 'Please check Nanami Network discord server to get more information.'
+misc.please_report: 'Please report on %CHANNEL% in discord server.'
+
+error.loading_playerdata: 'Error on loading player data.'
+error.logging_in: 'Error on logging in.'

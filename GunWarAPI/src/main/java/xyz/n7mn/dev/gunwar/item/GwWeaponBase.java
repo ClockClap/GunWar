@@ -11,22 +11,32 @@ import java.util.List;
 public abstract class GwWeaponBase extends GwItemBase implements GwWeaponItem {
 
     private float damage;
+    private WeaponType type;
 
     protected GwWeaponBase() {
-        this(0, Material.STONE, "", "", "", new ArrayList<>(), 0F);
+        this(0, Material.STONE, "", "", "", new ArrayList<>(), 0F, WeaponType.KNIFE);
     }
 
-    protected GwWeaponBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage) {
+    protected GwWeaponBase(int index, Material type, String name, String displayName, String id, List<String> description, float damage, WeaponType weaponType) {
         super(index, type, name, displayName, id, description);
         this.damage = damage;
+        this.type = weaponType;
     }
 
     public float getAttackDamage() {
         return damage;
     }
 
+    public WeaponType getWeaponType() {
+        return type;
+    }
+
     protected void setAttackDamage(float damage) {
         this.damage = damage;
+    }
+
+    protected void setWeaponType(WeaponType type) {
+        this.type = type;
     }
 
     protected void setDescription(List<String> description) {
