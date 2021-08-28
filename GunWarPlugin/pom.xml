@@ -8,7 +8,7 @@
         <relativePath>../pom.xml</relativePath>
         <artifactId>gunwar-parent</artifactId>
         <version>dev-SNAPSHOT</version>
-        <groupId>xyz.n7mn.dev</groupId>
+        <groupId>com.github.clockclap</groupId>
     </parent>
     <artifactId>gunwar</artifactId>
     <version>4.6.45</version>
@@ -89,7 +89,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>xyz.n7mn.dev</groupId>
+            <groupId>com.github.clockclap</groupId>
             <artifactId>gunwar-api</artifactId>
             <version>${gunwar.api-version}</version>
             <scope>compile</scope>
