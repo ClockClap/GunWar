@@ -6,7 +6,7 @@ import com.github.clockclap.gunwar.item.GwGunItem;
 import com.github.clockclap.gunwar.item.GwItem;
 import com.github.clockclap.gunwar.mysql.GwMySQL;
 import com.github.clockclap.gunwar.mysql.GwMySQLDataPath;
-import com.github.clockclap.gunwar.util.NanamiGunWarConfiguration;
+import com.github.clockclap.gunwar.util.GunWarPluginConfiguration;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -35,7 +35,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
         this.killCount = new HashMap<>();
         this.deathCount = 0;
         this.infectedCount = 0;
-        this.dataFile = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/players/" + uniqueId);
+        this.dataFile = new File(((GunWarPluginConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/players/" + uniqueId);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
                 GwMySQL.updatePlayerData(getUniqueId(), f.getPath());
             }
             GwMySQLDataPath.insert(getUniqueId(), f.getPath());
-            File f_ = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
+            File f_ = new File(((GunWarPluginConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
             if(!f_.exists()) {
                 f_.createNewFile();
             }
@@ -177,10 +177,10 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
             oos.close();
             fos.close();
         } catch (SQLException ex) {
-            File f_ = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
+            File f_ = new File(((GunWarPluginConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
             if(!f_.exists()) {
                 f_.createNewFile();
-                GwMySQLDataPath.insert(getUniqueId(), ((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath()
+                GwMySQLDataPath.insert(getUniqueId(), ((GunWarPluginConfiguration) GunWar.getConfig()).getDataFolder().getPath()
                         + "/players/" + getUniqueId().toString());
                 FileOutputStream fos = new FileOutputStream(f_);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -240,7 +240,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
                 GwMySQL.updatePlayerData(getUniqueId(), f.getPath());
             }
             GwMySQLDataPath.insert(getUniqueId(), f.getPath());
-            File f_ = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
+            File f_ = new File(((GunWarPluginConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
             if(!f_.exists()) {
                 f_.createNewFile();
             }
@@ -251,10 +251,10 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
             oos.close();
             fos.close();
         } catch (SQLException ex) {
-            File f_ = new File(((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
+            File f_ = new File(((GunWarPluginConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
             if(!f_.exists()) {
                 f_.createNewFile();
-                GwMySQLDataPath.insert(getUniqueId(), ((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder().getPath()
+                GwMySQLDataPath.insert(getUniqueId(), ((GunWarPluginConfiguration) GunWar.getConfig()).getDataFolder().getPath()
                         + "/players/" + getUniqueId().toString());
                 FileOutputStream fos = new FileOutputStream(f_);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);

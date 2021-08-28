@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import com.github.clockclap.gunwar.mysql.MySQLSettingBuilder;
-import com.github.clockclap.gunwar.util.NanamiGunWarConfiguration;
+import com.github.clockclap.gunwar.util.GunWarPluginConfiguration;
 import com.github.clockclap.gunwar.util.TextUtilities;
 
 import java.io.*;
@@ -60,14 +60,14 @@ public class GunWarReloadCommand extends Command {
 
     private void reloadPerm() {
         String path = GunWar.getConfig().getConfig()
-                .getString("permission-setting", ((NanamiGunWarConfiguration) GunWar.getConfig()).getDataFolder() + "/permission/default.yml");
+                .getString("permission-setting", ((GunWarPluginConfiguration) GunWar.getConfig()).getDataFolder() + "/permission/default.yml");
         if(path.startsWith(":nanami-network:>")) {
             if(MySQLSettingBuilder.isEnabled()) GunWar.getConfig().setNanamiNetwork(true);
             path = path.substring(17);
         } else {
             GunWar.getConfig().setNanamiNetwork(false);
         }
-        ((NanamiGunWarConfiguration) GunWar.getConfig()).setPermissionFile(new File(path));
+        ((GunWarPluginConfiguration) GunWar.getConfig()).setPermissionFile(new File(path));
         File permissionFile = GunWar.getConfig().getPermissionSettingFile();
         boolean b1 = true;
         if (!permissionFile.exists()) {

@@ -10,7 +10,7 @@ import com.github.clockclap.gunwar.listeners.PlayerListener;
 import com.github.clockclap.gunwar.listeners.ServerListener;
 import com.github.clockclap.gunwar.mysql.GwMySQLPlayerDataUpdater;
 import com.github.clockclap.gunwar.util.GwUtilities;
-import com.github.clockclap.gunwar.util.NanamiGunWarConfiguration;
+import com.github.clockclap.gunwar.util.GunWarPluginConfiguration;
 import com.github.clockclap.gunwar.util.PlayerWatcher;
 import com.github.clockclap.gunwar.util.TextUtilities;
 import org.bukkit.Bukkit;
@@ -31,12 +31,12 @@ import com.github.clockclap.gunwar.listeners.ItemListener;
 import java.io.File;
 import java.io.IOException;
 
-public final class NanamiGunWar extends JavaPlugin {
+public final class GunWarPlugin extends JavaPlugin {
 
-    private NanamiGunWar plugin;
+    private GunWarPlugin plugin;
     private SimplePluginManager pluginManager;
     private GwUtilities utilities;
-    private NanamiGunWarConfiguration config;
+    private GunWarPluginConfiguration config;
     public static GwMySQLPlayerDataUpdater updater;
     private GunWarGame game;
     private BukkitRunnable runnable;
@@ -48,7 +48,7 @@ public final class NanamiGunWar extends JavaPlugin {
         GunWar.plugin = plugin;
         utilities = new GwUtilities(plugin);
         GunWar.utilities = utilities;
-        config = new NanamiGunWarConfiguration(plugin);
+        config = new GunWarPluginConfiguration(plugin);
         GunWar.config = config;
         config.init();
         GwGameModes.registerDefault();

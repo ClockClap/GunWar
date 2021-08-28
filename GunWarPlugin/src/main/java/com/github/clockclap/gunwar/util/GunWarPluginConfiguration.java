@@ -7,7 +7,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.*;
 
-public class NanamiGunWarConfiguration implements GunWarConfiguration {
+public class GunWarPluginConfiguration implements GunWarConfiguration {
 
     private Plugin plugin;
     private File dataFolder;
@@ -21,7 +21,7 @@ public class NanamiGunWarConfiguration implements GunWarConfiguration {
     private File langFile;
     private boolean nanamiNetwork;
 
-    public NanamiGunWarConfiguration(Plugin plugin) {
+    public GunWarPluginConfiguration(Plugin plugin) {
         this.plugin = plugin;
         this.nanamiNetwork = false;
     }
