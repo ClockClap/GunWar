@@ -1,9 +1,7 @@
 package xyz.n7mn.dev.gunwar.game.data;
 
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import xyz.n7mn.dev.gunwar.entity.HitEntity;
@@ -53,22 +51,25 @@ public interface PlayerData extends EntityData {
 
     public void kill();
 
-    public void drawParticleLine(Particle particle, double start, double far, double separate);
+    @Deprecated
+    public void drawParticleLine(Particle particle, double start, double distance, double separate);
 
-    public void drawParticleLine(Particle particle, double startX, double startY, double startZ, double far,
+    @Deprecated
+    public void drawParticleLine(Particle particle, double startX, double startY, double startZ, double distance,
                                  double separateX, double separateY, double separateZ);
 
-    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double far,
+    @Deprecated
+    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double distance,
                                       double separateX, double separateY, double separateZ, GwGunItem gun);
 
     public HitEntity drawParticleLine(Particle particle, double startX, double startY,
-                                      double startZ, double far, Angle angle, double separate, GwGunItem gun, boolean aim);
+                                      double startZ, double distance, Angle angle, double separate, GwGunItem gun, boolean aim);
 
-    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double far, double separate, GwKnifeItem gun);
+    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double distance, double separate, GwKnifeItem gun);
 
     public void giveItem(GwItem item);
 
-    public class Nanami extends EntityData.Nanami {
+    public class Detail extends EntityData.Detail {
         public String getOldName() {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
@@ -126,6 +127,6 @@ public interface PlayerData extends EntityData {
 
     public void sendMessage(String[] messages);
 
-    public Nanami nanami();
+    public Detail detail();
 
 }

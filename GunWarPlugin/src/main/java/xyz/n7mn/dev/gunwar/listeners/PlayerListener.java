@@ -2,7 +2,6 @@ package xyz.n7mn.dev.gunwar.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,21 +9,15 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.n7mn.dev.gunwar.GunWar;
-import xyz.n7mn.dev.gunwar.NanamiGunWar;
-import xyz.n7mn.dev.gunwar.event.GwAchievementEarnEvent;
 import xyz.n7mn.dev.gunwar.game.GunWarGame;
 import xyz.n7mn.dev.gunwar.game.data.*;
-import xyz.n7mn.dev.gunwar.mysql.GwMySQL;
 import xyz.n7mn.dev.gunwar.mysql.GwMySQLDataPath;
-import xyz.n7mn.dev.gunwar.util.GwUUID;
-import xyz.n7mn.dev.gunwar.util.NanamiGunWarConfiguration;
 import xyz.n7mn.dev.gunwar.util.PlayerWatcher;
 import xyz.n7mn.dev.gunwar.util.TextUtilities;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.UUID;
 
 public class PlayerListener implements Listener {
 
@@ -68,12 +61,12 @@ public class PlayerListener implements Listener {
         watcher.startWatch10Ticks();
         data.setWatcher(watcher);
         ((GunWarGame) GunWar.getGame()).addPlayerData(data.getUniqueId(), data);
-        data.nanami().setName(ChatColor.GRAY + data.nanami().getOldName());
-        p.setPlayerListName(ChatColor.GRAY + data.nanami().getOldName());
+        data.detail().setName(ChatColor.GRAY + data.detail().getOldName());
+        p.setPlayerListName(ChatColor.GRAY + data.detail().getOldName());
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         for(Player pl : players) {
-            data.nanami().hide(pl);
-            data.nanami().show(pl);
+            data.detail().hide(pl);
+            data.detail().show(pl);
         }
     }
 
@@ -83,7 +76,7 @@ public class PlayerListener implements Listener {
                 TextUtilities.CHAT_PLAYER_QUIT.replaceAll("%PLAYER%", e.getPlayer().getName()));
         PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
         if(data != null) {
-            data.nanami().resetName();
+            data.detail().resetName();
             PlayerWatcher watcher = data.getWatcher();
             watcher.stopWatch();
             watcher.stopWatch10Ticks();

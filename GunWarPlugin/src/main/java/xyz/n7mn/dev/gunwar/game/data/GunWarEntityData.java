@@ -13,13 +13,13 @@ public class GunWarEntityData implements EntityData {
     private final UUID uniqueId;
     private final Entity entity;
     private final EntityType type;
-    private final Nanami nanami;
+    private final Detail detail;
 
     public GunWarEntityData(Entity entity) {
         this.uniqueId = entity.getUniqueId();
         this.entity = entity;
         this.type = entity.getType();
-        this.nanami = new Nanami() {
+        this.detail = new Detail() {
             public boolean canSee(LivingEntity from) {
                 if (from.getWorld() != entity.getWorld()) {
                     return false;
@@ -133,7 +133,7 @@ public class GunWarEntityData implements EntityData {
     }
 
     @Override
-    public Nanami nanami() {
-        return nanami;
+    public Detail detail() {
+        return detail;
     }
 }

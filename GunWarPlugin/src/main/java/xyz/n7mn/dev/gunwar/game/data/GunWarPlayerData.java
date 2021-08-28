@@ -45,7 +45,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     private Location loc;
     private boolean zoom;
     private float zoomLevel;
-    private final PlayerData.Nanami nanami;
+    private final PlayerData.Detail detail;
 
     public GunWarPlayerData(Player player) {
         super(player);
@@ -60,7 +60,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         this.dead = false;
         this.zoom = false;
         this.zoomLevel = 0F;
-        this.nanami = new PlayerData.Nanami() {
+        this.detail = new PlayerData.Detail() {
             private final String oldName = player.getName();
             private Map<Player, String> nameMap = new HashMap<>();
 
@@ -416,14 +416,16 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     }
 
     @Override
-    public void drawParticleLine(Particle particle, double start, double far, double separate) {
-        drawParticleLine(particle, 0, 0, start, far, 0, 0, separate);
+    @Deprecated
+    public void drawParticleLine(Particle particle, double start, double distance, double separate) {
+        drawParticleLine(particle, 0, 0, start, distance, 0, 0, separate);
     }
 
     @Override
+    @Deprecated
     public void drawParticleLine(Particle particle, double startX, double startY, double startZ,
-                                 double far, double separateX, double separateY, double separateZ) {
-        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * far;
+                                 double distance, double separateX, double separateY, double separateZ) {
+        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * distance;
         if(startZ < d) {
             double times = d / separateZ;
             double x = startX;
@@ -437,9 +439,10 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     }
 
     @Override
+    @Deprecated
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
-                                      double far, double separateX, double separateY, double separateZ, GwGunItem gun) {
-        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * far;
+                                      double distance, double separateX, double separateY, double separateZ, GwGunItem gun) {
+        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * distance;
         if(startZ < d) {
             double times = d / separateZ;
             double x = startX;
@@ -517,14 +520,14 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
     @Override
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
-                                      double far, Angle angle, double separate, GwGunItem gun, boolean aim) {
-        double yaw = angle.getYaw();
-        double pitch = angle.getPitch();
+                                      double distance, Angle angle, double separate, GwGunItem gun, boolean aim) {
+        double yaw = Math.toRadians(angle.getYaw());
+        double pitch = Math.toRadians(angle.getPitch());
         double r = separate * Math.cos(pitch);
         double separateX = r * Math.sin(yaw);
         double separateY = separate * Math.sin(pitch);
         double separateZ = r * Math.cos(yaw);
-        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * far;
+        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * distance;
         if(startZ < d) {
             double times = d / separate;
             double x = startX;
@@ -575,7 +578,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
                     player.spawnParticle(particle, new Location(c.getWorld(), px + dx_, py + dy_, pz + dz_), count, 0, 0, 0, 0);
 
-                    for(Entity entity : getPlayer().getNearbyEntities(far + 1, far + 1, far + 1)) {
+                    for(Entity entity : getPlayer().getNearbyEntities(distance + 1, distance + 1, distance + 1)) {
                         if(entity instanceof LivingEntity) {
                             LivingEntity livingEntity = (LivingEntity) entity;
                             if(livingEntity != getPlayer()) {
@@ -657,14 +660,10 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
     @Override
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
-                                      double far, double separate, GwKnifeItem knife) {
+                                      double distance, double separate, GwKnifeItem knife) {
         double yaw = 0;
         double pitch = 0;
-        double r = separate * Math.cos(pitch);
-        double separateX = r * Math.sin(yaw);
-        double separateY = separate * Math.sin(pitch);
-        double separateZ = r * Math.cos(yaw);
-        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * far;
+        double d = Math.sqrt(Math.pow(0, 2) + Math.pow(0, 2) + Math.pow(separate, 2)) * distance;
         if(startZ < d) {
             double times = d / separate;
             double x = startX;
@@ -712,7 +711,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
                     player.spawnParticle(particle, new Location(c.getWorld(), px + dx_, py + dy_, pz + dz_), count, 0, 0, 0, 0);
 
-                    for(Entity entity : getPlayer().getNearbyEntities(far + 1, far + 1, far + 1)) {
+                    for(Entity entity : getPlayer().getNearbyEntities(distance + 1, distance + 1, distance + 1)) {
                         if(entity instanceof LivingEntity) {
                             LivingEntity livingEntity = (LivingEntity) entity;
                             if(livingEntity != getPlayer()) {
@@ -768,9 +767,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                         }
                     }
                 }
-                x += separateX;
-                y += separateY;
-                z += separateZ;
+                z += separate;
                 currentDamage -= separateDamage;
                 currentHSDamage -= separateHSDamage;
             }
@@ -1002,7 +999,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     }
 
     @Override
-    public PlayerData.Nanami nanami() {
-        return nanami;
+    public PlayerData.Detail detail() {
+        return detail;
     }
 }

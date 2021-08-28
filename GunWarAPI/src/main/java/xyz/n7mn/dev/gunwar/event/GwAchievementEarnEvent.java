@@ -23,7 +23,7 @@ public class GwAchievementEarnEvent extends GwAchievementEvent implements Cancel
         super(who, achievement);
         cancel = false;
         showMessage = true;
-        String msg = TextUtilities.CHAT_ACHIEVEMENT_EARNED.replaceAll("%PLAYER%", GunWar.getPlayerData(who).nanami().getOldName());
+        String msg = TextUtilities.CHAT_ACHIEVEMENT_EARNED.replaceAll("%PLAYER%", GunWar.getPlayerData(who).detail().getOldName());
         String[] array = msg.split("%ACHIEVEMENT%");
         TextComponent component = new TextComponent();
         for(int i = 0; i < array.length; i++) {

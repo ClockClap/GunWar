@@ -27,7 +27,7 @@ public class PlayerWatcher {
         this.plugin = plugin;
         this.data = data;
         this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        this.objective = this.scoreboard.registerNewObjective(data.nanami().getOldName(), "dummy");
+        this.objective = this.scoreboard.registerNewObjective(data.detail().getOldName(), "dummy");
         this.objective.setDisplayName(TextUtilities.SIDEBAR_TITLE);
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
@@ -54,7 +54,7 @@ public class PlayerWatcher {
             @Override
             public void run() {
                 getObjective().unregister();
-                setObjective(getScoreboard().registerNewObjective(getOwner().nanami().getOldName(), "dummy"));
+                setObjective(getScoreboard().registerNewObjective(getOwner().detail().getOldName(), "dummy"));
                 getObjective().setDisplayName(TextUtilities.SIDEBAR_TITLE);
                 getObjective().setDisplaySlot(DisplaySlot.SIDEBAR);
                 if(GunWar.getGame().getState() == GameState.WAITING) {

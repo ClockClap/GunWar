@@ -3,7 +3,6 @@ package xyz.n7mn.dev.gunwar.game.data;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -15,12 +14,12 @@ public interface EntityData extends CustomData {
 
     public Entity getEntity();
 
-    public class Nanami {
+    public class Detail {
         public boolean canSee(LivingEntity from) {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
     }
 
-    public Nanami nanami();
+    public Detail detail();
 
 }
