@@ -44,6 +44,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -536,6 +538,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         return null;
     }
 
+    @Nullable
     @Override
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
                                       double distance, Angle angle, double separate, GwGunItem gun, boolean aim) {
@@ -640,9 +643,8 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     if(block != null) {
                         if (a(block, px, py, pz)) {
                             @SuppressWarnings("deprecation")
-                            PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
-                                    new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
-                                    block.getType().getId(), false);
+                            PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
+                                    2001, GunWarBlockData.newBlockPosition(block), block.getType().getId(), false);
                             List<Player> players = getPlayer().getWorld().getPlayers();
                             for(final Player p : players) {
                                 ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
@@ -676,6 +678,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         return null;
     }
 
+    @Nullable
     @Override
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
                                       double distance, double separate, GwKnifeItem knife) {
@@ -773,9 +776,8 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     if(block != null) {
                         if(a(block, px, py, pz)) {
                             @SuppressWarnings("deprecation")
-                            PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
-                                    new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
-                                    block.getType().getId(), false);
+                            PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
+                                    2001, GunWarBlockData.newBlockPosition(block), block.getType().getId(), false);
                             List<Player> players = getPlayer().getWorld().getPlayers();
                             for (final Player p : players) {
                                 ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
@@ -1016,8 +1018,10 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         }
     }
 
+    @NotNull
     @Override
     public PlayerData.Detail detail() {
         return detail;
     }
+
 }

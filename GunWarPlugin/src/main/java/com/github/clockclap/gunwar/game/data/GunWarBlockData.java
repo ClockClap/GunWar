@@ -49,4 +49,8 @@ public class GunWarBlockData implements BlockData {
     public BlockPosition getPosition() {
         return new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
     }
+
+    public static BlockPosition newBlockPosition(Block block) {
+        return new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
+    }
 }

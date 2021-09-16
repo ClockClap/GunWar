@@ -20,18 +20,20 @@ package com.github.clockclap.gunwar.entity;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public class HitEntity {
 
-    private LivingEntity entity;
-    private boolean headShot;
-    private double damage;
-    private Location from;
-    private Location hitLocation;
+    private final LivingEntity entity;
+    private final boolean headShot;
+    private final double damage;
+    private final Location from;
+    private final Location hitLocation;
 
-    public HitEntity(LivingEntity entity, boolean headShot, double damage, Location from, Location hitLocation) {
+    public HitEntity(LivingEntity entity, boolean headShot, double damage, @NotNull Location from, @NotNull Location hitLocation) {
         this.entity = entity;
         this.headShot = headShot;
         this.damage = damage;
@@ -39,10 +41,13 @@ public class HitEntity {
         this.hitLocation = hitLocation;
     }
 
+    @Nullable
     public UUID getUniqueId() {
-        return entity.getUniqueId();
+        if(entity != null) return entity.getUniqueId();
+        return null;
     }
 
+    @Nullable
     public LivingEntity getEntity() {
         return entity;
     }
@@ -55,10 +60,12 @@ public class HitEntity {
         return damage;
     }
 
+    @NotNull
     public Location getFrom() {
         return from;
     }
 
+    @NotNull
     public Location getHitLocation() {
         return hitLocation;
     }
