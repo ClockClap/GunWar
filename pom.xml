@@ -18,6 +18,13 @@
         <module>GunWarPlugin</module>
     </modules>
 
+    <licenses>
+        <license>
+            <name>GNU Lessor General Public License, Version 3.0</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+        </license>
+    </licenses>
+
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

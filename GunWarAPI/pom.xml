@@ -31,6 +31,13 @@
         <url>https://github.com/ClockClap/GunWar</url>
     </scm>
 
+    <licenses>
+        <license>
+            <name>GNU Lessor General Public License, Version 3.0</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+        </license>
+    </licenses>
+
     <build>
         <plugins>
             <plugin>
