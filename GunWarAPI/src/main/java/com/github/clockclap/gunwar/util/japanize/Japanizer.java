@@ -520,7 +520,6 @@ public class Japanizer {
             }
             result = msg;
         }
-
         return result;
     }
 
@@ -529,7 +528,7 @@ public class Japanizer {
     }
 
     private static String ime(String text) {
-        if ( text.length() == 0 ) {
+        if (text.length() == 0) {
             return "";
         }
 
@@ -553,8 +552,8 @@ public class Japanizer {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if ( urlconn != null ) urlconn.disconnect();
-            if ( reader != null ) try {
+            if (urlconn != null) urlconn.disconnect();
+            if (reader != null) try {
                 reader.close();
             } catch (IOException ignored) { }
         }

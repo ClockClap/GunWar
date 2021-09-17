@@ -295,7 +295,6 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         return dead;
     }
 
-    @SuppressWarnings({"unused"})
     public boolean isMoveable() {
         return moveable;
     }
@@ -355,7 +354,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (!moveable) {
+                    if (moveable) {
                         this.cancel();
                         return;
                     }
@@ -384,7 +383,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (!moveable) {
+                    if (moveable) {
                         this.cancel();
                         return;
                     }
@@ -642,7 +641,6 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     Block block = loc.getBlock();
                     if(block != null) {
                         if (a(block, px, py, pz)) {
-                            @SuppressWarnings("deprecation")
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
                                     2001, GunWarBlockData.newBlockPosition(block), block.getType().getId(), false);
                             List<Player> players = getPlayer().getWorld().getPlayers();
@@ -653,7 +651,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
                         } else {
                             if(block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) {
-                                currentDamage /= 2;
+                                currentDamage /= 1;
                                 currentHSDamage /= 2;
                             }
                             if(block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
@@ -775,7 +773,6 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     Block block = loc.getBlock();
                     if(block != null) {
                         if(a(block, px, py, pz)) {
-                            @SuppressWarnings("deprecation")
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
                                     2001, GunWarBlockData.newBlockPosition(block), block.getType().getId(), false);
                             List<Player> players = getPlayer().getWorld().getPlayers();
