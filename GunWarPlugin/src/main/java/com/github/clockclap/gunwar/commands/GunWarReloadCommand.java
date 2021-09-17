@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.commands;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import com.google.common.base.Charsets;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.util.PermissionInfo;
@@ -34,6 +35,7 @@ import com.github.clockclap.gunwar.util.TextUtilities;
 import java.io.*;
 import java.util.Arrays;
 
+@GwPlugin
 public class GunWarReloadCommand extends Command {
     public GunWarReloadCommand() {
         super("gunwarreload", TextUtilities.MISC_DESCRIPTION_COMMAND_GUNWARRELOAD, "Usage: /gunwarreload", Arrays.asList("gwreload"));

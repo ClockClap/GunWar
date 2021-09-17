@@ -18,12 +18,14 @@
 
 package com.github.clockclap.gunwar.achievement.achievements;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.achievement.GwAchievementBase;
 import org.bukkit.Material;
 import com.github.clockclap.gunwar.util.TextUtilities;
 
 import java.util.Arrays;
 
+@GwPlugin
 public class CraftAchievementMasterKiller extends GwAchievementBase implements AchievementMasterKiller {
 
     public CraftAchievementMasterKiller() {

@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.listeners;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.game.data.GunData;
 import com.github.clockclap.gunwar.game.data.ItemData;
 import com.github.clockclap.gunwar.game.data.PlayerData;
@@ -30,6 +31,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@GwPlugin
 public class ItemListener implements Listener {
 
     @EventHandler

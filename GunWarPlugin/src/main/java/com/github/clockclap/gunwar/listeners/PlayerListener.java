@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.listeners;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.game.data.GunWarPermanentlyPlayerData;
 import com.github.clockclap.gunwar.game.data.GunWarPlayerData;
 import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
@@ -40,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+@GwPlugin
 public class PlayerListener implements Listener {
 
     @EventHandler

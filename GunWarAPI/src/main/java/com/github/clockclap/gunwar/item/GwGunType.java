@@ -18,6 +18,9 @@
 
 package com.github.clockclap.gunwar.item;
 
+import com.github.clockclap.gunwar.GwAPI;
+
+@GwAPI
 public enum GwGunType {
 
     ASSAULT_RIFLE(0, "ASSAULT_RIFLE"),

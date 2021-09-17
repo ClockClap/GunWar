@@ -18,11 +18,13 @@
 
 package com.github.clockclap.gunwar.mysql;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.nanamiserver.permission.NanamiServerRoleData;
 
 import java.sql.*;
 import java.util.*;
 
+@GwPlugin
 public final class GwMySQL {
 
     public static boolean createTablePlayerData() throws SQLException {

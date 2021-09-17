@@ -18,6 +18,9 @@
 
 package com.github.clockclap.gunwar.exception;
 
+import com.github.clockclap.gunwar.GwAPI;
+
+@GwAPI
 public class GunWarException extends Exception {
 
     public GunWarException() {

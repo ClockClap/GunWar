@@ -18,6 +18,9 @@
 
 package com.github.clockclap.gunwar.game;
 
+import com.github.clockclap.gunwar.GwAPI;
+
+@GwAPI
 public enum GameState {
     WAITING(0, "WAITING"),
     STARTING(1, "STARTING"),

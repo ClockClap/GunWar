@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -32,6 +33,7 @@ import com.github.clockclap.gunwar.nanamiserver.permission.NanamiServerRoleData;
 import java.sql.*;
 import java.util.List;
 
+@GwPlugin
 public class GwUtilities implements Utilities {
 
     private final Plugin plugin;

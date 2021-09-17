@@ -29,12 +29,14 @@ import com.github.clockclap.gunwar.game.data.PlayerData;
 import java.util.Collection;
 import java.util.UUID;
 
+@GwAPI
 public final class GunWar {
 
     static Plugin plugin;
     static Utilities utilities;
     static GunWarConfiguration config;
     static Game game;
+    private static final int apiVer = 2;
 
     public static Plugin getPlugin() {
         return plugin;
@@ -67,6 +69,10 @@ public final class GunWar {
 
     public static Collection<PlayerData> getOnlinePlayerData() {
         return getGame().getOnlinePlayerData();
+    }
+
+    public static int getAPIVersion() {
+        return apiVer;
     }
 
 }

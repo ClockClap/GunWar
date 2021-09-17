@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.util;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.game.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,6 +33,7 @@ import com.github.clockclap.gunwar.game.data.PlayerData;
 import java.util.ArrayList;
 import java.util.List;
 
+@GwAPI
 public class PlayerWatcher {
 
     private final Plugin plugin;

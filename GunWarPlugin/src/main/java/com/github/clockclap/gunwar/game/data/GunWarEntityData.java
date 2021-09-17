@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -26,6 +27,7 @@ import org.bukkit.entity.LivingEntity;
 
 import java.util.UUID;
 
+@GwPlugin
 public class GunWarEntityData implements EntityData {
 
     private final UUID uniqueId;

@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.item;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
+@GwAPI
 public interface GwItem {
 
     public ItemStack getItem();

@@ -18,11 +18,13 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import net.minecraft.server.v1_12_R1.BlockPosition;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+@GwPlugin
 public class GunWarBlockData implements BlockData {
 
     private final Block block;

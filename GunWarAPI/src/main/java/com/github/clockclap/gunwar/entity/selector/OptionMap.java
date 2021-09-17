@@ -18,9 +18,13 @@
 
 package com.github.clockclap.gunwar.entity.selector;
 
+import com.github.clockclap.gunwar.GwAPI;
+
 import java.io.Serializable;
 import java.util.*;
 
+@GwAPI
+@Deprecated
 public final class OptionMap<K, V> implements Serializable {
 
     public static final class Entry<K, V> {

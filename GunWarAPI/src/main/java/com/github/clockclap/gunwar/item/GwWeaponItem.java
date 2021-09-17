@@ -18,6 +18,9 @@
 
 package com.github.clockclap.gunwar.item;
 
+import com.github.clockclap.gunwar.GwAPI;
+
+@GwAPI
 public interface GwWeaponItem extends GwItem {
 
     public float getAttackDamage();

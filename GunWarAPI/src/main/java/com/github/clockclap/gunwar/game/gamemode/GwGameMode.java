@@ -18,11 +18,13 @@
 
 package com.github.clockclap.gunwar.game.gamemode;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@GwAPI
 public abstract class GwGameMode implements IGwGameMode {
 
     private final int index;

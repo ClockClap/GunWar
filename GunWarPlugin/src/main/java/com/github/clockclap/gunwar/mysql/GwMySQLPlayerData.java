@@ -18,12 +18,14 @@
 
 package com.github.clockclap.gunwar.mysql;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.nanamiserver.permission.NanamiServerRoleData;
 import com.github.clockclap.gunwar.game.data.PlayerData;
 
 import java.sql.*;
 import java.util.*;
 
+@GwPlugin
 public final class GwMySQLPlayerData {
 
     private static Map<PlayerData, GwMySQLPlayerData> dataMap = new HashMap<>();

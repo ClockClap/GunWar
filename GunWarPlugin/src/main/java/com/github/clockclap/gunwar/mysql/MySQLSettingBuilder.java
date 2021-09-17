@@ -18,9 +18,12 @@
 
 package com.github.clockclap.gunwar.mysql;
 
+import com.github.clockclap.gunwar.GwPlugin;
+
 import java.sql.*;
 import java.util.Enumeration;
 
+@GwPlugin
 public final class MySQLSettingBuilder {
 
     private GwMySqlSetting setting;

@@ -18,11 +18,13 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.command.CommandSender;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@GwAPI
 public final class MessageLog {
 
     public static Map<CommandSender, CommandSender> finalMessageTarget = new HashMap<>();

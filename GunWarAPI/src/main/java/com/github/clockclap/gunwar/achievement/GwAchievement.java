@@ -18,11 +18,13 @@
 
 package com.github.clockclap.gunwar.achievement;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
+@GwAPI
 public interface GwAchievement {
 
     public String getName();

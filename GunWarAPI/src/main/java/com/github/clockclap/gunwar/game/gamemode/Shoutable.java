@@ -18,5 +18,8 @@
 
 package com.github.clockclap.gunwar.game.gamemode;
 
+import com.github.clockclap.gunwar.GwAPI;
+
+@GwAPI
 public interface Shoutable {
 }

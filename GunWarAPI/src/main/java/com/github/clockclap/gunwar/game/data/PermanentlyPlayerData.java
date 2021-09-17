@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.achievement.GwAchievement;
 import com.github.clockclap.gunwar.item.GwGunItem;
 import com.github.clockclap.gunwar.item.GwItem;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@GwAPI
 public interface PermanentlyPlayerData {
 
     public UUID getUniqueId();

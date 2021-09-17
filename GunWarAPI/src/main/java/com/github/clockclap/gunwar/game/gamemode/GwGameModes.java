@@ -18,10 +18,13 @@
 
 package com.github.clockclap.gunwar.game.gamemode;
 
+import com.github.clockclap.gunwar.GwAPI;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@GwAPI
 public final class GwGameModes {
 
     private static List<GwGameMode> registeredGameMode = new ArrayList<>();

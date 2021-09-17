@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.clockclap</groupId>
+    <groupId>io.github.clockclap</groupId>
     <artifactId>gunwar-parent</artifactId>
     <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GunWarParent</name>
-    <url>https://github.com/nanami-network/GunWar</url>
+    <url>https://github.com/ClockClap/GunWar</url>
     <description>Parent project for all GunWar modules.</description>
 
     <modules>

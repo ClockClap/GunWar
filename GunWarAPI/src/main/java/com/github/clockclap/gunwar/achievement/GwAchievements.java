@@ -18,8 +18,10 @@
 
 package com.github.clockclap.gunwar.achievement;
 
+import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.achievement.achievements.AchievementMasterKiller;
 
+@GwAPI
 public final class GwAchievements {
 
     public static final AchievementMasterKiller MASTER_KILLER = GwAchievementRegisterer.get(AchievementMasterKiller.class);

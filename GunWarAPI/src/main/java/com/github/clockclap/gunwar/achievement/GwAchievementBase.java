@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.achievement;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,6 +29,7 @@ import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
 
 import java.util.List;
 
+@GwAPI
 public abstract class GwAchievementBase implements GwAchievement {
 
     private String name;

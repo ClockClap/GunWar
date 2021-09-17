@@ -18,12 +18,14 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.sql.SQLException;
 
+@GwAPI
 public interface Utilities {
 
     public Plugin getPlugin();

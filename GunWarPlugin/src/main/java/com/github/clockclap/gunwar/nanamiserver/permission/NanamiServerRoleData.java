@@ -18,8 +18,11 @@
 
 package com.github.clockclap.gunwar.nanamiserver.permission;
 
+import com.github.clockclap.gunwar.GwPlugin;
+
 import java.util.UUID;
 
+@GwPlugin
 public class NanamiServerRoleData {
 
     private java.util.UUID uniqueId;

@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.commands;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.util.PermissionInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -28,6 +29,7 @@ import com.github.clockclap.gunwar.util.TextUtilities;
 
 import java.util.Arrays;
 
+@GwPlugin
 public class GunWarConfigCommand extends Command {
 
     public GunWarConfigCommand() {

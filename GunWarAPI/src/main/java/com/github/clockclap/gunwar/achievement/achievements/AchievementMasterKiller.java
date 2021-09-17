@@ -18,7 +18,9 @@
 
 package com.github.clockclap.gunwar.achievement.achievements;
 
+import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.achievement.GwAchievement;
 
+@GwAPI
 public interface AchievementMasterKiller extends GwAchievement {
 }

@@ -18,6 +18,9 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwAPI;
+
+@GwAPI
 public final class GwVersions {
 
     public static String max(String val1, String val2) {

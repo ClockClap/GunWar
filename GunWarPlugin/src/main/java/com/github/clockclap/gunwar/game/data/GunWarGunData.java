@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.game.data;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.entity.HitEntity;
 import com.github.clockclap.gunwar.item.GunReloadingType;
 import com.github.clockclap.gunwar.item.GwGunItem;
@@ -34,6 +35,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
+@GwPlugin
 public class GunWarGunData extends GunWarItemData implements GunData {
 
     private boolean reloading;

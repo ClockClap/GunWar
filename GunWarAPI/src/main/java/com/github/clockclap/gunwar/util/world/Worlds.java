@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.util.world;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -27,6 +28,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+@GwAPI
 public final class Worlds {
 
     public static final double DEFAULT_MIN_COORDINATE_X = 0xFE363C80;

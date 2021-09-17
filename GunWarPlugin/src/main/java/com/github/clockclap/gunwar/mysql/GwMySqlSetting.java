@@ -18,6 +18,9 @@
 
 package com.github.clockclap.gunwar.mysql;
 
+import com.github.clockclap.gunwar.GwPlugin;
+
+@GwPlugin
 final class GwMySqlSetting {
 
     private final String host;

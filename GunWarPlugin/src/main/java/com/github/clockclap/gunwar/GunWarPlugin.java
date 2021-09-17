@@ -49,6 +49,7 @@ import com.github.clockclap.gunwar.listeners.ItemListener;
 import java.io.File;
 import java.io.IOException;
 
+@GwPlugin
 public final class GunWarPlugin extends JavaPlugin {
 
     private GunWarPlugin plugin;

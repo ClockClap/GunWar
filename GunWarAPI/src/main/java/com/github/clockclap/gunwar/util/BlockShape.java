@@ -18,8 +18,10 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.Material;
 
+@GwAPI
 public final class BlockShape {
 
     public static boolean isSlab(Material material) {

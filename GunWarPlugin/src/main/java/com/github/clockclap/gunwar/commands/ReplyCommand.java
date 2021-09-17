@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.commands;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.util.TextUtilities;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -29,6 +30,7 @@ import com.github.clockclap.gunwar.util.MessageLog;
 import java.util.Arrays;
 import java.util.List;
 
+@GwPlugin
 public class ReplyCommand extends Command {
 
     public ReplyCommand() {

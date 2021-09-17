@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.game;
 
+import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.game.data.ItemData;
 import com.github.clockclap.gunwar.game.gamemode.GwGameMode;
 import org.bukkit.Location;
@@ -31,6 +32,7 @@ import com.github.clockclap.gunwar.game.data.PlayerData;
 import java.util.Collection;
 import java.util.UUID;
 
+@GwAPI
 public interface Game {
 
     public Plugin getPlugin();

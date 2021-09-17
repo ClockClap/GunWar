@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.util;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.util.japanize.Japanizer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -28,6 +29,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.UnsupportedEncodingException;
 
+@GwAPI
 public final class TextUtilities {
 
     private static final FileConfiguration lang = GunWar.getConfig().getLang();

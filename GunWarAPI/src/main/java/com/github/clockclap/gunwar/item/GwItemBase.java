@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.item;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
+@GwAPI
 public abstract class GwItemBase implements GwItem {
 
     private ItemStack item;

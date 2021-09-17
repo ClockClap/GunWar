@@ -18,6 +18,8 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwAPI;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.mysql.MySQLSettingBuilder;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,6 +27,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.*;
 
+@GwPlugin
 public class GunWarPluginConfiguration implements GunWarConfiguration {
 
     private Plugin plugin;
@@ -249,6 +252,7 @@ public class GunWarPluginConfiguration implements GunWarConfiguration {
         return langFile;
     }
 
+    @GwPlugin
     public void setPermissionFile(File file) {
         permissionFile = file;
     }

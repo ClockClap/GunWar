@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.listeners;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -39,6 +40,7 @@ import com.github.clockclap.gunwar.item.GwWeaponItem;
 import com.github.clockclap.gunwar.item.WeaponType;
 import com.github.clockclap.gunwar.util.TextUtilities;
 
+@GwPlugin
 public class ServerListener implements Listener {
 
     @EventHandler

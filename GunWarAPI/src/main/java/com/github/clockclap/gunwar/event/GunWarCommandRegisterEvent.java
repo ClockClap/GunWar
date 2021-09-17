@@ -18,10 +18,12 @@
 
 package com.github.clockclap.gunwar.event;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.command.Command;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.server.ServerEvent;
 
+@GwAPI
 public class GunWarCommandRegisterEvent extends ServerEvent {
 
     private static final HandlerList handlers = new HandlerList();

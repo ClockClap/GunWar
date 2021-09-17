@@ -18,10 +18,12 @@
 
 package com.github.clockclap.gunwar.event;
 
+import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.achievement.GwAchievement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
 
+@GwAPI
 public abstract class GwAchievementEvent extends PlayerEvent {
 
     private GwAchievement achievement;

@@ -18,10 +18,12 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+@GwAPI
 public interface BlockData extends CustomData {
 
     public Location getLocation();

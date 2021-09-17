@@ -18,6 +18,10 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwAPI;
+
+@GwAPI
+@Deprecated
 public class InvertibleObject<T> {
 
     private T value;

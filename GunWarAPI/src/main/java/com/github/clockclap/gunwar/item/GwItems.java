@@ -18,11 +18,13 @@
 
 package com.github.clockclap.gunwar.item;
 
+import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.item.items.GwItemAK47;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@GwAPI
 public final class GwItems {
 
     private static List<GwItem> registeredItems = new ArrayList<>();

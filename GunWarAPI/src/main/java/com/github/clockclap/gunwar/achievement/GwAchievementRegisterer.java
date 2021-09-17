@@ -18,8 +18,11 @@
 
 package com.github.clockclap.gunwar.achievement;
 
+import com.github.clockclap.gunwar.GwAPI;
+
 import java.util.*;
 
+@GwAPI
 public final class GwAchievementRegisterer {
 
     private static Map<Integer, GwAchievement> achievementMap = new HashMap<>();

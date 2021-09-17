@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.item.GwItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -25,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
+@GwPlugin
 public class GunWarItemData implements ItemData {
 
     private UUID uniqueId;

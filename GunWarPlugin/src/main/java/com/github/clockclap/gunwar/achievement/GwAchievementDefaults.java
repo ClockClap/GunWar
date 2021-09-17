@@ -18,11 +18,13 @@
 
 package com.github.clockclap.gunwar.achievement;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.achievement.achievements.CraftAchievementMasterKiller;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@GwPlugin
 public final class GwAchievementDefaults {
 
     public static List<GwAchievement> defaultAchievements = new ArrayList<>();

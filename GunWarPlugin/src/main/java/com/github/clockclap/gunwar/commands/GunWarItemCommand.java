@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.commands;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.item.GwItem;
 import com.github.clockclap.gunwar.item.GwItems;
 import com.github.clockclap.gunwar.util.PermissionInfo;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@GwPlugin
 public class GunWarItemCommand extends Command {
 
     public GunWarItemCommand() {

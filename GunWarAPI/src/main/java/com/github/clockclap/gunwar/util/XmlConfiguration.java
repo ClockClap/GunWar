@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.Bukkit;
 import org.xml.sax.SAXException;
 import com.github.clockclap.gunwar.GunWar;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@GwAPI
 public class XmlConfiguration {
 
     private Map<String, Object> map;

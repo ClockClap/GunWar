@@ -18,11 +18,13 @@
 
 package com.github.clockclap.gunwar.item;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@GwAPI
 public abstract class GwKnifeBase extends GwWeaponBase implements GwKnifeItem {
 
     protected GwKnifeBase() {

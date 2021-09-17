@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.entity.HitEntity;
 import com.github.clockclap.gunwar.item.GwGunItem;
 import com.github.clockclap.gunwar.item.GwItem;
@@ -31,6 +32,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
+@GwAPI
 public interface PlayerData extends EntityData {
 
     public Player getPlayer();

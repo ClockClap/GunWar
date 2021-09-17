@@ -18,6 +18,10 @@
 
 package com.github.clockclap.gunwar.exception;
 
+import com.github.clockclap.gunwar.GwAPI;
+
+@GwAPI
+@Deprecated
 public class InvalidTargetSelectorException extends TargetSelectorException {
 
     public InvalidTargetSelectorException() {

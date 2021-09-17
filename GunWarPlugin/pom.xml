@@ -8,13 +8,13 @@
         <relativePath>../pom.xml</relativePath>
         <artifactId>gunwar-parent</artifactId>
         <version>dev-SNAPSHOT</version>
-        <groupId>com.github.clockclap</groupId>
+        <groupId>io.github.clockclap</groupId>
     </parent>
     <artifactId>gunwar</artifactId>
     <version>4.6.45</version>
     <packaging>jar</packaging>
     <name>GunWar</name>
-    <url>https://github.com/nanami-network/GunWar</url>
+    <url>https://github.com/ClockClap/GunWar</url>
 
     <properties>
         <java.version>1.8</java.version>
@@ -23,12 +23,6 @@
         <gunwar.api-version>1.12.2-R0.1-SNAPSHOT</gunwar.api-version>
         <paper.version>1.12.2-R0.1-SNAPSHOT</paper.version>
     </properties>
-
-    <!--    <scm>-->
-    <!--        <connection>scm:git:https://github.com/ClockClap/GunWar.git</connection>-->
-    <!--        <developerConnection>scm:git:https://github.com/ClockClap/GunWar.git</developerConnection>-->
-    <!--        <url>https://github.com/ClockClap/GunWar</url>-->
-    <!--    </scm>-->
 
     <build>
         <plugins>
@@ -135,7 +129,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.clockclap</groupId>
+            <groupId>io.github.clockclap</groupId>
             <artifactId>gunwar-api</artifactId>
             <version>${gunwar.api-version}</version>
             <scope>compile</scope>

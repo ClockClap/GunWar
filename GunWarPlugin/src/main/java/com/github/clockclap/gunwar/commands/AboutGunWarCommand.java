@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.commands;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.util.PermissionInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -29,6 +30,7 @@ import com.github.clockclap.gunwar.util.TextUtilities;
 
 import java.util.Arrays;
 
+@GwPlugin
 public class AboutGunWarCommand extends Command {
     public AboutGunWarCommand() {
         super("aboutgunwar", GwReference.COMMAND_AGW_DESCRIPTION, "Usage: /aboutgunwar", Arrays.asList("aboutgw", "agw"));

@@ -18,9 +18,11 @@
 
 package com.github.clockclap.gunwar.item;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+@GwAPI
 public interface GwGunItem extends GwWeaponItem {
 
     /**

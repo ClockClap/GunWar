@@ -18,11 +18,13 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@GwAPI
 public final class DataList {
 
     public static List<Location> brokenGlasses = new ArrayList<>();

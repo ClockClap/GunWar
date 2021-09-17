@@ -18,12 +18,14 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@GwAPI
 final class GwSAX extends DefaultHandler {
 
     private Map<String, String> map;

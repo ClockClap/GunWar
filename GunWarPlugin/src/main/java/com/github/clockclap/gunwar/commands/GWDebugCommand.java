@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.commands;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@GwPlugin
 public class GWDebugCommand extends Command {
 
     public GWDebugCommand() {

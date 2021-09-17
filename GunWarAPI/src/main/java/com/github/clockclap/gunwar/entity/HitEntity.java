@@ -18,6 +18,8 @@
 
 package com.github.clockclap.gunwar.entity;
 
+import com.github.clockclap.gunwar.GwAPI;
+import com.github.clockclap.gunwar.GwPlugin;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
+@GwAPI
 public class HitEntity {
 
     private final LivingEntity entity;

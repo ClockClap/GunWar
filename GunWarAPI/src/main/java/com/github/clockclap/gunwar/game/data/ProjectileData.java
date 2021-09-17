@@ -18,9 +18,11 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.ProjectileSource;
 
+@GwAPI
 public interface ProjectileData extends EntityData {
 
     public Projectile getProjectile();

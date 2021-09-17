@@ -18,10 +18,14 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwPlugin;
+
 import java.util.UUID;
 
+@GwPlugin
 public class GwUUID {
 
+    @Deprecated
     public static boolean match(UUID uuid1, UUID uuid2) {
         return uuid1.toString().equalsIgnoreCase(uuid2.toString());
     }

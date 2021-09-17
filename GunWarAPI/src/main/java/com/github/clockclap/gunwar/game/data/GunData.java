@@ -18,6 +18,9 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GwAPI;
+
+@GwAPI
 public interface GunData extends ItemData {
 
     public boolean isReloading();

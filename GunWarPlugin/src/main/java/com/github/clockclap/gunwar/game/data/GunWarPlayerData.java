@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import com.mojang.authlib.GameProfile;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.entity.HitEntity;
@@ -50,6 +51,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 
+@GwPlugin
 @SuppressWarnings({"all"})
 public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 

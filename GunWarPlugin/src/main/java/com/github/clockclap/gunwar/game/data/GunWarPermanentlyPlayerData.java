@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.game.data;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.achievement.GwAchievement;
 import com.github.clockclap.gunwar.item.GwGunItem;
 import com.github.clockclap.gunwar.item.GwItem;
@@ -30,6 +31,7 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 
+@GwPlugin
 public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Serializable {
 
     private final UUID uniqueId;

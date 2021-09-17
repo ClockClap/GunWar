@@ -18,10 +18,12 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 
+@GwAPI
 public interface GunWarConfiguration {
 
     public FileConfiguration getConfig();

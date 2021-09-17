@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.game.data;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.entity.HitEntity;
 import com.github.clockclap.gunwar.item.GwGunItem;
 import com.github.clockclap.gunwar.item.GwKnifeItem;
@@ -35,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+@GwPlugin
 public class GunWarKnifeData extends GunWarItemData implements KnifeData {
 
     private boolean reloading;

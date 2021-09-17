@@ -18,9 +18,12 @@
 
 package com.github.clockclap.gunwar.mysql;
 
+import com.github.clockclap.gunwar.GwPlugin;
+
 import java.io.Serializable;
 import java.util.*;
 
+@GwPlugin
 public class GwMySQLDataPath implements Serializable {
 
     private transient static Set<GwMySQLDataPath> paths = new HashSet<>();

@@ -18,12 +18,14 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.UUID;
 
+@GwAPI
 public interface EntityData extends CustomData {
 
     public UUID getUniqueId();

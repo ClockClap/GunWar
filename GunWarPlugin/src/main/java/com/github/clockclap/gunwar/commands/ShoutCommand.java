@@ -19,6 +19,7 @@
 package com.github.clockclap.gunwar.commands;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.game.GameState;
 import com.github.clockclap.gunwar.game.gamemode.Shoutable;
 import com.github.clockclap.gunwar.util.TextUtilities;
@@ -30,6 +31,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+@GwPlugin
 public class ShoutCommand extends Command {
 
     public ShoutCommand() {

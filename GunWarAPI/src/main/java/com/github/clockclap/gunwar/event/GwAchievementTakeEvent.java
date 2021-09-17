@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.event;
 
+import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.achievement.GwAchievement;
 import com.github.clockclap.gunwar.util.TextUtilities;
 import net.md_5.bungee.api.ChatColor;
@@ -28,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
+@GwAPI
 public class GwAchievementTakeEvent extends GwAchievementEvent implements Cancellable {
 
     public static HandlerList handlers = new HandlerList();

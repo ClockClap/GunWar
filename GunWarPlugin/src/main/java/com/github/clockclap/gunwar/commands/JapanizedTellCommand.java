@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.commands;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@GwPlugin
 public class JapanizedTellCommand extends Command {
 
     public JapanizedTellCommand() {

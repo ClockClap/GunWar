@@ -18,6 +18,9 @@
 
 package com.github.clockclap.gunwar.achievement;
 
+import com.github.clockclap.gunwar.GwAPI;
+
+@GwAPI
 public enum GwAchievementAttributes {
     ACHIEVEMENT, DIFFICULT_ACHIEVEMENT, CHALLENGE
 }

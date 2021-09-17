@@ -18,6 +18,7 @@
 
 package com.github.clockclap.gunwar.game;
 
+import com.github.clockclap.gunwar.GwPlugin;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
@@ -39,6 +40,7 @@ import com.github.clockclap.gunwar.util.world.Worlds;
 
 import java.util.*;
 
+@GwPlugin
 public class GunWarGame implements Game {
 
     private final Plugin plugin;
