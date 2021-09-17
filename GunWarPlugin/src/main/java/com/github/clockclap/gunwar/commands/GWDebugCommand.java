@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.util.GwUUID;
 import com.github.clockclap.gunwar.util.PermissionInfo;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.UUID;
 public class GWDebugCommand extends Command {
 
     public GWDebugCommand() {
-        super("gwdebug", TextUtilities.MISC_DESCRIPTION_COMMAND_GWDEBUG, "Usage: /gwdebug <args...>", new ArrayList<>());
+        super("gwdebug", TextReference.MISC_DESCRIPTION_COMMAND_GWDEBUG, "Usage: /gwdebug <args...>", new ArrayList<>());
     }
 
     @Override
@@ -48,50 +48,50 @@ public class GWDebugCommand extends Command {
             int required = GunWar.getConfig().getPermissionSetting().getInt("commands.gwdebug", 1);
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
+                PermissionInfo info = GunWar.getManager().testPermission(p, required);
                 if (!info.isPassed()) {
-                    p.sendMessage(TextUtilities.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
+                    p.sendMessage(TextReference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                     return true;
                 }
             }
             if(args.length >= 1) {
                 if(args[0].equalsIgnoreCase("GETVAL")) {
                     if(args[1].equalsIgnoreCase("configMap") && args.length >= 3) {
-                        sender.sendMessage(TextUtilities.CHAT_PREFIX + " Debug [GETVAL]: configMap(" + args[2] + ") = " + GunWar.getConfig().getDetailConfig().get(args[2], ""));
+                        sender.sendMessage(TextReference.CHAT_PREFIX + " Debug [GETVAL]: configMap(" + args[2] + ") = " + GunWar.getConfig().getDetailConfig().get(args[2], ""));
                         return true;
                     }
                     if(args[1].equalsIgnoreCase("attrMap") && args.length >= 4) {
-                        sender.sendMessage(TextUtilities.CHAT_PREFIX + " Debug [GETVAL]: attrMap(" + args[2] + ") = " + GunWar.getConfig().getDetailConfig().getAttribute(args[2], args[3]));
+                        sender.sendMessage(TextReference.CHAT_PREFIX + " Debug [GETVAL]: attrMap(" + args[2] + ") = " + GunWar.getConfig().getDetailConfig().getAttribute(args[2], args[3]));
                         return true;
                     }
                 }
                 if(args[0].equalsIgnoreCase("CHAT1") && args.length >= 3) {
-                    sender.sendMessage(TextUtilities.chat(args[1], args[2]));
+                    sender.sendMessage(TextReference.chat(args[1], args[2]));
                     return true;
                 }
                 if(args[0].equalsIgnoreCase("CHAT2") && args.length >= 5) {
-                    sender.sendMessage(TextUtilities.chat(ChatColor.valueOf(args[1]), args[2], args[3], args[4]));
+                    sender.sendMessage(TextReference.chat(ChatColor.valueOf(args[1]), args[2], args[3], args[4]));
                 }
                 if(args[0].equalsIgnoreCase("COLOR")) {
-                    sender.sendMessage(TextUtilities.translateAlternateColorCodes("%{color}", "%{color}ctest"));
+                    sender.sendMessage(TextReference.translateAlternateColorCodes("%{color}", "%{color}ctest"));
                 }
                 if(args[0].equalsIgnoreCase("UUID")) {
                     if(sender instanceof Player) {
                         Player p = (Player) sender;
-                        p.sendMessage(TextUtilities.CHAT_PREFIX + " Your UUID is " + p.getUniqueId().toString() + ".");
+                        p.sendMessage(TextReference.CHAT_PREFIX + " Your UUID is " + p.getUniqueId().toString() + ".");
                         if(GwUUID.match(p.getUniqueId(), UUID.fromString("4b7aeaa5-f198-4547-b05c-d78282e0d495")) ||
                                 GwUUID.match(p.getUniqueId(), UUID.fromString("e7899741-cbea-4a11-aa6c-a67a8342e72d"))) {
-                            p.sendMessage(TextUtilities.CHAT_PREFIX + " You are a developer of GunWar plugin.");
+                            p.sendMessage(TextReference.CHAT_PREFIX + " You are a developer of GunWar plugin.");
                         }
                     } else {
-                        sender.sendMessage(TextUtilities.CHAT_PREFIX + " You do not have UUID.");
+                        sender.sendMessage(TextReference.CHAT_PREFIX + " You do not have UUID.");
                     }
                 }
             }
-            sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_DEBUG);
+            sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_DEBUG);
             return true;
         }
-        sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_NOT_DEBUGGING_MODE);
+        sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_NOT_DEBUGGING_MODE);
         return true;
     }
 

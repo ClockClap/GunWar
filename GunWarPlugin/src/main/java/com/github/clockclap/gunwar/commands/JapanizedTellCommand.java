@@ -27,7 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import com.github.clockclap.gunwar.util.MessageLog;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,17 +51,17 @@ public class JapanizedTellCommand extends Command {
                     message.append(" ");
                 }
                 String name = sender instanceof ConsoleCommandSender ? "Server" : sender.getName();
-                String s = TextUtilities.privateChat(sender.getName(), args[0], message.toString().trim());
+                String s = TextReference.privateChat(sender.getName(), args[0], message.toString().trim());
                 sender.sendMessage(s);
                 to.sendMessage(s);
                 MessageLog.finalMessageTarget.put(sender, to);
                 MessageLog.finalMessageTarget.put(to, sender);
                 return true;
             }
-            sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_UNKNOWN_PLAYER);
+            sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_UNKNOWN_PLAYER);
             return true;
         }
-        sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
+        sender.sendMessage(TextReference.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
         return true;
     }
 

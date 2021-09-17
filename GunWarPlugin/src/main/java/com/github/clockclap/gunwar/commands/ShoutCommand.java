@@ -23,7 +23,7 @@ import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.game.GameState;
 import com.github.clockclap.gunwar.game.gamemode.Shoutable;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -46,24 +46,24 @@ public class ShoutCommand extends Command {
             if (GunWar.getGame().getState() == GameState.PLAYING) {
                 if (GunWar.getGame().getGameMode() instanceof Shoutable) {
                     if(GunWar.getPlayerData(p).isSpectator()) {
-                        sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_CANT_USE_SPECTATOR);
+                        sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_CANT_USE_SPECTATOR);
                         return true;
                     }
                     if(args.length >= 1 && args[0] != null) {
                         String message = String.join(" ", args);
-                        Bukkit.broadcastMessage(TextUtilities.chat(p.getName(), message));
+                        Bukkit.broadcastMessage(TextReference.chat(p.getName(), message));
                         return true;
                     }
-                    sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + getUsage());
+                    sender.sendMessage(TextReference.CHAT_PREFIX + " " + getUsage());
                     return true;
                 }
-                sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_CANT_USE_THIS_MODE);
+                sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_CANT_USE_THIS_MODE);
                 return true;
             }
-            sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_GAME_NOT_STARTED);
+            sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_GAME_NOT_STARTED);
             return true;
         }
-        sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_ONLY_PLAYER);
+        sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_ONLY_PLAYER);
         return true;
     }
 

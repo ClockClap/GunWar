@@ -30,7 +30,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import com.github.clockclap.gunwar.game.data.PlayerData;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ import java.util.List;
 public class GunWarItemCommand extends Command {
 
     public GunWarItemCommand() {
-        super("gunwaritem", TextUtilities.MISC_DESCRIPTION_COMMAND_GUNWARITEM, "Usage: /gunwaritem <player> <item>", Arrays.asList("gwitem", "gwi"));
+        super("gunwaritem", TextReference.MISC_DESCRIPTION_COMMAND_GUNWARITEM, "Usage: /gunwaritem <player> <item>", Arrays.asList("gwitem", "gwi"));
     }
 
     @Override
@@ -48,16 +48,16 @@ public class GunWarItemCommand extends Command {
         int required = GunWar.getConfig().getPermissionSetting().getInt("commands.gunwaritem", 1);
         if(sender instanceof Player) {
             Player p = (Player) sender;
-            PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
+            PermissionInfo info = GunWar.getManager().testPermission(p, required);
             if(!info.isPassed()) {
-                p.sendMessage(TextUtilities.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
+                p.sendMessage(TextReference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                 return true;
             }
         }
         if(args.length >= 2) {
             Player p = Bukkit.getPlayer(args[0]);
             if(p == null) {
-                sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_UNKNOWN_PLAYER);
+                sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_UNKNOWN_PLAYER);
                 return true;
             }
             PlayerData data = GunWar.getGame().getPlayerData(p);
@@ -68,24 +68,24 @@ public class GunWarItemCommand extends Command {
                         try {
                             int am = Integer.parseInt(args[2]);
                             if(am < 1) {
-                                sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
+                                sender.sendMessage(TextReference.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
                                 return true;
                             }
                             amount = am;
                         } catch(NumberFormatException e) {
-                            sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
+                            sender.sendMessage(TextReference.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
                             e.printStackTrace();
                             return true;
                         }
                     }
                     for(int j = 0; j < amount; j++) data.giveItem(i);
-                    sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_GIVE_ITEM
+                    sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_GIVE_ITEM
                             .replaceAll("%PLAYER%", p.getName()).replaceAll("%ITEM%", i.getName()));
                     return true;
                 }
             }
         }
-        sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
+        sender.sendMessage(TextReference.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
         return true;
     }
 

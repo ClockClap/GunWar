@@ -27,7 +27,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import com.github.clockclap.gunwar.util.GwReference;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 
 import java.util.Arrays;
 
@@ -42,9 +42,9 @@ public class AboutGunWarCommand extends Command {
         int required = GunWar.getConfig().getPermissionSetting().getInt("commands.aboutgunwar", 0);
         if(sender instanceof Player) {
             Player p = (Player) sender;
-            PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
+            PermissionInfo info = GunWar.getManager().testPermission(p, required);
             if(!info.isPassed()) {
-                p.sendMessage(TextUtilities.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
+                p.sendMessage(TextReference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                 return true;
             }
         }

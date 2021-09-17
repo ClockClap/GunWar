@@ -49,7 +49,7 @@ public class PlayerWatcher {
         this.data = data;
         this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         this.objective = this.scoreboard.registerNewObjective(data.detail().getOldName(), "dummy");
-        this.objective.setDisplayName(TextUtilities.SIDEBAR_TITLE);
+        this.objective.setDisplayName(TextReference.SIDEBAR_TITLE);
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
@@ -76,14 +76,14 @@ public class PlayerWatcher {
             public void run() {
                 getObjective().unregister();
                 setObjective(getScoreboard().registerNewObjective(getOwner().detail().getOldName(), "dummy"));
-                getObjective().setDisplayName(TextUtilities.SIDEBAR_TITLE);
+                getObjective().setDisplayName(TextReference.SIDEBAR_TITLE);
                 getObjective().setDisplaySlot(DisplaySlot.SIDEBAR);
                 if(GunWar.getGame().getState() == GameState.WAITING) {
                     List<String> lines = new ArrayList<>();
                     lines.add("");
-                    lines.add(TextUtilities.SIDEBAR_GAMESTATE + ": " + TextUtilities.SIDEBAR_GAMESTATE_WAITING);
+                    lines.add(TextReference.SIDEBAR_GAMESTATE + ": " + TextReference.SIDEBAR_GAMESTATE_WAITING);
                     if(GunWar.getConfig().getConfig().getBoolean("game.auto-start", false)) {
-                        lines.add(TextUtilities.SIDEBAR_WAITING_PLAYER
+                        lines.add(TextReference.SIDEBAR_WAITING_PLAYER
                                 .replaceAll("%PLAYERS%",
                                         (Math.max(
                                                 0,
@@ -93,13 +93,13 @@ public class PlayerWatcher {
                                                 + ""));
                     } else {
                         if (getOwner().getPlayer().isOp()) {
-                            lines.add(TextUtilities.SIDEBAR_PLEASE_START);
+                            lines.add(TextReference.SIDEBAR_PLEASE_START);
                         } else {
-                            lines.add(TextUtilities.SIDEBAR_PLEASE_WAIT);
+                            lines.add(TextReference.SIDEBAR_PLEASE_WAIT);
                         }
                     }
                     lines.add(ChatColor.RESET + "");
-                    lines.add(TextUtilities.SIDEBAR_PLAYERS + ": " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.RESET + "/" + ChatColor.GREEN + Bukkit.getMaxPlayers());
+                    lines.add(TextReference.SIDEBAR_PLAYERS + ": " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.RESET + "/" + ChatColor.GREEN + Bukkit.getMaxPlayers());
                     lines.add(ChatColor.WHITE + "");
                     lines.add(ChatColor.GOLD + "nanami-network");
                     int i = lines.size();
@@ -113,10 +113,10 @@ public class PlayerWatcher {
                 if(GunWar.getGame().getState() == GameState.STARTING) {
                     List<String> lines = new ArrayList<>();
                     lines.add("");
-                    lines.add(TextUtilities.SIDEBAR_GAMESTATE + ": " + TextUtilities.SIDEBAR_GAMESTATE_WAITING);
-                    lines.add(TextUtilities.SIDEBAR_STARTING_AT.replaceAll("%SECOND%", GunWar.getGame().getStartingAt() + ""));
+                    lines.add(TextReference.SIDEBAR_GAMESTATE + ": " + TextReference.SIDEBAR_GAMESTATE_WAITING);
+                    lines.add(TextReference.SIDEBAR_STARTING_AT.replaceAll("%SECOND%", GunWar.getGame().getStartingAt() + ""));
                     lines.add(ChatColor.RESET + "");
-                    lines.add(TextUtilities.SIDEBAR_PLAYERS + ": " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.RESET + "/" + ChatColor.GREEN + Bukkit.getMaxPlayers());
+                    lines.add(TextReference.SIDEBAR_PLAYERS + ": " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.RESET + "/" + ChatColor.GREEN + Bukkit.getMaxPlayers());
                     lines.add(ChatColor.WHITE + "");
                     lines.add(ChatColor.GOLD + "nanami-network");
                     int i = lines.size();

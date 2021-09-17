@@ -22,7 +22,7 @@ package com.github.clockclap.gunwar.event;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.achievement.GwAchievement;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -44,7 +44,7 @@ public class GwAchievementEarnEvent extends GwAchievementEvent implements Cancel
         super(who, achievement);
         cancel = false;
         showMessage = true;
-        String msg = TextUtilities.CHAT_ACHIEVEMENT_EARNED.replaceAll("%PLAYER%", GunWar.getPlayerData(who).detail().getOldName());
+        String msg = TextReference.CHAT_ACHIEVEMENT_EARNED.replaceAll("%PLAYER%", GunWar.getPlayerData(who).detail().getOldName());
         String[] array = msg.split("%ACHIEVEMENT%");
         TextComponent component = new TextComponent();
         for(int i = 0; i < array.length; i++) {

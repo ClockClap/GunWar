@@ -21,7 +21,6 @@ package com.github.clockclap.gunwar;
 
 import com.github.clockclap.gunwar.game.Game;
 import com.github.clockclap.gunwar.util.GunWarConfiguration;
-import com.github.clockclap.gunwar.util.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -34,7 +33,7 @@ import java.util.UUID;
 public final class GunWar {
 
     static Plugin plugin;
-    static Utilities utilities;
+    static GunWarManager manager;
     static GunWarConfiguration config;
     static Game game;
     private static final int apiVer = 2;
@@ -43,8 +42,8 @@ public final class GunWar {
         return plugin;
     }
 
-    public static Utilities getUtilities() {
-        return utilities;
+    public static GunWarManager getManager() {
+        return manager;
     }
 
     public static GunWarConfiguration getConfig() {

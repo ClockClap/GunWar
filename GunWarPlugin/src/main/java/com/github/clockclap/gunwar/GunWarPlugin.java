@@ -28,10 +28,9 @@ import com.github.clockclap.gunwar.listeners.DamageListener;
 import com.github.clockclap.gunwar.listeners.PlayerListener;
 import com.github.clockclap.gunwar.listeners.ServerListener;
 import com.github.clockclap.gunwar.mysql.GwMySQLPlayerDataUpdater;
-import com.github.clockclap.gunwar.util.GwUtilities;
 import com.github.clockclap.gunwar.util.GunWarPluginConfiguration;
 import com.github.clockclap.gunwar.util.PlayerWatcher;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
@@ -55,7 +54,7 @@ public final class GunWarPlugin extends JavaPlugin {
 
     private GunWarPlugin plugin;
     private SimplePluginManager pluginManager;
-    private GwUtilities utilities;
+    private CraftGunWarManager manager;
     private GunWarPluginConfiguration config;
     public static GwMySQLPlayerDataUpdater updater;
     private GunWarGame game;
@@ -66,8 +65,8 @@ public final class GunWarPlugin extends JavaPlugin {
         // Plugin startup logic
         plugin = this;
         GunWar.plugin = plugin;
-        utilities = new GwUtilities(plugin);
-        GunWar.utilities = utilities;
+        manager = new CraftGunWarManager(plugin);
+        GunWar.manager = manager;
         config = new GunWarPluginConfiguration(plugin);
         GunWar.config = config;
         config.init();
@@ -91,12 +90,12 @@ public final class GunWarPlugin extends JavaPlugin {
                 ((GunWarGame) GunWar.getGame()).addPermanentlyPlayerData(permanentlyPlayerData);
             } catch(Throwable ex) {
                 p.kickPlayer("" +
-                        ChatColor.DARK_GREEN + "=== " + TextUtilities.MISC_TITLE + " ===\n" +
-                        ChatColor.RED + TextUtilities.MISC_LOST_CONNECTION + "\n" +
-                        ChatColor.GRAY + TextUtilities.MISC_CAUSE + ": " + ChatColor.WHITE + TextUtilities.ERROR_LOADING_PLAYERDATA + "\n" +
-                        ChatColor.GRAY + TextUtilities.MISC_SOLUTION + ": " + ChatColor.WHITE + TextUtilities.MISC_PLEASE_REPORT.replaceAll("%CHANNEL%", ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE) + "\n" +
+                        ChatColor.DARK_GREEN + "=== " + TextReference.MISC_TITLE + " ===\n" +
+                        ChatColor.RED + TextReference.MISC_LOST_CONNECTION + "\n" +
+                        ChatColor.GRAY + TextReference.MISC_CAUSE + ": " + ChatColor.WHITE + TextReference.ERROR_LOADING_PLAYERDATA + "\n" +
+                        ChatColor.GRAY + TextReference.MISC_SOLUTION + ": " + ChatColor.WHITE + TextReference.MISC_PLEASE_REPORT.replaceAll("%CHANNEL%", ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE) + "\n" +
                         "\n" +
-                        ChatColor.WHITE + TextUtilities.MISC_MORE + "\n" +
+                        ChatColor.WHITE + TextReference.MISC_MORE + "\n" +
                         ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/nbRUAmmypS"));
                 ex.printStackTrace();
             }
@@ -111,7 +110,7 @@ public final class GunWarPlugin extends JavaPlugin {
     }
 
     private void bossBar() {
-        BossBar bar = Bukkit.getServer().createBossBar(TextUtilities.BOSSBAR_WAITING, BarColor.WHITE, BarStyle.SOLID);
+        BossBar bar = Bukkit.getServer().createBossBar(TextReference.BOSSBAR_WAITING, BarColor.WHITE, BarStyle.SOLID);
         bar.setVisible(true);
         bar.setProgress(1.0);
         game.setBar(bar);
@@ -125,12 +124,12 @@ public final class GunWarPlugin extends JavaPlugin {
     }
 
     private void registerCommands() {
-        utilities.registerCommand(plugin.getName(), new GunWarReloadCommand());
-        utilities.registerCommand(plugin.getName() + "-op", new GunWarItemCommand());
-        utilities.registerCommand(plugin.getName(), new GWDebugCommand());
-        utilities.registerCommand(plugin.getName() + "-game", new ShoutCommand());
-        utilities.registerCommand(plugin.getName() + "-chat", new JapanizedTellCommand());
-        utilities.registerCommand(plugin.getName() + "-chat", new ReplyCommand());
+        manager.registerCommand(plugin.getName(), new GunWarReloadCommand());
+        manager.registerCommand(plugin.getName() + "-op", new GunWarItemCommand());
+        manager.registerCommand(plugin.getName() + "-dev", new GWDebugCommand());
+        manager.registerCommand(plugin.getName() + "-game", new ShoutCommand());
+        manager.registerCommand(plugin.getName() + "-chat", new JapanizedTellCommand());
+        manager.registerCommand(plugin.getName() + "-chat", new ReplyCommand());
     }
 
     private void startWatch() {

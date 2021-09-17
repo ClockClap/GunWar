@@ -36,7 +36,7 @@ import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.game.GunWarGame;
 import com.github.clockclap.gunwar.mysql.GwMySQLDataPath;
 import com.github.clockclap.gunwar.util.PlayerWatcher;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,12 +58,12 @@ public class PlayerListener implements Listener {
             ((GunWarGame) GunWar.getGame()).addPermanentlyPlayerData(permanentlyPlayerData);
         } catch(Throwable ex) {
             e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "" +
-                    ChatColor.DARK_GREEN + "=== " + TextUtilities.MISC_TITLE + " ===\n" +
-                    ChatColor.RED + TextUtilities.MISC_FAILED_TO_CONNECT + "\n" +
-                    ChatColor.GRAY + TextUtilities.MISC_CAUSE + ": " + ChatColor.WHITE + TextUtilities.ERROR_ON_LOGGING_IN + "\n" +
-                    ChatColor.GRAY + TextUtilities.MISC_SOLUTION + ": " + ChatColor.WHITE + TextUtilities.MISC_PLEASE_REPORT.replaceAll("%CHANNEL%", ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE) + "\n" +
+                    ChatColor.DARK_GREEN + "=== " + TextReference.MISC_TITLE + " ===\n" +
+                    ChatColor.RED + TextReference.MISC_FAILED_TO_CONNECT + "\n" +
+                    ChatColor.GRAY + TextReference.MISC_CAUSE + ": " + ChatColor.WHITE + TextReference.ERROR_ON_LOGGING_IN + "\n" +
+                    ChatColor.GRAY + TextReference.MISC_SOLUTION + ": " + ChatColor.WHITE + TextReference.MISC_PLEASE_REPORT.replaceAll("%CHANNEL%", ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE) + "\n" +
                     "\n" +
-                    ChatColor.WHITE + TextUtilities.MISC_MORE + "\n" +
+                    ChatColor.WHITE + TextReference.MISC_MORE + "\n" +
                     ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/nbRUAmmypS"));
             ex.printStackTrace();
         }
@@ -73,11 +73,11 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if(p.hasPlayedBefore()) {
-            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_join.raw", false) ? "" : TextUtilities.CHAT_PREFIX + " ") +
-                    TextUtilities.CHAT_PLAYER_JOIN.replaceAll("%PLAYER%", p.getName()));
+            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_join.raw", false) ? "" : TextReference.CHAT_PREFIX + " ") +
+                    TextReference.CHAT_PLAYER_JOIN.replaceAll("%PLAYER%", p.getName()));
         } else {
-            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_first_join.raw", false) ? "" : TextUtilities.CHAT_PREFIX + " ") +
-                    TextUtilities.CHAT_PLAYER_FIRST_JOIN.replaceAll("%PLAYER%", p.getName()));
+            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_first_join.raw", false) ? "" : TextReference.CHAT_PREFIX + " ") +
+                    TextReference.CHAT_PLAYER_FIRST_JOIN.replaceAll("%PLAYER%", p.getName()));
         }
         GunWarPlayerData data = new GunWarPlayerData(p);
         PlayerWatcher watcher = new PlayerWatcher(GunWar.getPlugin(), data);
@@ -96,8 +96,8 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        e.setQuitMessage((GunWar.getConfig().getLang().getBoolean("chat.player_quit.raw", false) ? "" : TextUtilities.CHAT_PREFIX + " ") +
-                TextUtilities.CHAT_PLAYER_QUIT.replaceAll("%PLAYER%", e.getPlayer().getName()));
+        e.setQuitMessage((GunWar.getConfig().getLang().getBoolean("chat.player_quit.raw", false) ? "" : TextReference.CHAT_PREFIX + " ") +
+                TextReference.CHAT_PLAYER_QUIT.replaceAll("%PLAYER%", e.getPlayer().getName()));
         PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
         if(data != null) {
             data.detail().resetName();

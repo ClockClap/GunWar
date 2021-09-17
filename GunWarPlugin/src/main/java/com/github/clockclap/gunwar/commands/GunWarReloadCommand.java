@@ -31,7 +31,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import com.github.clockclap.gunwar.mysql.MySQLSettingBuilder;
 import com.github.clockclap.gunwar.util.GunWarPluginConfiguration;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 
 import java.io.*;
 import java.util.Arrays;
@@ -39,7 +39,7 @@ import java.util.Arrays;
 @GwPlugin
 public class GunWarReloadCommand extends Command {
     public GunWarReloadCommand() {
-        super("gunwarreload", TextUtilities.MISC_DESCRIPTION_COMMAND_GUNWARRELOAD, "Usage: /gunwarreload", Arrays.asList("gwreload"));
+        super("gunwarreload", TextReference.MISC_DESCRIPTION_COMMAND_GUNWARRELOAD, "Usage: /gunwarreload", Arrays.asList("gwreload"));
     }
 
     @Override
@@ -47,14 +47,14 @@ public class GunWarReloadCommand extends Command {
         int required = GunWar.getConfig().getPermissionSetting().getInt("commands.gunwarreload", 1);
         if(sender instanceof Player) {
             Player p = (Player) sender;
-            PermissionInfo info = GunWar.getUtilities().testPermission(p, required);
+            PermissionInfo info = GunWar.getManager().testPermission(p, required);
             if(!info.isPassed()) {
-                p.sendMessage(TextUtilities.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
+                p.sendMessage(TextReference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                 return true;
             }
         }
         reload();
-        sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_RELOAD);
+        sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_RELOAD);
         return true;
     }
 

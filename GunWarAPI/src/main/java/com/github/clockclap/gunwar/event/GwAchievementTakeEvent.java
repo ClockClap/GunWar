@@ -21,7 +21,7 @@ package com.github.clockclap.gunwar.event;
 
 import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.achievement.GwAchievement;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -41,7 +41,7 @@ public class GwAchievementTakeEvent extends GwAchievementEvent implements Cancel
     public GwAchievementTakeEvent(Player who, GwAchievement achievement) {
         super(who, achievement);
         cancel = false;
-        String msg = TextUtilities.CHAT_ACHIEVEMENT_TAKEN;
+        String msg = TextReference.CHAT_ACHIEVEMENT_TAKEN;
         String[] array = msg.split("%ACHIEVEMENT%");
         TextComponent component = new TextComponent();
         for(int i = 0; i < array.length; i++) {

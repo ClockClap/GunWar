@@ -32,7 +32,7 @@ import com.github.clockclap.gunwar.item.GwKnifeItem;
 import com.github.clockclap.gunwar.util.Angle;
 import com.github.clockclap.gunwar.util.BlockShape;
 import com.github.clockclap.gunwar.util.PlayerWatcher;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_12_R1.BlockPosition;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldEvent;
@@ -346,7 +346,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             inf = true;
             moveable = false;
             loc = getPlayer().getLocation();
-            getPlayer().sendTitle(TextUtilities.TITLE_MAIN_INFECT, TextUtilities.TITLE_SUB_INFECT, 0, 100, 20);
+            getPlayer().sendTitle(TextReference.TITLE_MAIN_INFECT, TextReference.TITLE_SUB_INFECT, 0, 100, 20);
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -375,7 +375,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             moveable = false;
             dead = true;
             loc = getPlayer().getLocation();
-            getPlayer().sendTitle(TextUtilities.TITLE_MAIN_DIED_ZOMBIE, TextUtilities.TITLE_SUB_INFECT, 0, 100, 20);
+            getPlayer().sendTitle(TextReference.TITLE_MAIN_DIED_ZOMBIE, TextReference.TITLE_SUB_INFECT, 0, 100, 20);
             new BukkitRunnable() {
                 @Override
                 public void run() {

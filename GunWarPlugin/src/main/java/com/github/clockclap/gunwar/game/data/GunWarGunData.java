@@ -25,7 +25,7 @@ import com.github.clockclap.gunwar.entity.HitEntity;
 import com.github.clockclap.gunwar.item.GunReloadingType;
 import com.github.clockclap.gunwar.item.GwGunItem;
 import com.github.clockclap.gunwar.util.Angle;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.Particle;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -182,7 +182,7 @@ public class GunWarGunData extends GunWarItemData implements GunData {
         ItemMeta meta = getItem().getItemMeta();
         String s = GunWar.getConfig().getDetailConfig().getString("item.gun_name_format.general", "%{color}7%i ▪ «%a»");
         if(reloading) s = GunWar.getConfig().getDetailConfig().getString("item.gun_name_format.reloading", "%{color}7%i ▫ %{color}8«%a»");
-            s = TextUtilities.translateAlternateColorCodes("%{color}", s);
+            s = TextReference.translateAlternateColorCodes("%{color}", s);
             s = s.replaceAll("%i", getGwItem().getDisplayName()).replaceAll("%a", ammo + "");
             meta.setDisplayName(s);
         getItem().setItemMeta(meta);

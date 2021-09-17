@@ -20,7 +20,7 @@
 package com.github.clockclap.gunwar.commands;
 
 import com.github.clockclap.gunwar.GwPlugin;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -49,17 +49,17 @@ public class ReplyCommand extends Command {
                     message.append(" ");
                 }
                 String name = sender instanceof ConsoleCommandSender ? "Server" : sender.getName();
-                String s = TextUtilities.privateChat(sender.getName(), to.getName(), message.toString().trim());
+                String s = TextReference.privateChat(sender.getName(), to.getName(), message.toString().trim());
                 sender.sendMessage(s);
                 to.sendMessage(s);
                 MessageLog.finalMessageTarget.put(sender, to);
                 MessageLog.finalMessageTarget.put(to, sender);
                 return true;
             }
-            sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_ERROR_NO_FINAL_MESSAGE_TARGET);
+            sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_NO_FINAL_MESSAGE_TARGET);
             return true;
         }
-        sender.sendMessage(TextUtilities.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
+        sender.sendMessage(TextReference.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
         return true;
     }
 

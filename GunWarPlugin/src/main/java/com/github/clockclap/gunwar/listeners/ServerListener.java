@@ -39,7 +39,7 @@ import com.github.clockclap.gunwar.game.gamemode.GwGameMode;
 import com.github.clockclap.gunwar.game.gamemode.Shoutable;
 import com.github.clockclap.gunwar.item.GwWeaponItem;
 import com.github.clockclap.gunwar.item.WeaponType;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 
 @GwPlugin
 public class ServerListener implements Listener {
@@ -70,18 +70,18 @@ public class ServerListener implements Listener {
             if(data.isSpectator()) {
                 for(PlayerData d : GunWar.getOnlinePlayerData()) {
                     if(d.isSpectator())
-                        d.sendMessage(ChatColor.DARK_GRAY + "(Spectator Chat) " + TextUtilities.chat(color, prefix, e.getPlayer().getName(), e.getMessage()));
+                        d.sendMessage(ChatColor.DARK_GRAY + "(Spectator Chat) " + TextReference.chat(color, prefix, e.getPlayer().getName(), e.getMessage()));
                 }
             } else if(mode instanceof Shoutable) {
                 for(PlayerData d : GunWar.getOnlinePlayerData()) {
                     if(d.getTeam() == data.getTeam())
-                        d.sendMessage(ChatColor.BLUE + "(Team Chat) " + TextUtilities.chat(color, prefix, e.getPlayer().getName(), e.getMessage()));
+                        d.sendMessage(ChatColor.BLUE + "(Team Chat) " + TextReference.chat(color, prefix, e.getPlayer().getName(), e.getMessage()));
                 }
             } else {
-                Bukkit.broadcastMessage(TextUtilities.chat(color, prefix, e.getPlayer().getName(), e.getMessage()));
+                Bukkit.broadcastMessage(TextReference.chat(color, prefix, e.getPlayer().getName(), e.getMessage()));
             }
         } else {
-            Bukkit.broadcastMessage(TextUtilities.chat(e.getPlayer().getName(), e.getMessage()));
+            Bukkit.broadcastMessage(TextReference.chat(e.getPlayer().getName(), e.getMessage()));
         }
     }
 

@@ -31,7 +31,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.io.UnsupportedEncodingException;
 
 @GwAPI
-public final class TextUtilities {
+public final class TextReference {
 
     private static final FileConfiguration lang = GunWar.getConfig().getLang();
 
@@ -196,10 +196,10 @@ public final class TextUtilities {
     public static BaseComponent getChatCommandPermissionError(String required, String now) {
         TextComponent component = new TextComponent();
         TextComponent component1 = new TextComponent();
-        component.setText(TextUtilities.CHAT_PREFIX + " " + TextUtilities.CHAT_COMMAND_PERMISSION_ERROR_PRIVATE + " ");
-        component1.setText(TextUtilities.CHAT_ABOUT);
+        component.setText(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_PERMISSION_ERROR_PRIVATE + " ");
+        component1.setText(TextReference.CHAT_ABOUT);
         component1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{
-                new TextComponent(TextUtilities.CHAT_ABOUT + "\n"),
+                new TextComponent(TextReference.CHAT_ABOUT + "\n"),
                 new TextComponent(CHAT_DETAIL_YOUR_PERMISSION.replaceAll("%CURRENT%", now) + "\n"),
                 new TextComponent(CHAT_DETAIL_REQUIRED_PERMISSION.replaceAll("%REQUIRED%", required))
         }));

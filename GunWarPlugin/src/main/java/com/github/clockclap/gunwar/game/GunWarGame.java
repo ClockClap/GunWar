@@ -36,7 +36,7 @@ import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.game.gamemode.GwGameMode;
 import com.github.clockclap.gunwar.game.gamemode.GwGameModes;
 import com.github.clockclap.gunwar.util.DataList;
-import com.github.clockclap.gunwar.util.TextUtilities;
+import com.github.clockclap.gunwar.util.TextReference;
 import com.github.clockclap.gunwar.util.world.Worlds;
 
 import java.util.*;
@@ -164,7 +164,7 @@ public class GunWarGame implements Game {
                     this.cancel();
                     return;
                 }
-                getBar().setTitle(TextUtilities.BOSSBAR_STARTING.replaceAll("%SECOND%", Integer.toString(startingAt)));
+                getBar().setTitle(TextReference.BOSSBAR_STARTING.replaceAll("%SECOND%", Integer.toString(startingAt)));
                 if(startingAt <= 5) {
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
