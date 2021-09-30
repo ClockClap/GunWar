@@ -29,6 +29,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -38,21 +39,32 @@ public class ItemListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
-        if(data != null && data.isClickable()) {
-            data.setClickable(false);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    data.setClickable(true);
-                }
-            }.runTaskLater(GunWar.getPlugin(), 1);
+        if(data != null && e.getHand() == EquipmentSlot.HAND) {
             ItemData itemData = GunWar.getGame().getItemData(e.getItem());
             if (itemData != null) {
                 if (itemData instanceof GunData) {
+                    e.setCancelled(true);
                     GunData gunData = (GunData) itemData;
                     if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                        if (gunData.getAmmo() <= 0) gunData.reload();
-                        gunData.fire(e.getPlayer().isSneaking());
+                        if(e.getPlayer().isSneaking()) {
+                            if (gunData.getAmmo() <= 0) gunData.reload();
+                            gunData.fire(true);
+                        } else {
+                            BukkitRunnable loop = new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    if (gunData.getAmmo() <= 0) gunData.reload();
+                                    gunData.fire(false);
+                                }
+                            };
+                            loop.runTaskTimer(GunWar.getPlugin(), 0, 1);
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    loop.cancel();;
+                                }
+                            }.runTaskLater(GunWar.getPlugin(), 5);
+                        }
                     } else if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
                         if(data.isZoom()) {
                             data.setZoom(false, 0);

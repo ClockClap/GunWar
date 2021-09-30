@@ -33,12 +33,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @GwAPI
 public class Japanizer {
@@ -386,7 +385,7 @@ public class Japanizer {
         con.put("n'", "ん");
         con.put("xn", "ん");
 
-        for ( Map.Entry<String, String> entry : con.entrySet() ) {
+        for (Map.Entry<String, String> entry : new HashMap<>(con).entrySet()) {
             String romaji = entry.getKey();
             String hiragana = entry.getValue();
             if (!StringUtils.startsWithAny(romaji, "a", "i", "u", "e", "o", "n")) {
@@ -397,10 +396,10 @@ public class Japanizer {
         con.put("-", "ー");
         con.put(",", "、");
         con.put(".", "。");
-        con.put("?", "？");
-        con.put("!", "！");
         con.put("[", "「");
         con.put("]", "」");
+        con.put("|", "｜");
+        con.put("\\", "￥");
 
         con.put("&0", "\u00a70");
         con.put("&1", "\u00a71");
@@ -445,28 +444,6 @@ public class Japanizer {
             String beforeconvert = msg;
             if(colouredChat) {
                 beforeconvert = ChatColor.translateAlternateColorCodes('&', beforeconvert);
-//                msg = msg.replaceAll("&0", "%COLOR_CH0719682009%");
-//                msg = msg.replaceAll("&1", "%COLOR_CH1968829860%");
-//                msg = msg.replaceAll("&2", "%COLOR_CH2386997101%");
-//                msg = msg.replaceAll("&3", "%COLOR_CH3708126056%");
-//                msg = msg.replaceAll("&4", "%COLOR_CH4675978972%");
-//                msg = msg.replaceAll("&5", "%COLOR_CH5061000271%");
-//                msg = msg.replaceAll("&6", "%COLOR_CH6999177200%");
-//                msg = msg.replaceAll("&7", "%COLOR_CH7215630099%");
-//                msg = msg.replaceAll("&8", "%COLOR_CH8017596028%");
-//                msg = msg.replaceAll("&9", "%COLOR_CH9683716961%");
-//                msg = msg.replaceAll("&(a|A)", "%COLOR_CHS0581265105%");
-//                msg = msg.replaceAll("&(b|B)", "%COLOR_CHS1983716587%");
-//                msg = msg.replaceAll("&(c|C)", "%COLOR_CHS2689102282%");
-//                msg = msg.replaceAll("&(d|D)", "%COLOR_CHS3611000193%");
-//                msg = msg.replaceAll("&(e|E)", "%COLOR_CHS4871006899%");
-//                msg = msg.replaceAll("&(f|F)", "%COLOR_CHS5839195606%");
-//                msg = msg.replaceAll("&(k|K)", "%COLOR_CHR4175912001%");
-//                msg = msg.replaceAll("&(l|L)", "%COLOR_CHR0158849715%");
-//                msg = msg.replaceAll("&(m|M)", "%COLOR_CHR1857120067%");
-//                msg = msg.replaceAll("&(n|N)", "%COLOR_CHR2547106916%");
-//                msg = msg.replaceAll("&(o|O)", "%COLOR_CHR3050819923%");
-//                msg = msg.replaceAll("&(r|R)", "%COLOR_CHRESET%");
                 msg = msg.replaceAll("&A", "&a");
                 msg = msg.replaceAll("&B", "&b");
                 msg = msg.replaceAll("&C", "&c");
@@ -490,20 +467,50 @@ public class Japanizer {
                 }
             }
             if(ime) result = ime(result);
-            result = result.replaceAll("０", "0");
-            result = result.replaceAll("１", "1");
-            result = result.replaceAll("２", "2");
-            result = result.replaceAll("３", "3");
-            result = result.replaceAll("４", "4");
-            result = result.replaceAll("５", "5");
-            result = result.replaceAll("６", "6");
-            result = result.replaceAll("７", "7");
-            result = result.replaceAll("８", "8");
-            result = result.replaceAll("９", "9");
+            Map<String, String> m = new HashMap<>();
+            m.put("＆", "&");
+            m.put("％", "%");
+            m.put("；", ";");
+            m.put("：", ":");
+            m.put("｛", "{");
+            m.put("｝", "}");
+            m.put("（", "(");
+            m.put("）", ")");
+            m.put("／", "/");
+            m.put("。。", "..");
+            m.put("。。。", "...");
+            m.put("？", "?");
+            m.put("！", "!");
+            m.put("＋", "+");
+            m.put("＿", "_");
+            m.put("”", "\"");
+            m.put("’", "'");
+            m.put("＜", "<");
+            m.put("＞", ">");
+            m.put("＠", "@");
+            m.put("＊", "*");
+            m.put("｜", "|");
+            m.put("＃", "#");
+            m.put("｀", "`");
+            m.put("＾", "^");
+            m.put("＝", "=");
+            m.put("０", "0");
+            m.put("１", "1");
+            m.put("２", "2");
+            m.put("３", "3");
+            m.put("４", "4");
+            m.put("５", "5");
+            m.put("６", "6");
+            m.put("７", "7");
+            m.put("８", "8");
+            m.put("９", "9");
+            String[] k = m.keySet().toArray(new String[0]);
+            String[] v = m.values().toArray(new String[0]);
+            result = StringUtils.replaceEach(result, k, v);
             if(colouredChat) {
                 result = ChatColor.translateAlternateColorCodes('&', result);
             }
-            result = jformat.replaceAll("%m", beforeconvert).replaceAll("%j", result);
+            result = result.isEmpty() ? beforeconvert : jformat.replaceAll("%m", resetColor(beforeconvert)).replaceAll("%j", result);
         } else {
             if(msg.indexOf(japanizeCanceller) == 0) {
                 if(msg.indexOf(imeCanceller) == 1) {
@@ -526,6 +533,12 @@ public class Japanizer {
         return result;
     }
 
+    private static String resetColor(String text) {
+        String result = text;
+        result = result.replaceAll("\u00a7[0-1a-fA-Fk-oK-OrR]", "");
+        return result;
+    }
+
     private static String kana(String romaji) {
         return StringUtils.replaceEach(romaji, ll, hl);
     }
@@ -539,7 +552,7 @@ public class Japanizer {
         BufferedReader reader = null;
         try {
             String encode = "UTF-8";
-            String baseurl = "https://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + URLEncoder.encode(text , encode);
+            String baseurl = "https://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + URLEncoder.encode(text , encode).replaceAll("\\|", "%7C");
 
             URL url = new URL(baseurl);
             urlconn = (HttpURLConnection)url.openConnection();

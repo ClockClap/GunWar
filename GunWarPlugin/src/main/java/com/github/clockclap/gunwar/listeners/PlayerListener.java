@@ -19,6 +19,7 @@
 
 package com.github.clockclap.gunwar.listeners;
 
+import com.github.clockclap.gunwar.GunWarPlugin;
 import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.game.data.GunWarPermanentlyPlayerData;
 import com.github.clockclap.gunwar.game.data.GunWarPlayerData;
@@ -55,7 +56,7 @@ public class PlayerListener implements Listener {
             } else {
                 permanentlyPlayerData.load(f);
             }
-            ((GunWarGame) GunWar.getGame()).addPermanentlyPlayerData(permanentlyPlayerData);
+            GunWarPlugin.getGame().addPermanentlyPlayerData(permanentlyPlayerData);
         } catch(Throwable ex) {
             e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "" +
                     ChatColor.DARK_GREEN + "=== " + TextReference.MISC_TITLE + " ===\n" +
@@ -84,9 +85,9 @@ public class PlayerListener implements Listener {
         watcher.startWatch();
         watcher.startWatch10Ticks();
         data.setWatcher(watcher);
-        ((GunWarGame) GunWar.getGame()).addPlayerData(data.getUniqueId(), data);
-        data.detail().setName(ChatColor.GRAY + data.detail().getOldName());
-        p.setPlayerListName(ChatColor.GRAY + data.detail().getOldName());
+        GunWarPlugin.getGame().addPlayerData(data.getUniqueId(), data);
+        data.detail().setName(ChatColor.GRAY + data.detail().getOriginalName());
+        p.setPlayerListName(ChatColor.GRAY + data.detail().getOriginalName());
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         for(Player pl : players) {
             data.detail().hide(pl);
@@ -113,7 +114,7 @@ public class PlayerListener implements Listener {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            ((GunWarGame) GunWar.getGame()).removePermanentlyPlayerData(e.getPlayer().getUniqueId());
+            GunWarPlugin.getGame().removePermanentlyPlayerData(e.getPlayer().getUniqueId());
         }
         GwMySQLDataPath.delete(e.getPlayer().getUniqueId());
     }

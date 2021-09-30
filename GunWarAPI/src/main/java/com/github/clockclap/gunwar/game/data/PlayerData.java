@@ -91,7 +91,7 @@ public interface PlayerData extends EntityData {
     public void giveItem(GwItem item);
 
     public class Detail extends EntityData.Detail {
-        public String getOldName() {
+        public String getOriginalName() {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
 
@@ -116,6 +116,10 @@ public interface PlayerData extends EntityData {
         }
 
         public boolean canSee(LivingEntity from) {
+            throw new UnsupportedOperationException( "Not supported yet." );
+        }
+
+        public boolean canSee(LivingEntity from, double distance) {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
 

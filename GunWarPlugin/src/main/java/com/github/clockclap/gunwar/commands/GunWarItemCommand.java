@@ -64,7 +64,7 @@ public class GunWarItemCommand extends Command {
             for (GwItem i : GwItems.getRegisteredItems()) {
                 if (i.getName().equalsIgnoreCase(args[1])) {
                     int amount = 1;
-                    if(args[2] != null) {
+                    if(args.length >= 3) {
                         try {
                             int am = Integer.parseInt(args[2]);
                             if(am < 1) {

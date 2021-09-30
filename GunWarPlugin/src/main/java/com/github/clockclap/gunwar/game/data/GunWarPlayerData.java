@@ -20,6 +20,7 @@
 package com.github.clockclap.gunwar.game.data;
 
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.util.*;
 import com.mojang.authlib.GameProfile;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.entity.HitEntity;
@@ -29,13 +30,10 @@ import com.github.clockclap.gunwar.game.gamemode.GwGameModes;
 import com.github.clockclap.gunwar.item.GwGunItem;
 import com.github.clockclap.gunwar.item.GwItem;
 import com.github.clockclap.gunwar.item.GwKnifeItem;
-import com.github.clockclap.gunwar.util.Angle;
-import com.github.clockclap.gunwar.util.BlockShape;
-import com.github.clockclap.gunwar.util.PlayerWatcher;
-import com.github.clockclap.gunwar.util.TextReference;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_12_R1.BlockPosition;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldEvent;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 
@@ -44,6 +42,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +53,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 @GwPlugin
-@SuppressWarnings({"all"})
+@SuppressWarnings({ "all" })
 public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
     private final Player player;
@@ -87,7 +87,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             private final String oldName = player.getName();
             private Map<Player, String> nameMap = new HashMap<>();
 
-            public String getOldName() {
+            public String getOriginalName() {
                 return oldName;
             }
 
@@ -112,103 +112,61 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
             }
 
             public void resetName(Player from) {
-                setName(from, getOldName());
+                setName(from, getOriginalName());
             }
 
             public void resetName() {
-                setName(getOldName());
+                setName(getOriginalName());
             }
 
             public boolean canSee(LivingEntity from) {
-                if (from.getWorld() != player.getWorld()) {
-                    return false;
+                return canSee(from, 100D);
+            }
+
+            public boolean canSee(LivingEntity from, double distance) {
+                Validate.notNull(from);
+                GunWarValidate.distance(distance);
+                Player player = getPlayer();
+                if(from instanceof Player && !((Player) from).canSee(player)) return false;
+                if(from.getWorld().getUID().equals(player.getWorld().getUID())) {
+                    Collection<PotionEffect> c = player.getActivePotionEffects();
+                    for(PotionEffect e : c) if (e.getType() == PotionEffectType.INVISIBILITY) return false;
+
+                    Location f = from.getEyeLocation();
+                    Location t = player.getEyeLocation();
+                    World w = player.getWorld();
+                    double xf = f.getX();
+                    double yf = f.getY();
+                    double zf = f.getZ();
+                    double xt = t.getX();
+                    double yt = t.getY();
+                    double zt = t.getZ();
+
+                    double dx = xt - xf;
+                    double dy = yt - yf;
+                    double dz = zt - zf;
+
+                    Vector v = new Vector(dx, dy, dz);
+                    double d = v.length();
+                    if(d > distance) return false;
+                    double nx = dx / d;
+                    double ny = dy / d;
+                    double nz = dz / d;
+
+                    for(double cx = xf, cy = yf, cz = zf;
+                        cx <= xt && cy <= yt && cz <= zt;
+                        cx += nx,cy += ny,cz += nz) {
+
+                        int xi = (int)Math.round(cx);
+                        int yi = (int)Math.round(cy);
+                        int zi = (int)Math.round(cz);
+
+                        Block b = w.getBlockAt(xi, yi, zi);
+                        if(!BlockShape.isTransparentBlock(b.getType()) && BlockShape.isInBlock(b, cx, cy, cz)) return false;
+                    }
+                    return true;
                 }
-                World world = from.getWorld();
-                Location fromLoc = from.getEyeLocation();
-                Location to = player.getEyeLocation();
-                int x = to.getBlockX();
-                int y = to.getBlockY();
-                int z = to.getBlockZ();
-                int x_ = fromLoc.getBlockX();
-                int y_ = fromLoc.getBlockY();
-                int z_ = fromLoc.getBlockZ();
-                for (int traceDistance = 100; traceDistance >= 0; traceDistance--) {
-                    byte b0;
-                    if (x_ == x && y_ == y && z_ == z) {
-                        return true;
-                    }
-                    double x0 = 999.0D;
-                    double y0 = 999.0D;
-                    double z0 = 999.0D;
-                    double x1 = 999.0D;
-                    double y1 = 999.0D;
-                    double z1 = 999.0D;
-                    double dx = to.getX() - fromLoc.getX();
-                    double dy = to.getY() - fromLoc.getY();
-                    double dz = to.getZ() - fromLoc.getZ();
-                    if (x > x_) {
-                        x0 = x_ + 1.0D;
-                        x1 = (x0 - fromLoc.getX()) / dx;
-                    } else if (x < x_) {
-                        x0 = x_ + 0.0D;
-                        x1 = (x0 - fromLoc.getX()) / dx;
-                    }
-                    if (y > y_) {
-                        y0 = y_ + 1.0D;
-                        y1 = (y0 - fromLoc.getY()) / dy;
-                    } else if (y < y_) {
-                        y0 = y_ + 0.0D;
-                        y1 = (y0 - fromLoc.getY()) / dy;
-                    }
-                    if (z > z_) {
-                        z0 = z_ + 1.0D;
-                        z1 = (z0 - fromLoc.getZ()) / dz;
-                    } else if (z < z_) {
-                        z0 = z_ + 0.0D;
-                        z1 = (z0 - fromLoc.getZ()) / dz;
-                    }
-                    if (x1 < y1 && x1 < z1) {
-                        if (x > x_) {
-                            b0 = 4;
-                        } else {
-                            b0 = 5;
-                        }
-                        fromLoc.setX(x0);
-                        fromLoc.add(0.0D, dy * x1, dz * x1);
-                    } else if (y1 < z1) {
-                        if (y > y_) {
-                            b0 = 0;
-                        } else {
-                            b0 = 1;
-                        }
-                        fromLoc.add(dx * y1, 0.0D, dz * y1);
-                        fromLoc.setY(y0);
-                    } else {
-                        if (z > z_) {
-                            b0 = 2;
-                        } else {
-                            b0 = 3;
-                        }
-                        fromLoc.add(dx * z1, dy * z1, 0.0D);
-                        fromLoc.setZ(z0);
-                    }
-                    x_ = fromLoc.getBlockX();
-                    y_ = fromLoc.getBlockY();
-                    z_ = fromLoc.getBlockZ();
-                    if (b0 == 5) {
-                        x_--;
-                    }
-                    if (b0 == 1) {
-                        y_--;
-                    }
-                    if (b0 == 3) {
-                        z_--;
-                    }
-                    if (world.getBlockAt(x_, y_, z_).getType().isOccluding()) {
-                        return false;
-                    }
-                }
-                return true;
+                return false;
             }
 
             private void a(String name) {
@@ -520,7 +478,6 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                 Location loc = new Location(getPlayer().getWorld(), x, y, z);
                 Block block = loc.getBlock();
                 if(block != null && block.getType() != Material.AIR && block.getType() != Material.STRUCTURE_VOID) {
-                    @SuppressWarnings("deprecation")
                     PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001,
                             new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()),
                             block.getType().getId(), false);
@@ -544,48 +501,47 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     @Override
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
                                       double distance, Angle angle, double separate, GwGunItem gun, boolean aim) {
-        double yaw = Math.toRadians(angle.getYaw());
-        double pitch = Math.toRadians(angle.getPitch());
-        double r = separate * Math.cos(pitch);
-        double separateX = r * Math.sin(yaw);
-        double separateY = separate * Math.sin(pitch);
-        double separateZ = r * Math.cos(yaw);
-        double d = Math.sqrt(Math.pow(separateX, 2) + Math.pow(separateY, 2) + Math.pow(separateZ, 2)) * distance;
-        if(startZ < d) {
-            double times = d / separate;
-            double x = startX;
-            double y = startY;
-            double z = startZ;
+        double start = Math.sqrt(Math.pow(startX, 2) + Math.pow(startY, 2) + Math.pow(startZ, 2));
+        if(start < distance) {
+            double times = distance / separate;
             double ad = aim ? gun.getAttackDamage() + gun.getDamageAimed() : gun.getAttackDamage();
-            double damageMin = ad / 1.1;
-            double hsdamageMin = (ad + gun.getHeadShotDamage()) / 1.1;
+            double damageMin = ad / 1.075;
+            double hsdamageMin = (ad + gun.getHeadShotDamage()) / 1.075;
             double currentDamage = ad;
             double currentHSDamage = ad + gun.getHeadShotDamage();
             double separateDamage = currentDamage - damageMin / times;
             double separateHSDamage = currentHSDamage - hsdamageMin / times;
-            double px = 0;
-            double py = 0;
-            double pz = 0;
-            while (z < times) {
-                double twopi = 2 * Math.PI;
-                double t = 1 * twopi;
-                double division = twopi / 100;
-                double radius = 2;
+            double t = 2 * Math.PI;
+            double division = Math.PI / 50;
+            double radius = 2;
 
-                Location c = player.getEyeLocation();
-                Vector nv = c.getDirection().normalize();
+            Location c = player.getEyeLocation();
+            Vector nv = new Vector();
+            double rx = c.getYaw() + angle.getYaw();
+            double ry = c.getPitch() + angle.getPitch();
+            double rrx = Math.toRadians(rx);
+            double rry = Math.toRadians(ry);
 
-                double nx = radius * nv.getX() + c.getX();
-                double ny = radius * nv.getY() + c.getY();
-                double nz = radius * nv.getZ() + c.getZ();
+            nv.setX(-Math.cos(rry) * Math.sin(rrx));
+            nv.setY(-Math.sin(rry));
+            nv.setZ(Math.cos(rry) * Math.cos(rrx));
+            nv.normalize();
 
-                Vector ya = a(nv, new Vector(0, 1, 0)).normalize();
-                Vector xa = ya.getCrossProduct(nv).normalize();
+            double cx = c.getX() + startX;
+            double cy = c.getY() + startY;
+            double cz = c.getZ() + startZ;
+            double nx = radius * nv.getX() + cx;
+            double ny = radius * nv.getY() + cy;
+            double nz = radius * nv.getZ() + cz;
+            double px = nx;
+            double py = ny;
+            double pz = nz;
 
+            for(double o = start; o <= distance; o += separate) {
                 for (double theta = 0; theta < t; theta += division) {
-                    double xi = xa.getX() * x + ya.getX() * y + nv.getX() * z;
-                    double yi = xa.getY() * x + ya.getY() * y + nv.getY() * z;
-                    double zi = xa.getZ() * x + ya.getZ() * y + nv.getZ() * z;
+                    double xi = nv.getX() * o;
+                    double yi = nv.getY() * o;
+                    double zi = nv.getZ() * o;
 
                     px = xi + nx;
                     py = yi + ny;
@@ -597,14 +553,13 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     double dz_ = rand.nextDouble() * 0.2 - 0.1;
 
                     int count = 1;
-                    if(particle == Particle.SUSPENDED_DEPTH) count = 8;
-
+                    if (particle == Particle.SUSPENDED_DEPTH) count = 2;
                     player.spawnParticle(particle, new Location(c.getWorld(), px + dx_, py + dy_, pz + dz_), count, 0, 0, 0, 0);
 
-                    for(Entity entity : getPlayer().getNearbyEntities(distance + 1, distance + 1, distance + 1)) {
-                        if(entity instanceof LivingEntity) {
+                    for (Entity entity : getPlayer().getNearbyEntities(distance + 1, distance + 1, distance + 1)) {
+                        if (entity instanceof LivingEntity) {
                             LivingEntity livingEntity = (LivingEntity) entity;
-                            if(livingEntity != getPlayer()) {
+                            if (livingEntity != getPlayer()) {
                                 double xmin = livingEntity.getLocation().getX() - (livingEntity.getWidth() / 2);
                                 double xmax = livingEntity.getLocation().getX() + (livingEntity.getWidth() / 2);
                                 double ymin = livingEntity.getLocation().getY();
@@ -626,15 +581,16 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                                     boolean hcondition3 = hzmin <= pz && hzmax >= pz;
                                     boolean headShot = hcondition1 && hcondition2 && hcondition3;
                                     boolean passed = true;
-                                    if(livingEntity instanceof Player) {
+                                    if (livingEntity instanceof Player) {
                                         if ((GunWar.getGame().getGameMode() == GwGameModes.NORMAL && ((GameModeNormal) GwGameModes.NORMAL).getMode() == GameModeNormal.Mode.TEAM) ||
                                                 GunWar.getGame().getGameMode() == GwGameModes.GENERAL_SIEGE || GunWar.getGame().getGameMode() == GwGameModes.ZOMBIE_ESCAPE) {
                                             PlayerData data = GunWar.getGame().getPlayerData((Player) livingEntity);
-                                            if(data != null) passed = data.getTeam() == getTeam();
+                                            if (data != null) passed = data.getTeam() == getTeam();
                                         }
                                     }
-                                    if(passed) return new HitEntity(livingEntity, headShot, headShot ? currentHSDamage : currentDamage,
-                                            getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), px, py, pz));
+                                    if (passed)
+                                        return new HitEntity(livingEntity, headShot, headShot ? currentHSDamage : currentDamage,
+                                                getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), px, py, pz));
                                 }
                             }
                         }
@@ -642,34 +598,31 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     Location loc = new Location(getPlayer().getWorld(), px, py, pz);
 
                     Block block = loc.getBlock();
-                    if(block != null) {
+                    if (block != null) {
                         if (a(block, px, py, pz)) {
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
                                     2001, GunWarBlockData.newBlockPosition(block), block.getType().getId(), false);
                             List<Player> players = getPlayer().getWorld().getPlayers();
-                            for(final Player p : players) {
+                            for (final Player p : players) {
                                 ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
                             }
                             return new HitEntity(null, false, 0,
                                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
                         } else {
-                            if(block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) {
+                            if (block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) {
                                 currentDamage /= 1;
                                 currentHSDamage /= 2;
                             }
-                            if(block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
+                            if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
                                 currentDamage /= 3;
                                 currentHSDamage /= 3;
                             }
-                            if(block.getType() == Material.WEB) {
+                            if (block.getType() == Material.WEB) {
                                 block.setType(Material.AIR);
                             }
                         }
                     }
                 }
-                x += separateX;
-                y += separateY;
-                z += separateZ;
                 currentDamage -= separateDamage;
                 currentHSDamage -= separateHSDamage;
             }
@@ -683,60 +636,48 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     @Override
     public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ,
                                       double distance, double separate, GwKnifeItem knife) {
-        double yaw = 0;
-        double pitch = 0;
-        double d = Math.sqrt(Math.pow(0, 2) + Math.pow(0, 2) + Math.pow(separate, 2)) * distance;
-        if(startZ < d) {
-            double times = d / separate;
-            double x = startX;
-            double y = startY;
-            double z = startZ;
-            double currentDamage = knife.getAttackDamage();
-            double currentHSDamage = knife.getAttackDamage();
-            double separateDamage = 0;
-            double separateHSDamage = 0;
-            double px = 0;
-            double py = 0;
-            double pz = 0;
-            while (z < times) {
-                double twopi = 2 * Math.PI;
-                double t = 1 * twopi;
-                double division = twopi / 100;
-                double radius = 2;
+        double start = Math.sqrt(Math.pow(startX, 2) + Math.pow(startY, 2) + Math.pow(startZ, 2));
+        if(start < distance) {
+            double times = distance / separate;
+            double ad = knife.getAttackDamage();
+            double damageMin = ad / 1.075;
+            double currentDamage = ad;
+            double separateDamage = currentDamage - damageMin / times;
+            double t = 2 * Math.PI;
+            double division = Math.PI / 50;
+            double radius = 2;
 
-                Location c = player.getEyeLocation();
-                Vector nv = c.getDirection().normalize();
+            Location c = player.getEyeLocation();
+            Vector nv = c.getDirection().normalize();
 
-                double nx = radius * nv.getX() + c.getX();
-                double ny = radius * nv.getY() + c.getY();
-                double nz = radius * nv.getZ() + c.getZ();
+            double cx = c.getX() + startX;
+            double cy = c.getY() + startY;
+            double cz = c.getZ() + startZ;
+            double nx = radius * nv.getX() + cx;
+            double ny = radius * nv.getY() + cy;
+            double nz = radius * nv.getZ() + cz;
+            double px = nx;
+            double py = ny;
+            double pz = nz;
 
-                Vector ya = a(nv, new Vector(0, 1, 0)).normalize();
-                Vector xa = ya.getCrossProduct(nv).normalize();
-
+            for(double o = start; o <= distance; o += separate) {
                 for (double theta = 0; theta < t; theta += division) {
-                    double xi = xa.getX() * x + ya.getX() * y + nv.getX() * z;
-                    double yi = xa.getY() * x + ya.getY() * y + nv.getY() * z;
-                    double zi = xa.getZ() * x + ya.getZ() * y + nv.getZ() * z;
+                    double xi = nv.getX() * o;
+                    double yi = nv.getY() * o;
+                    double zi = nv.getZ() * o;
 
                     px = xi + nx;
                     py = yi + ny;
                     pz = zi + nz;
 
-                    Random rand = new Random();
-                    double dx_ = rand.nextDouble() * 0.2 - 0.1;
-                    double dy_ = rand.nextDouble() * 0.2 - 0.1;
-                    double dz_ = rand.nextDouble() * 0.2 - 0.1;
-
                     int count = 1;
-                    if(particle == Particle.SUSPENDED_DEPTH) count = 8;
+                    if (particle == Particle.SUSPENDED_DEPTH) count = 2;
+                    player.spawnParticle(particle, new Location(c.getWorld(), px, py, pz), count, 0, 0, 0, 0);
 
-                    player.spawnParticle(particle, new Location(c.getWorld(), px + dx_, py + dy_, pz + dz_), count, 0, 0, 0, 0);
-
-                    for(Entity entity : getPlayer().getNearbyEntities(distance + 1, distance + 1, distance + 1)) {
-                        if(entity instanceof LivingEntity) {
+                    for (Entity entity : getPlayer().getNearbyEntities(distance + 1, distance + 1, distance + 1)) {
+                        if (entity instanceof LivingEntity) {
                             LivingEntity livingEntity = (LivingEntity) entity;
-                            if(livingEntity != getPlayer()) {
+                            if (livingEntity != getPlayer()) {
                                 double xmin = livingEntity.getLocation().getX() - (livingEntity.getWidth() / 2);
                                 double xmax = livingEntity.getLocation().getX() + (livingEntity.getWidth() / 2);
                                 double ymin = livingEntity.getLocation().getY();
@@ -747,26 +688,17 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                                 boolean condition2 = ymin <= py && ymax >= py;
                                 boolean condition3 = zmin <= pz && zmax >= pz;
                                 if (condition1 && condition2 && condition3) {
-                                    double hxmin = livingEntity.getEyeLocation().getX() - (livingEntity.getEyeHeight() / 2);
-                                    double hxmax = livingEntity.getEyeLocation().getX() + (livingEntity.getEyeHeight() / 2);
-                                    double hymin = livingEntity.getEyeLocation().getY() - (livingEntity.getEyeHeight() / 2);
-                                    double hymax = livingEntity.getEyeLocation().getY() + (livingEntity.getEyeHeight() / 2);
-                                    double hzmin = livingEntity.getEyeLocation().getZ() - (livingEntity.getEyeHeight() / 2);
-                                    double hzmax = livingEntity.getEyeLocation().getZ() + (livingEntity.getEyeHeight() / 2);
-                                    boolean hcondition1 = hxmin <= px && hxmax >= px;
-                                    boolean hcondition2 = hymin <= py && hymax >= py;
-                                    boolean hcondition3 = hzmin <= pz && hzmax >= pz;
-                                    boolean headShot = hcondition1 && hcondition2 && hcondition3;
                                     boolean passed = true;
-                                    if(livingEntity instanceof Player) {
+                                    if (livingEntity instanceof Player) {
                                         if ((GunWar.getGame().getGameMode() == GwGameModes.NORMAL && ((GameModeNormal) GwGameModes.NORMAL).getMode() == GameModeNormal.Mode.TEAM) ||
                                                 GunWar.getGame().getGameMode() == GwGameModes.GENERAL_SIEGE || GunWar.getGame().getGameMode() == GwGameModes.ZOMBIE_ESCAPE) {
                                             PlayerData data = GunWar.getGame().getPlayerData((Player) livingEntity);
-                                            if(data != null) passed = data.getTeam() == getTeam();
+                                            if (data != null) passed = data.getTeam() == getTeam();
                                         }
                                     }
-                                    if(passed) return new HitEntity(livingEntity, headShot, headShot ? currentHSDamage : currentDamage,
-                                            getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), px, py, pz));
+                                    if (passed)
+                                        return new HitEntity(livingEntity, false, currentDamage,
+                                                getPlayer().getEyeLocation(), new Location(livingEntity.getWorld(), px, py, pz));
                                 }
                             }
                         }
@@ -774,8 +706,8 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     Location loc = new Location(getPlayer().getWorld(), px, py, pz);
 
                     Block block = loc.getBlock();
-                    if(block != null) {
-                        if(a(block, px, py, pz)) {
+                    if (block != null) {
+                        if (a(block, px, py, pz)) {
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
                                     2001, GunWarBlockData.newBlockPosition(block), block.getType().getId(), false);
                             List<Player> players = getPlayer().getWorld().getPlayers();
@@ -787,9 +719,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                         }
                     }
                 }
-                z += separate;
                 currentDamage -= separateDamage;
-                currentHSDamage -= separateHSDamage;
             }
             return new HitEntity(null, false, 0,
                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
@@ -959,7 +889,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                 } else if(type == Material.ENCHANTMENT_TABLE || type == Material.ENDER_PORTAL_FRAME) {
                     if(yb <= 0.8125) result = false;
                 }
-            } else if(!BlockShape.isTransparent(type)) {
+            } else {
                 result = false;
             }
         }

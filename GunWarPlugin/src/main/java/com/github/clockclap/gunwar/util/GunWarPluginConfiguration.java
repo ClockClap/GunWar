@@ -77,20 +77,7 @@ public class GunWarPluginConfiguration implements GunWarConfiguration {
             detailConfigFile = new File(dataFolder + "/detail_config.xml");
             if(!detailConfigFile.exists()) {
                 detailConfigFile.createNewFile();
-                try {
-                    InputStream inputStream = plugin.getResource("detail_config.xml");
-                    File file = detailConfigFile;
-                    OutputStream out = new FileOutputStream(file);
-                    byte[] buf = new byte['?'];
-                    int length;
-                    while ((length = inputStream.read(buf)) > 0) {
-                        out.write(buf, 0, length);
-                    }
-                    out.close();
-                    inputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                saveDefault(detailConfigFile, "detail_config.xml");
             }
             detailConfig = XmlConfiguration.loadXml(detailConfigFile);
             if(detailConfig != null) {
@@ -101,55 +88,16 @@ public class GunWarPluginConfiguration implements GunWarConfiguration {
                 if(!langFile.exists()) {
                     langFile.createNewFile();
                     if(langFile.getName().equalsIgnoreCase("ja_jp.yml")) {
-                        try {
-                            InputStream inputStream = plugin.getResource("lang/ja_jp.yml");
-                            File file = langFile;
-                            OutputStream out = new FileOutputStream(file);
-                            byte[] buf = new byte['?'];
-                            int length;
-                            while ((length = inputStream.read(buf)) > 0) {
-                                out.write(buf, 0, length);
-                            }
-                            out.close();
-                            inputStream.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        saveDefault(langFile, "lang/ja_jp.yml");
                     } else {
-                        try {
-                            InputStream inputStream = plugin.getResource("lang/en_us.yml");
-                            File file = langFile;
-                            OutputStream out = new FileOutputStream(file);
-                            byte[] buf = new byte['?'];
-                            int length;
-                            while ((length = inputStream.read(buf)) > 0) {
-                                out.write(buf, 0, length);
-                            }
-                            out.close();
-                            inputStream.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        saveDefault(langFile, "lang/en_us.yml");
                     }
                 }
             } else {
                 langFile = new File(dataFolder + "/lang/ja_jp.yml");
                 if(!langFile.exists()) {
                     langFile.createNewFile();
-                    try {
-                        InputStream inputStream = plugin.getResource("lang/ja_jp.yml");
-                        File file = langFile;
-                        OutputStream out = new FileOutputStream(file);
-                        byte[] buf = new byte['?'];
-                        int length;
-                        while ((length = inputStream.read(buf)) > 0) {
-                            out.write(buf, 0, length);
-                        }
-                        out.close();
-                        inputStream.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    saveDefault(langFile, "lang/ja_jp.yml");
                 }
             }
             lang = YamlConfiguration.loadConfiguration(langFile);
@@ -157,20 +105,7 @@ public class GunWarPluginConfiguration implements GunWarConfiguration {
             configFile = new File(dataFolder + "/config.yml");
             if (!configFile.exists()) {
                 configFile.createNewFile();
-                try {
-                    InputStream inputStream = plugin.getResource("config.yml");
-                    File file = configFile;
-                    OutputStream out = new FileOutputStream(file);
-                    byte[] buf = new byte['?'];
-                    int length;
-                    while ((length = inputStream.read(buf)) > 0) {
-                        out.write(buf, 0, length);
-                    }
-                    out.close();
-                    inputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                saveDefault(configFile, "config.yml");
             }
             config = YamlConfiguration.loadConfiguration(configFile);
 
@@ -192,24 +127,24 @@ public class GunWarPluginConfiguration implements GunWarConfiguration {
             permissionFile = new File(ppath);
             if (!permissionFile.exists()) {
                 permissionFile.createNewFile();
-                try {
-                    InputStream inputStream = plugin.getResource("permission/default.yml");
-                    File file = permissionFile;
-                    OutputStream out = new FileOutputStream(file);
-                    byte[] buf = new byte['?'];
-                    int length;
-                    while ((length = inputStream.read(buf)) > 0) {
-                        out.write(buf, 0, length);
-                    }
-                    out.close();
-                    inputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                saveDefault(permissionFile, "permission/default.yml");
             }
             permissionSetting = YamlConfiguration.loadConfiguration(permissionFile);
         } catch(IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private void saveDefault(File file, String resource) {
+        try (InputStream inputStream = plugin.getResource(resource);
+             OutputStream out = new FileOutputStream(file)) {
+            byte[] buf = new byte['?'];
+            int length;
+            while ((length = inputStream.read(buf)) > 0) {
+                out.write(buf, 0, length);
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 

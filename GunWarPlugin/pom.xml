@@ -11,7 +11,7 @@
         <groupId>io.github.clockclap</groupId>
     </parent>
     <artifactId>gunwar</artifactId>
-    <version>4.6.45</version>
+    <version>4.7.32</version>
     <packaging>jar</packaging>
     <name>GunWar</name>
     <url>https://github.com/ClockClap/GunWar</url>
@@ -20,13 +20,12 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <revision>1.0.0</revision>
-        <gunwar.api-version>2.0.6</gunwar.api-version>
         <paper.version>1.12.2-R0.1-SNAPSHOT</paper.version>
     </properties>
 
     <licenses>
         <license>
-            <name>GNU Lessor General Public License, Version 3.0</name>
+            <name>GNU Lesser General Public License, Version 3.0</name>
             <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
         </license>
     </licenses>
@@ -138,7 +137,7 @@
         <dependency>
             <groupId>io.github.clockclap</groupId>
             <artifactId>gunwar-api</artifactId>
-            <version>${gunwar.api-version}</version>
+            <version>2.1.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

@@ -52,13 +52,29 @@ import java.io.IOException;
 @GwPlugin
 public final class GunWarPlugin extends JavaPlugin {
 
-    private GunWarPlugin plugin;
+    private static GunWarPlugin plugin;
     private SimplePluginManager pluginManager;
     private CraftGunWarManager manager;
     private GunWarPluginConfiguration config;
     public static GwMySQLPlayerDataUpdater updater;
     private GunWarGame game;
     private BukkitRunnable runnable;
+
+    public static GunWarGame getGame() {
+        return plugin.game;
+    }
+
+    public static GunWarPlugin getPlugin() {
+        return plugin;
+    }
+
+    public static CraftGunWarManager getManager() {
+        return plugin.manager;
+    }
+
+    public static GunWarPluginConfiguration getPluginConfig() {
+        return plugin.config;
+    }
 
     @Override
     public void onEnable() {

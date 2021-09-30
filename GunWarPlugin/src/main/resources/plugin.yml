@@ -1,6 +1,6 @@
 name: GunWar
 version: ${project.version}
-main: com.github.clockclap.GunWarPlugin
+main: com.github.clockclap.gunwar.GunWarPlugin
 load: STARTUP
-authors: [ tubqme ]
+authors: [ clock_clap ]
 description: この銃撃戦には様々なゲームモードがあり、自分好みのモードで楽しめます。
