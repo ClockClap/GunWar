@@ -28,24 +28,24 @@ import java.util.Map;
 @GwAPI
 public interface IGwGameMode {
 
-    public int getIndex();
+    int getIndex();
 
-    public String getName();
+    String getName();
 
-    public String getDisplayName();
+    String getDisplayName();
 
-    public int getGameTime();
+    int getGameTime();
 
-    public int getElapsedTime();
+    int getElapsedTime();
 
-    public int getRemainingTime();
+    int getRemainingTime();
 
-    public Map<Integer, String> getTeamNames();
+    Map<Integer, String> getTeamNames();
 
-    public Map<Integer, ChatColor> getTeamColors();
+    Map<Integer, ChatColor> getTeamColors();
 
-    public void start(Location loc);
+    void start(Location loc);
 
-    public void stop();
+    void stop();
 
 }

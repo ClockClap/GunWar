@@ -19,12 +19,17 @@
 
 package com.github.clockclap.gunwar.listeners;
 
+import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarPlugin;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.game.GunWarGame;
 import com.github.clockclap.gunwar.game.data.GunWarPermanentlyPlayerData;
 import com.github.clockclap.gunwar.game.data.GunWarPlayerData;
 import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
 import com.github.clockclap.gunwar.game.data.PlayerData;
+import com.github.clockclap.gunwar.mysql.GwMySQLDataPath;
+import com.github.clockclap.gunwar.util.PlayerWatcher;
+import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -33,11 +38,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import com.github.clockclap.gunwar.GunWar;
-import com.github.clockclap.gunwar.game.GunWarGame;
-import com.github.clockclap.gunwar.mysql.GwMySQLDataPath;
-import com.github.clockclap.gunwar.util.PlayerWatcher;
-import com.github.clockclap.gunwar.util.TextReference;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,10 +74,10 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if(p.hasPlayedBefore()) {
-            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_join.raw", false) ? "" : TextReference.CHAT_PREFIX + " ") +
+            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_join.raw") ? "" : TextReference.CHAT_PREFIX + " ") +
                     TextReference.CHAT_PLAYER_JOIN.replaceAll("%PLAYER%", p.getName()));
         } else {
-            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_first_join.raw", false) ? "" : TextReference.CHAT_PREFIX + " ") +
+            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_first_join.raw") ? "" : TextReference.CHAT_PREFIX + " ") +
                     TextReference.CHAT_PLAYER_FIRST_JOIN.replaceAll("%PLAYER%", p.getName()));
         }
         GunWarPlayerData data = new GunWarPlayerData(p);
@@ -97,7 +97,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        e.setQuitMessage((GunWar.getConfig().getLang().getBoolean("chat.player_quit.raw", false) ? "" : TextReference.CHAT_PREFIX + " ") +
+        e.setQuitMessage((GunWar.getConfig().getLang().getBoolean("chat.player_quit.raw") ? "" : TextReference.CHAT_PREFIX + " ") +
                 TextReference.CHAT_PLAYER_QUIT.replaceAll("%PLAYER%", e.getPlayer().getName()));
         PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
         if(data != null) {

@@ -20,18 +20,18 @@
 package com.github.clockclap.gunwar.commands;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.util.PermissionInfo;
+import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.github.clockclap.gunwar.util.TextReference;
 
 import java.util.Arrays;
 
 @GwPlugin
-public class GunWarConfigCommand extends Command {
+public class GunWarConfigCommand extends GunWarCommand {
 
     public GunWarConfigCommand() {
         super("gunwarconfig");

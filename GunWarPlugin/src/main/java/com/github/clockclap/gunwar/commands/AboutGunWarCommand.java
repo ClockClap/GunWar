@@ -20,19 +20,19 @@
 package com.github.clockclap.gunwar.commands;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.util.GwReference;
 import com.github.clockclap.gunwar.util.PermissionInfo;
+import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.github.clockclap.gunwar.util.GwReference;
-import com.github.clockclap.gunwar.util.TextReference;
 
 import java.util.Arrays;
 
 @GwPlugin
-public class AboutGunWarCommand extends Command {
+public class AboutGunWarCommand extends GunWarCommand {
     public AboutGunWarCommand() {
         super("aboutgunwar", GwReference.COMMAND_AGW_DESCRIPTION, "Usage: /aboutgunwar", Arrays.asList("aboutgw", "agw"));
     }

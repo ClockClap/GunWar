@@ -1,0 +1,95 @@
+chat.prefix=&2[GunWar]&7
+chat.about=&8[Detail]
+chat.command.error.permission=&cYou do not have the permission to execute this command.
+chat.command.error.unknown_player=&cSpecific player is not exist or not online.
+chat.command.error.debug=&cI''m sorry but an error occurred while debugging.
+chat.command.error.not_debugging_mode=&cDebugging mode has not been enabled.
+chat.command.error.cant_use_this_mode=You cannot use this command on this mode.
+chat.command.error.game_not_started=The game has not started yet.
+chat.command.error.only_player=This command can be only used by a player.
+chat.command.error.no_final_message_target=The target you are trying to reply is not online or not a player.
+chat.command.error.cant_use_spectator=You cannot use this command on spectator.
+chat.command.reload=Reloaded configuration successfully.
+chat.command.give_item=&7Given %ITEM% to %PLAYER%.
+chat.detail.your_permission=&7Your Permission: &a%CURRENT%
+chat.detail.required_permission=&7Required Permission: &a%REQUIRED%
+chat.achievement.earned=%PLAYER% earned the achievement %ACHIEVEMENT%.
+chat.achievement.taken=&cYou have been taken the achievement %ACHIEVEMENT% by an administrator.
+
+chat.player_first_join=&e%PLAYER%&e joined the server for the first time!
+chat.player_first_join.raw=false
+chat.player_join=%PLAYER%&7 joined the server.
+chat.player_join.raw=false
+chat.player_quit=%PLAYER%&7 left the server.
+chat.player_quit.raw=false
+
+ui.title.main.infect=&2YOU ARE INFECTED...
+ui.title.main.died_zombie=&2YOU DIED...
+ui.title.sub.infect=&7You will respawn as a zombie after 5 seconds
+ui.title.main.infection_respawn=&2RESPAWNED AS ZOMBIE
+ui.title.sub.infection_respawn=&7Infect remaining survivors
+ui.title.main.survivor=&3YOU ARE SURVIVOR
+ui.title.sub.survivor=&7Escape from zombies
+ui.title.main.victory=&6&lVICTORY
+ui.title.main.gameover=&c&lGAME OVER
+ui.title.sub.victory.survivor=&3Survivors has won!
+ui.title.sub.victory.zombie=&2Zombies has won!
+ui.title.sub.victory.blue=&9Blue team has won!
+ui.title.sub.victory.red=&cRed team has won!
+
+ui.sidebar.title=&2[Nanami GunWar]
+ui.sidebar.game_state.current=&6Status
+ui.sidebar.please_start=&ePlease start the game
+ui.sidebar.please_wait=&rPlease wait for a moment
+ui.sidebar.starting_at=&rStarting at &a%SECOND%&r seconds
+ui.sidebar.waiting_player=&rWe are waiting for &a%PLAYERS%&r players
+ui.sidebar.remaining_time=&rRemaining &c%SECOND%&r seconds
+ui.sidebar.defended_time=&rDefended time
+ui.sidebar.remaining_players=&rRemaining players
+ui.sidebar.players=&rAll players
+ui.sidebar.team.blue=&9&lBlue
+ui.sidebar.team.red=&c&lRed
+ui.sidebar.current_turn=&rCurrent turn
+ui.sidebar.defenders=&aDefend
+ui.sidebar.attackers=&aAttack
+ui.sidebar.game_state.waiting=&aWaiting
+ui.sidebar.game_state.playing=&aPlaying
+ui.sidebar.game_state.ending=&aEnding
+
+ui.bossbar.waiting=&cWaiting - Please wait for a moment
+ui.bossbar.starting=Starting at %SECOND% seconds
+
+misc.weapon-set=Weapon Set
+
+misc.rule.team.defender=Defend your king from attackers attack. If you are king, hide so as not to be defeated.
+misc.rule.team.attacker=Capture the fortress and knock down the king of defenders team.
+misc.rule.team.survivor=Go to the safe area, endure the time limit and escape from the zombies.
+misc.rule.team.zombie=Infect all survivors with left click or enter the safe area.
+misc.rule.mode.team=Divides into 2 teams. The team with higher scores win when the game end.
+misc.rule.mode.solo=Not divide into teams. The player with highest scores win when the game end.
+misc.rule.mode.zombie_escape=The game to escape from zombies. They have no weapons.
+misc.rule.mode.general_siege=A general siege divided into attackers and defenders.
+
+slot.weapon=Weapon Slot
+
+slot.weapon.main=Main Weapon
+slot.weapon.sub=Sub Weapon
+slot.weapon.knife=Knife
+
+achievement.master_killer.name=Master Killer
+achievement.master_killer.description=Kill 50 players in a game
+
+misc.description.command.gunwaritem=Gives specific player a GunWar item.
+misc.description.command.gunwarreload=Reloads the configuration of GunWar plugin.
+misc.description.command.gwdebug=Debugs GunWar plugin system. Needs to enable debugging mode.
+
+misc.title=Nanami GunWar
+misc.lost_connection=Lost connection.
+misc.failed_to_connect=Failed to connect.
+misc.cause=Cause
+misc.solution=Solution
+misc.more=Please check Nanami Network discord server to get more information.
+misc.please_report=Please report on %CHANNEL% in discord server.
+
+error.loading_playerdata=Error on loading player data.
+error.logging_in=Error on logging in.

@@ -19,10 +19,8 @@
 
 package com.github.clockclap.gunwar.game.data;
 
-import com.github.clockclap.gunwar.GwPlugin;
-import com.github.clockclap.gunwar.util.*;
-import com.mojang.authlib.GameProfile;
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.entity.HitEntity;
 import com.github.clockclap.gunwar.game.GunWarGame;
 import com.github.clockclap.gunwar.game.gamemode.GameModeNormal;
@@ -30,13 +28,15 @@ import com.github.clockclap.gunwar.game.gamemode.GwGameModes;
 import com.github.clockclap.gunwar.item.GwGunItem;
 import com.github.clockclap.gunwar.item.GwItem;
 import com.github.clockclap.gunwar.item.GwKnifeItem;
+import com.github.clockclap.gunwar.util.*;
+import com.mojang.authlib.GameProfile;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_12_R1.BlockPosition;
+import net.minecraft.server.v1_12_R1.Packet;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldEvent;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -49,6 +49,8 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -599,13 +601,10 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
                     Block block = loc.getBlock();
                     if (block != null) {
-                        if (a(block, px, py, pz)) {
+                        if (BlockShape.isInBlock(block, px, py, pz)) {
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
                                     2001, GunWarBlockData.newBlockPosition(block), block.getType().getId(), false);
-                            List<Player> players = getPlayer().getWorld().getPlayers();
-                            for (final Player p : players) {
-                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-                            }
+                            a(packet);
                             return new HitEntity(null, false, 0,
                                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
                         } else {
@@ -707,13 +706,10 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
 
                     Block block = loc.getBlock();
                     if (block != null) {
-                        if (a(block, px, py, pz)) {
+                        if (BlockShape.isInBlock(block, px, py, pz)) {
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
                                     2001, GunWarBlockData.newBlockPosition(block), block.getType().getId(), false);
-                            List<Player> players = getPlayer().getWorld().getPlayers();
-                            for (final Player p : players) {
-                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-                            }
+                            a(packet);
                             return new HitEntity(null, false, 0,
                                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
                         }
@@ -727,173 +723,15 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         return null;
     }
 
-    private boolean a(Block block, double x, double y, double z) {
-        boolean result = true;
-        if(block != null && block.getType() != null) {
-            Material type = block.getType();
-            int xa = block.getLocation().getBlockX();
-            int ya = block.getLocation().getBlockY();
-            int za = block.getLocation().getBlockZ();
+    private void a(Packet<?> packet) {
+        a(getPlayer().getWorld(), packet);
+    }
 
-            double xb = x - xa;
-            double yb = y - ya;
-            double zb = z - za;
-
-            if(!BlockShape.isTransparent(type)) {
-                if (BlockShape.isSlab(type)) {
-                    if (block.getData() >= 8 && yb >= 0.5) {
-                        result = false;
-                    } else if (block.getData() < 8 && yb <= 0.5) {
-                        result = false;
-                    }
-                } else if (BlockShape.isStairs(type)) {
-                    if (block.getData() == 0 || block.getData() == 8) {
-                        if(yb <= 0.5) {
-                            result = false;
-                        } else if(xb >= 0.5) {
-                            result = false;
-                        }
-                    } else if (block.getData() == 1 || block.getData() == 9) {
-                        if(yb <= 0.5) {
-                            result = false;
-                        } else if(xb <= 0.5) {
-                            result = false;
-                        }
-                    } else if (block.getData() == 2 || block.getData() == 10) {
-                        if(yb <= 0.5) {
-                            result = false;
-                        } else if(zb >= 0.5) {
-                            result = false;
-                        }
-                    } else if (block.getData() == 3 || block.getData() == 11) {
-                        if(yb <= 0.5) {
-                            result = false;
-                        } else if(zb <= 0.5) {
-                            result = false;
-                        }
-                    } else if (block.getData() == 4 || block.getData() == 12) {
-                        if(yb >= 0.5) {
-                            result = false;
-                        } else if(xb >= 0.5) {
-                            result = false;
-                        }
-                    } else if ((block.getData() == 5 || block.getData() == 13)) {
-                        if(yb >= 0.5) {
-                            result = false;
-                        } else if(xb <= 0.5) {
-                            result = false;
-                        }
-                    } else if ((block.getData() == 6 || block.getData() == 14)) {
-                        if(yb >= 0.5) {
-                            result = false;
-                        } else if(zb >= 0.5) {
-                            result = false;
-                        }
-                    } else if ((block.getData() == 7 || block.getData() == 15)) {
-                        if(yb >= 0.5) {
-                            result = false;
-                        } else if(zb <= 0.5) {
-                            result = false;
-                        }
-                    }
-                } else if(BlockShape.isDoor(type)) {
-                    World w = block.getLocation().getWorld();
-                    Block bottom = w.getBlockAt(xa, ya - 1, za);
-                    Block b = block;
-                    if(bottom != null && bottom.getType() != null && BlockShape.isDoor(bottom.getType())) b = bottom;
-                    if((b.getData() == 0 || b.getData() == 7) && xb <= 0.1875) {
-                        result = false;
-                    } else if((b.getData() == 1 || b.getData() == 4) && zb <= 0.1875) {
-                        result = false;
-                    } else if((b.getData() == 2 || b.getData() == 5) && xb >= 0.8125) {
-                        result = false;
-                    } else if((b.getData() == 3 || b.getData() == 6) && zb >= 0.8125) {
-                        result = false;
-                    }
-                } else if(BlockShape.isFence(type)) {
-                    World w = block.getLocation().getWorld();
-                    Block x0 = w.getBlockAt(xa + 1, ya, za);
-                    Block x1 = w.getBlockAt(xa - 1, ya, za);
-                    Block z0 = w.getBlockAt(xa, ya, za + 1);
-                    Block z1 = w.getBlockAt(xa, ya, za - 1);
-                    boolean b = true;
-                    if(x0 != null && x0.getType() == block.getType()) {
-                        if(xb >= 0.375 && zb >= 0.375 && zb <= 0.625) {
-                            b = false;
-                        }
-                    }
-                    if(x1 != null && x1.getType() == block.getType()) {
-                        if(xb <= 0.625 && zb >= 0.375 && zb <= 0.625) {
-                            b = false;
-                        }
-                    }
-                    if(z0 != null && z0.getType() == block.getType()) {
-                        if(zb >= 0.375 && xb >= 0.375 && xb <= 0.625) {
-                            b = false;
-                        }
-                    }
-                    if(z1 != null && z1.getType() == block.getType()) {
-                        if(zb <= 0.625 && xb >= 0.375 && xb <= 0.625) {
-                            b = false;
-                        }
-                    }
-                    result = b;
-                } else if(type == Material.COBBLE_WALL) {
-                    World w = block.getLocation().getWorld();
-                    Block x0 = w.getBlockAt(xa + 1, ya, za);
-                    Block x1 = w.getBlockAt(xa - 1, ya, za);
-                    Block z0 = w.getBlockAt(xa, ya, za + 1);
-                    Block z1 = w.getBlockAt(xa, ya, za - 1);
-                    boolean b = true;
-                    if(x0 != null && x0.getType() == block.getType()) {
-                        if(xb >= 0.3125 && zb >= 0.3125 && zb <= 0.6875) {
-                            b = false;
-                        }
-                    }
-                    if(x1 != null && x1.getType() == block.getType()) {
-                        if(xb <= 0.6875 && zb >= 0.3125 && zb <= 0.6875) {
-                            b = false;
-                        }
-                    }
-                    if(z0 != null && z0.getType() == block.getType()) {
-                        if(zb >= 0.3125 && xb >= 0.3125 && xb <= 0.6875) {
-                            b = false;
-                        }
-                    }
-                    if(z1 != null && z1.getType() == block.getType()) {
-                        if(zb <= 0.6875 && xb >= 0.3125 && xb <= 0.6875) {
-                            b = false;
-                        }
-                    }
-                    result = b;
-                } else if(BlockShape.isFenceGate(type)) {
-                    if((block.getData() == 0 || block.getData() == 2 || block.getData() == 8 || block.getData() == 10) && zb >= 0.375 && zb <= 0.625) {
-                        result = false;
-                    } else if((block.getData() == 1 || block.getData() == 3 || block.getData() == 9 || block.getData() == 11) && xb >= 0.375 && xb <= 0.625) {
-                        result = false;
-                    }
-                } else if(BlockShape.isTrapdoor(type)) {
-                    if((block.getData() >= 0 && block.getData() <= 3) && yb <= 0.1875) {
-                        result = false;
-                    } else if((block.getData() == 4 || block.getData() == 12) && zb >= 0.8125) {
-                        result = false;
-                    } else if((block.getData() == 5 || block.getData() == 13) && zb <= 0.1875) {
-                        result = false;
-                    } else if((block.getData() == 6 || block.getData() == 14) && xb >= 0.8125) {
-                        result = false;
-                    } else if((block.getData() == 7 || block.getData() == 15) && xb <= 0.1825) {
-                        result = false;
-                    } else if((block.getData() >= 8 && block.getData() <= 11) && yb >= 0.8125) {
-                        result = false;
-                    }
-                } else if(type == Material.ENCHANTMENT_TABLE || type == Material.ENDER_PORTAL_FRAME) {
-                    if(yb <= 0.8125) result = false;
-                }
-            } else {
-                result = false;
-            }
+    private void a(World world, Packet<?> packet) {
+        List<Player> players = world.getPlayers();
+        for (final Player p : players) {
+            ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
         }
-        return result;
     }
 
     @Override
@@ -929,6 +767,15 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     @Override
     public void sendMessage(String[] messages) {
         getPlayer().sendMessage(messages);
+    }
+
+    @Override
+    public void sendStackTrace(Throwable throwable) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        throwable.printStackTrace(pw);
+        String str = sw.toString();
+        getPlayer().sendMessage(str);
     }
 
     @Override

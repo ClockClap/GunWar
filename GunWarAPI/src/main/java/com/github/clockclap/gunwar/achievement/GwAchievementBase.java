@@ -21,12 +21,12 @@ package com.github.clockclap.gunwar.achievement;
 
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import com.github.clockclap.gunwar.event.GwAchievementEarnEvent;
 import com.github.clockclap.gunwar.event.GwAchievementTakeEvent;
 import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 

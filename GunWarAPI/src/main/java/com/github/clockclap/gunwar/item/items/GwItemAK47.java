@@ -20,10 +20,10 @@
 package com.github.clockclap.gunwar.item.items;
 
 import com.github.clockclap.gunwar.GwAPI;
+import com.github.clockclap.gunwar.item.GwGunBase;
 import com.github.clockclap.gunwar.item.GwGunType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import com.github.clockclap.gunwar.item.GwGunBase;
 
 import java.util.Arrays;
 

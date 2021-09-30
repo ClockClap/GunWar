@@ -19,23 +19,23 @@
 
 package com.github.clockclap.gunwar.commands;
 
-import com.github.clockclap.gunwar.GwPlugin;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GunWarCommand;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.util.GwUUID;
 import com.github.clockclap.gunwar.util.PermissionInfo;
 import com.github.clockclap.gunwar.util.TextReference;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @GwPlugin
-public class GWDebugCommand extends Command {
+public class GWDebugCommand extends GunWarCommand {
 
     public GWDebugCommand() {
         super("gwdebug", TextReference.MISC_DESCRIPTION_COMMAND_GWDEBUG, "Usage: /gwdebug <args...>", new ArrayList<>());

@@ -36,61 +36,61 @@ import java.util.Map;
 @GwAPI
 public interface PlayerData extends EntityData {
 
-    public Player getPlayer();
+    Player getPlayer();
 
-    public PlayerWatcher getWatcher();
+    PlayerWatcher getWatcher();
 
-    public double getHealth();
+    double getHealth();
 
-    public double getMaxHealth();
+    double getMaxHealth();
 
-    public int getTeam();
+    int getTeam();
 
-    public boolean isSpectator();
+    boolean isSpectator();
 
-    public boolean isClickable();
+    boolean isClickable();
 
-    public boolean isDead();
+    boolean isDead();
 
-    public boolean isZoom();
+    boolean isZoom();
 
-    public void setZoom(boolean zoom, float zoomLevel);
+    void setZoom(boolean zoom, float zoomLevel);
 
-    public void setDead(boolean dead);
+    void setDead(boolean dead);
 
-    public void setClickable(boolean clickable);
+    void setClickable(boolean clickable);
 
-    public void setHealth(double health);
+    void setHealth(double health);
 
-    public void setMaxHealth(double maxHealth);
+    void setMaxHealth(double maxHealth);
 
-    public void setTeam(int team);
+    void setTeam(int team);
 
-    public void setSpectator(boolean spectator);
+    void setSpectator(boolean spectator);
 
-    public void infect();
+    void infect();
 
-    public void kill();
-
-    @Deprecated
-    public void drawParticleLine(Particle particle, double start, double distance, double separate);
+    void kill();
 
     @Deprecated
-    public void drawParticleLine(Particle particle, double startX, double startY, double startZ, double distance,
+    void drawParticleLine(Particle particle, double start, double distance, double separate);
+
+    @Deprecated
+    void drawParticleLine(Particle particle, double startX, double startY, double startZ, double distance,
                                  double separateX, double separateY, double separateZ);
 
     @Deprecated
-    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double distance,
-                                      double separateX, double separateY, double separateZ, GwGunItem gun);
+    HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double distance,
+                               double separateX, double separateY, double separateZ, GwGunItem gun);
 
-    public HitEntity drawParticleLine(Particle particle, double startX, double startY,
-                                      double startZ, double distance, Angle angle, double separate, GwGunItem gun, boolean aim);
+    HitEntity drawParticleLine(Particle particle, double startX, double startY,
+                               double startZ, double distance, Angle angle, double separate, GwGunItem gun, boolean aim);
 
-    public HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double distance, double separate, GwKnifeItem gun);
+    HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double distance, double separate, GwKnifeItem gun);
 
-    public void giveItem(GwItem item);
+    void giveItem(GwItem item);
 
-    public class Detail extends EntityData.Detail {
+    class Detail extends EntityData.Detail {
         public String getOriginalName() {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
@@ -144,14 +144,16 @@ public interface PlayerData extends EntityData {
         }
     }
 
-    public void sendMessage(String message);
+    void sendMessage(String message);
 
-    public void sendMessage(BaseComponent component);
+    void sendMessage(BaseComponent component);
 
-    public void sendMessage(BaseComponent... components);
+    void sendMessage(BaseComponent... components);
 
-    public void sendMessage(String[] messages);
+    void sendMessage(String[] messages);
 
-    public Detail detail();
+    void sendStackTrace(Throwable throwable);
+
+    Detail detail();
 
 }

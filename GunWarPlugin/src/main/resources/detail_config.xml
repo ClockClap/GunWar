@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config version="4.6.45"> <!-- DO NOT CHANGE VERSION -->
+<config version="4.7.32"> <!-- DO NOT CHANGE VERSION -->
     <!-- IF YOU UPDATED DETAIL CONFIG, YOU NEED TO RELOAD SERVER -->
     <!--
     if you want to color texts, you can use this
@@ -16,7 +16,7 @@
     </item>
 
     <chat>
-        <lang>plugins/GunWar/lang/ja_jp.yml</lang>
+        <lang>plugins/GunWar/lang/ja_jp.lang</lang>
         <japanize>
             <enabled>true</enabled>
             <player_name>false</player_name> <!-- true: japanize player name -->

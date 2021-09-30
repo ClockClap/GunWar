@@ -22,10 +22,14 @@ package com.github.clockclap.gunwar.mysql;
 import com.github.clockclap.gunwar.GwPlugin;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @GwPlugin
 public class GwMySQLDataPath implements Serializable {
+
+    private static final long serialVersionUID = 2076752219409265522L;
 
     private transient static Set<GwMySQLDataPath> paths = new HashSet<>();
 

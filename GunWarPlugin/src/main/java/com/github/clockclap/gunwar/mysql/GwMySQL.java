@@ -23,7 +23,10 @@ import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.nanamiserver.permission.NanamiServerRoleData;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.UUID;
 
 @GwPlugin
 public final class GwMySQL {

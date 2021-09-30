@@ -19,9 +19,9 @@
 
 package com.github.clockclap.gunwar.util;
 
-import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.mysql.MySQLSettingBuilder;
+import com.github.clockclap.gunwar.util.map.StringMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -31,11 +31,11 @@ import java.io.*;
 @GwPlugin
 public class GunWarPluginConfiguration implements GunWarConfiguration {
 
-    private Plugin plugin;
+    private final Plugin plugin;
     private File dataFolder;
     private FileConfiguration config;
     private FileConfiguration permissionSetting;
-    private FileConfiguration lang;
+    private StringMap lang;
     private XmlConfiguration detailConfig;
     private File configFile;
     private File permissionFile;
@@ -81,26 +81,26 @@ public class GunWarPluginConfiguration implements GunWarConfiguration {
             }
             detailConfig = XmlConfiguration.loadXml(detailConfigFile);
             if(detailConfig != null) {
-                String langPath = detailConfig.getString("config.chat.lang", "plugins/GunWar/lang/ja_jp.yml");
+                String langPath = detailConfig.getString("config.chat.lang", "plugins/GunWar/lang/ja_jp.lang");
                 langFile = new File(langPath);
             }
             if(langFile != null) {
                 if(!langFile.exists()) {
                     langFile.createNewFile();
-                    if(langFile.getName().equalsIgnoreCase("ja_jp.yml")) {
-                        saveDefault(langFile, "lang/ja_jp.yml");
+                    if(langFile.getName().equalsIgnoreCase("ja_jp.lang")) {
+                        saveDefault(langFile, "lang/ja_jp.lang");
                     } else {
-                        saveDefault(langFile, "lang/en_us.yml");
+                        saveDefault(langFile, "lang/en_us.lang");
                     }
                 }
             } else {
-                langFile = new File(dataFolder + "/lang/ja_jp.yml");
+                langFile = new File(dataFolder + "/lang/ja_jp.lang");
                 if(!langFile.exists()) {
                     langFile.createNewFile();
-                    saveDefault(langFile, "lang/ja_jp.yml");
+                    saveDefault(langFile, "lang/ja_jp.lang");
                 }
             }
-            lang = YamlConfiguration.loadConfiguration(langFile);
+            lang = StringMap.load(langFile);
 
             configFile = new File(dataFolder + "/config.yml");
             if (!configFile.exists()) {
@@ -164,7 +164,7 @@ public class GunWarPluginConfiguration implements GunWarConfiguration {
     }
 
     @Override
-    public FileConfiguration getLang() {
+    public StringMap getLang() {
         return lang;
     }
 

@@ -19,7 +19,18 @@
 
 package com.github.clockclap.gunwar.listeners;
 
+import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.event.GunWarCommandRegisterEvent;
+import com.github.clockclap.gunwar.game.GameState;
+import com.github.clockclap.gunwar.game.data.ItemData;
+import com.github.clockclap.gunwar.game.data.PlayerData;
+import com.github.clockclap.gunwar.game.gamemode.GwGameMode;
+import com.github.clockclap.gunwar.game.gamemode.Shoutable;
+import com.github.clockclap.gunwar.item.GwWeaponItem;
+import com.github.clockclap.gunwar.item.WeaponType;
+import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -30,25 +41,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import com.github.clockclap.gunwar.GunWar;
-import com.github.clockclap.gunwar.event.GunWarCommandRegisterEvent;
-import com.github.clockclap.gunwar.game.GameState;
-import com.github.clockclap.gunwar.game.data.ItemData;
-import com.github.clockclap.gunwar.game.data.PlayerData;
-import com.github.clockclap.gunwar.game.gamemode.GwGameMode;
-import com.github.clockclap.gunwar.game.gamemode.Shoutable;
-import com.github.clockclap.gunwar.item.GwWeaponItem;
-import com.github.clockclap.gunwar.item.WeaponType;
-import com.github.clockclap.gunwar.util.TextReference;
 
 @GwPlugin
 public class ServerListener implements Listener {
 
     @EventHandler
     public void onRegisterCommand(GunWarCommandRegisterEvent e) {
-        if(e.getCommand().getName().equalsIgnoreCase("gunwarreload") ||
-                e.getCommand().getName().equalsIgnoreCase("gunwaritem")) {
-            if(e.getThrowable() != null) {
+        if(e.getCommand() instanceof GunWarCommand) {
+            if (e.getThrowable() != null) {
                 e.catchThrowable();
                 GunWar.getPlugin().getLogger().info("Failed to register command: /" + e.getCommand().getName());
                 return;

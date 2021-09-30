@@ -21,14 +21,14 @@ package com.github.clockclap.gunwar.game;
 
 import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.game.data.ItemData;
+import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
+import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.game.gamemode.GwGameMode;
 import org.bukkit.Location;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
-import com.github.clockclap.gunwar.game.data.PlayerData;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -36,25 +36,25 @@ import java.util.UUID;
 @GwAPI
 public interface Game {
 
-    public Plugin getPlugin();
+    Plugin getPlugin();
 
-    public GameState getState();
+    GameState getState();
 
-    public void setState(GameState state);
+    void setState(GameState state);
 
-    public PlayerData getPlayerData(Player player);
+    PlayerData getPlayerData(Player player);
 
-    public PermanentlyPlayerData getPermanentlyPlayerData(UUID uniqueId);
+    PermanentlyPlayerData getPermanentlyPlayerData(UUID uniqueId);
 
-    public Collection<PlayerData> getOnlinePlayerData();
+    Collection<PlayerData> getOnlinePlayerData();
 
-    public BossBar getBar();
+    BossBar getBar();
 
-    public void setBar(BossBar bar);
+    void setBar(BossBar bar);
 
-    public GwGameMode getGameMode();
+    GwGameMode getGameMode();
 
-    public ItemData getItemData(ItemStack item);
+    ItemData getItemData(ItemStack item);
 
     public void setGameMode(GwGameMode gamemode);
 

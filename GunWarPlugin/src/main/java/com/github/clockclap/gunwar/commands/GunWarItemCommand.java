@@ -20,24 +20,24 @@
 package com.github.clockclap.gunwar.commands;
 
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.item.GwItem;
 import com.github.clockclap.gunwar.item.GwItems;
 import com.github.clockclap.gunwar.util.PermissionInfo;
+import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.github.clockclap.gunwar.game.data.PlayerData;
-import com.github.clockclap.gunwar.util.TextReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @GwPlugin
-public class GunWarItemCommand extends Command {
+public class GunWarItemCommand extends GunWarCommand {
 
     public GunWarItemCommand() {
         super("gunwaritem", TextReference.MISC_DESCRIPTION_COMMAND_GUNWARITEM, "Usage: /gunwaritem <player> <item>", Arrays.asList("gwitem", "gwi"));

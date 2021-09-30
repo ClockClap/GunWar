@@ -34,7 +34,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 @GwPlugin
 public class GunWarGunData extends GunWarItemData implements GunData {

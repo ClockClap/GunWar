@@ -26,14 +26,16 @@ import com.github.clockclap.gunwar.util.data.Encoder;
 import com.github.clockclap.gunwar.util.data.Serializer;
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @GwAPI(since = 2)
 public final class MapCodec implements Codec<HashMap<Object, Object>> {
 
     @Override
     public String getName() {
-        return null;
+        return "MapCodec";
     }
 
     @Override
@@ -78,12 +80,14 @@ public final class MapCodec implements Codec<HashMap<Object, Object>> {
 
             @Override
             public byte[] decode(byte[] o) {
-                byte[] b = new byte[o.length / 2];
+                int l = o.length;
+                if(l % 2 != 0) l = o.length + 1;
+                byte[] b = new byte[l / 2];
                 for(int i = 1, ii = 0; i < o.length; i += 2, ii++) {
                     int j = i - 1;
-                    char c2 = (char) b[j];
-                    char c1 = (char) b[i];
-                    char c = (char)(c1 + c2);
+                    int c2 = (int) o[j] & 0xFF;
+                    int c1 = (int) o[i] & 0xFF;
+                    int c = c1 + c2;
                     b[ii] = (byte) c;
                 }
                 return b;
@@ -123,8 +127,8 @@ public final class MapCodec implements Codec<HashMap<Object, Object>> {
                         Encoder<?> encoder = encoder();
                         k = encoder.encode(k);
                         v = encoder.encode(v);
-                        char e = 128;
-                        char l = 129;
+                        byte e = (byte) 128;
+                        byte l = (byte) 129;
 
                         for (byte value : k) {
                             if(i >= r.length * 0.75) r = Arrays.copyOf(r, r.length + 16);
@@ -132,7 +136,7 @@ public final class MapCodec implements Codec<HashMap<Object, Object>> {
                             i++;
                         }
                         if(i >= r.length * 0.75) r = Arrays.copyOf(r, r.length + 16);
-                        r[i] = (byte) e;
+                        r[i] = e;
                         i++;
                         for (byte value : v) {
                             if(i >= r.length * 0.75) r = Arrays.copyOf(r, r.length + 16);
@@ -140,7 +144,7 @@ public final class MapCodec implements Codec<HashMap<Object, Object>> {
                             i++;
                         }
                         if(i >= r.length * 0.75) r = Arrays.copyOf(r, r.length + 16);
-                        r[i] = (byte) l;
+                        r[i] = l;
                     }
                     return r;
                 }

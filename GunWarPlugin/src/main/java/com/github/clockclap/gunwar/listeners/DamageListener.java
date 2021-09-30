@@ -21,7 +21,10 @@ package com.github.clockclap.gunwar.listeners;
 
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.game.data.GunData;
 import com.github.clockclap.gunwar.game.data.ItemData;
+import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
+import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.game.gamemode.GwGameModes;
 import com.github.clockclap.gunwar.item.GwGunItem;
 import org.bukkit.entity.Player;
@@ -35,9 +38,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import com.github.clockclap.gunwar.game.data.GunData;
-import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
-import com.github.clockclap.gunwar.game.data.PlayerData;
 
 @GwPlugin
 public class DamageListener implements Listener {

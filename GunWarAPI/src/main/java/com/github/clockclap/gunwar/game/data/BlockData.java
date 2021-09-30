@@ -27,10 +27,10 @@ import org.bukkit.block.Block;
 @GwAPI
 public interface BlockData extends CustomData {
 
-    public Location getLocation();
+    Location getLocation();
 
-    public Block getBlock();
+    Block getBlock();
 
-    public Material getType();
+    Material getType();
 
 }

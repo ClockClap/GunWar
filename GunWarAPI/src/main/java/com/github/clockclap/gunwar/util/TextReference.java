@@ -22,18 +22,18 @@ package com.github.clockclap.gunwar.util;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.util.japanize.Japanizer;
+import com.github.clockclap.gunwar.util.map.StringMap;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.UnsupportedEncodingException;
 
 @GwAPI
 public final class TextReference {
 
-    private static final FileConfiguration lang = GunWar.getConfig().getLang();
+    private static final StringMap lang = GunWar.getConfig().getLang();
 
     public static final String CHAT_PREFIX = format("chat.prefix", "&2[銃撃戦]&7");
 
@@ -209,12 +209,12 @@ public final class TextReference {
 
     public static String format(String unformattedText) {
         return ChatColor.translateAlternateColorCodes('&',
-                lang.getString(unformattedText,unformattedText));
+                lang.get(unformattedText,unformattedText));
     }
 
     public static String format(String unformattedText, String defaultText) {
         return ChatColor.translateAlternateColorCodes('&',
-                lang.getString(unformattedText,defaultText));
+                lang.get(unformattedText,defaultText));
     }
 
 }

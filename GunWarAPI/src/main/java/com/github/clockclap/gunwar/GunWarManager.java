@@ -29,12 +29,12 @@ import java.sql.SQLException;
 @GwAPI
 public interface GunWarManager {
 
-    public Plugin getPlugin();
+    Plugin getPlugin();
 
-    public void registerCommand(String fallbackPrefix, Command command);
+    void registerCommand(String fallbackPrefix, Command command);
 
-    public String getRoleNameById(int id) throws SQLException;
+    String getRoleNameById(int id) throws SQLException;
 
-    public PermissionInfo testPermission(Player player, int required);
+    PermissionInfo testPermission(Player player, int required);
 
 }

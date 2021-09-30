@@ -20,11 +20,11 @@
 package com.github.clockclap.gunwar;
 
 import com.github.clockclap.gunwar.game.Game;
+import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.util.GunWarConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import com.github.clockclap.gunwar.game.data.PlayerData;
 
 import java.util.Collection;
 import java.util.UUID;

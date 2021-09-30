@@ -31,30 +31,30 @@ import java.util.List;
 @GwAPI
 public interface GwItem {
 
-    public ItemStack getItem();
+    ItemStack getItem();
 
-    public int getIndex();
+    int getIndex();
 
-    public String getName();
+    String getName();
 
-    public String getDisplayName();
+    String getDisplayName();
 
-    public List<String> getDescription();
+    List<String> getDescription();
 
-    public String getId();
+    String getId();
 
-    public Material getType();
+    Material getType();
 
-    public default void onClick(Player player, ClickAction action) { }
+    default void onClick(Player player, ClickAction action) { }
 
-    public default void onClickAtEntity(Player player, ClickAction action, Entity entity) { }
+    default void onClickAtEntity(Player player, ClickAction action, Entity entity) { }
 
-    public default void onClickAtBlock(Player player, ClickAction action, Block block) { }
+    default void onClickAtBlock(Player player, ClickAction action, Block block) { }
 
-    public default void onPlace(Player player, Block block) { }
+    default void onPlace(Player player, Block block) { }
 
-    public default void onBreak(Player player, Block block) { }
+    default void onBreak(Player player, Block block) { }
 
-    public default void onAttack(Player player, Entity target) { }
+    default void onAttack(Player player, Entity target) { }
 
 }

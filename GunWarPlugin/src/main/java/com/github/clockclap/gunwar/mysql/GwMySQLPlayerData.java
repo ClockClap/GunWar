@@ -20,8 +20,8 @@
 package com.github.clockclap.gunwar.mysql;
 
 import com.github.clockclap.gunwar.GwPlugin;
-import com.github.clockclap.gunwar.nanamiserver.permission.NanamiServerRoleData;
 import com.github.clockclap.gunwar.game.data.PlayerData;
+import com.github.clockclap.gunwar.nanamiserver.permission.NanamiServerRoleData;
 
 import java.sql.*;
 import java.util.*;

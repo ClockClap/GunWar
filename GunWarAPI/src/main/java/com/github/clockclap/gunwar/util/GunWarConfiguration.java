@@ -20,6 +20,7 @@
 package com.github.clockclap.gunwar.util;
 
 import com.github.clockclap.gunwar.GwAPI;
+import com.github.clockclap.gunwar.util.map.StringMap;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -27,24 +28,24 @@ import java.io.File;
 @GwAPI
 public interface GunWarConfiguration {
 
-    public FileConfiguration getConfig();
+    FileConfiguration getConfig();
 
-    public FileConfiguration getPermissionSetting();
+    FileConfiguration getPermissionSetting();
 
-    public XmlConfiguration getDetailConfig();
+    XmlConfiguration getDetailConfig();
 
-    public FileConfiguration getLang();
+    StringMap getLang();
 
-    public File getConfigFile();
+    File getConfigFile();
 
-    public File getPermissionSettingFile();
+    File getPermissionSettingFile();
 
-    public File getDetailConfigFile();
+    File getDetailConfigFile();
 
-    public File getLangFile();
+    File getLangFile();
 
-    public boolean isNanamiNetwork();
+    boolean isNanamiNetwork();
 
-    public void setNanamiNetwork(boolean nanamiNetwork);
+    void setNanamiNetwork(boolean nanamiNetwork);
 
 }

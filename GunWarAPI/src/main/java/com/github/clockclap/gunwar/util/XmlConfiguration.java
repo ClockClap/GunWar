@@ -19,10 +19,10 @@
 
 package com.github.clockclap.gunwar.util;
 
+import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.Bukkit;
 import org.xml.sax.SAXException;
-import com.github.clockclap.gunwar.GunWar;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;

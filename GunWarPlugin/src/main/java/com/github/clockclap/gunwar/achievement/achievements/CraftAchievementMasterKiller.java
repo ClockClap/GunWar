@@ -21,8 +21,8 @@ package com.github.clockclap.gunwar.achievement.achievements;
 
 import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.achievement.GwAchievementBase;
-import org.bukkit.Material;
 import com.github.clockclap.gunwar.util.TextReference;
+import org.bukkit.Material;
 
 import java.util.Arrays;
 

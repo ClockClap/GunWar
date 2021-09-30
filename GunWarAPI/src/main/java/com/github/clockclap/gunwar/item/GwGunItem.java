@@ -31,63 +31,63 @@ public interface GwGunItem extends GwWeaponItem {
      *
      * @return amoung of ammo with int
      */
-    public int getAmmo();
+    int getAmmo();
 
     /**
      * Gets range can be shot.
      *
      * @return block
      */
-    public double getRange();
+    double getRange();
 
     /**
      * Gets recoil size.
      *
      * @return block
      */
-    public float getRecoil();
+    float getRecoil();
 
     /**
      * Gets recoil size when the gun owner is currently sneaking.
      *
      * @return block
      */
-    public float getRecoilOnSneak();
+    float getRecoilOnSneak();
 
     /**
      * Gets reloading time with tick.
      *
      * @return tick
      */
-    public long getReload();
+    long getReload();
 
     /**
      * Gets rate of fire with tick.
      *
      * @return tick
      */
-    public long getFire();
+    long getFire();
 
     /**
      * Gets zoom level with percent.
      *
      * @return percent as float
      */
-    public float getZoomLevel();
+    float getZoomLevel();
 
     /**
      * Gets health value of damage when the gun gave head shot damage.
      *
      * @return health value of damage
      */
-    public float getHeadShotDamage();
+    float getHeadShotDamage();
 
     /**
      * Gets health value of damage when the gun holder sneaking.
      *
      * @return health value of damage
      */
-    public float getDamageAimed();
+    float getDamageAimed();
 
     /**
      * Gets accuracy of the gun ammo. <br>
@@ -95,7 +95,7 @@ public interface GwGunItem extends GwWeaponItem {
      *
      * @return accuracy of the gun ammo as float less than 500F
      */
-    public float getAccuracy();
+    float getAccuracy();
 
     /**
      * Gets accuracy of the gun ammo when the gun owner is currently sneaking. <br>
@@ -103,33 +103,33 @@ public interface GwGunItem extends GwWeaponItem {
      *
      * @return accuracy of the gun ammo as float less than 500F
      */
-    public float getAccuracyOnSneak();
+    float getAccuracyOnSneak();
 
     /**
      * Gets value of knockback.
      *
      * @return value
      */
-    public float getKnockBack();
+    float getKnockBack();
 
     /**
      * Gets kind of the gun.
      *
      * @return gun type
      */
-    public GwGunType getGunType();
+    GwGunType getGunType();
 
     /**
      * Gets type of the gun reloading.
      *
      * @return gun reloading type
      */
-    public GunReloadingType getReloadingType();
+    GunReloadingType getReloadingType();
 
-    public default void onShoot(Player player) { }
+    default void onShoot(Player player) { }
 
-    public default void onHit(Player player, Entity entity, float damage) { }
+    default void onHit(Player player, Entity entity, float damage) { }
 
-    public default void onHitHeadShot(Player player, Entity entity, float damage) { }
+    default void onHitHeadShot(Player player, Entity entity, float damage) { }
 
 }

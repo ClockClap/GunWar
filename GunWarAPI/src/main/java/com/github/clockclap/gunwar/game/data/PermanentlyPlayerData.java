@@ -33,34 +33,34 @@ import java.util.UUID;
 @GwAPI
 public interface PermanentlyPlayerData {
 
-    public UUID getUniqueId();
+    UUID getUniqueId();
 
-    public int getCoins();
+    int getCoins();
 
-    public List<GwItem> getItemInProcessions();
+    List<GwItem> getItemInProcessions();
 
-    public List<GwItem> getGifts();
+    List<GwItem> getGifts();
 
-    public List<GwAchievement> getAchievements();
+    List<GwAchievement> getAchievements();
 
-    public Map<GwGunItem, Integer> getPlayCount();
+    Map<GwGunItem, Integer> getPlayCount();
 
-    public Map<GwGunItem, Integer> getKillCount();
+    Map<GwGunItem, Integer> getKillCount();
 
-    public int getDeathCount();
+    int getDeathCount();
 
-    public int getInfectedCount();
+    int getInfectedCount();
 
-    public void setCoins(int coins);
+    void setCoins(int coins);
 
-    public void setDeathCount(int deathCount);
+    void setDeathCount(int deathCount);
 
-    public void setInfectedCount(int infectedCount);
+    void setInfectedCount(int infectedCount);
 
-    public File getDefaultDataFile();
+    File getDefaultDataFile();
 
-    public void save(File file) throws IOException;
+    void save(File file) throws IOException;
 
-    public void load(File file) throws IOException,ClassNotFoundException;
+    void load(File file) throws IOException,ClassNotFoundException;
 
 }

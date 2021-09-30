@@ -19,18 +19,18 @@
 
 package com.github.clockclap.gunwar;
 
+import com.github.clockclap.gunwar.event.GunWarCommandRegisterEvent;
+import com.github.clockclap.gunwar.mysql.GwMySQLPlayerData;
+import com.github.clockclap.gunwar.mysql.NanamiServer;
+import com.github.clockclap.gunwar.nanamiserver.permission.NanamiServerRoleData;
 import com.github.clockclap.gunwar.util.PermissionInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import com.github.clockclap.gunwar.event.GunWarCommandRegisterEvent;
-import com.github.clockclap.gunwar.mysql.GwMySQLPlayerData;
-import com.github.clockclap.gunwar.mysql.NanamiServer;
-import com.github.clockclap.gunwar.nanamiserver.permission.NanamiServerRoleData;
 
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.List;
 
 @GwPlugin

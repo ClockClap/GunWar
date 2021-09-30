@@ -28,16 +28,16 @@ import java.util.List;
 @GwAPI
 public interface GwAchievement {
 
-    public String getName();
+    String getName();
 
-    public Material getIcon();
+    Material getIcon();
 
-    public String getDisplayName();
+    String getDisplayName();
 
-    public List<String> getDescription();
+    List<String> getDescription();
 
-    public void give(Player player);
+    void give(Player player);
 
-    public void take(Player player);
+    void take(Player player);
 
 }

@@ -19,16 +19,8 @@
 
 package com.github.clockclap.gunwar.game;
 
-import com.github.clockclap.gunwar.GwPlugin;
-import org.bukkit.*;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.game.data.GunWarPlayerData;
 import com.github.clockclap.gunwar.game.data.ItemData;
 import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
@@ -38,6 +30,14 @@ import com.github.clockclap.gunwar.game.gamemode.GwGameModes;
 import com.github.clockclap.gunwar.util.DataList;
 import com.github.clockclap.gunwar.util.TextReference;
 import com.github.clockclap.gunwar.util.world.Worlds;
+import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 

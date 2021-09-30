@@ -24,12 +24,12 @@ import com.github.clockclap.gunwar.GwAPI;
 @GwAPI(since = 2)
 public interface Codec<S> {
 
-    public String getName();
+    String getName();
 
-    public Encoder<?> encoder();
+    Encoder<?> encoder();
 
-    public Decoder<?> decoder();
+    Decoder<?> decoder();
 
-    public Serializer<?> serializer();
+    Serializer<?> serializer();
 
 }

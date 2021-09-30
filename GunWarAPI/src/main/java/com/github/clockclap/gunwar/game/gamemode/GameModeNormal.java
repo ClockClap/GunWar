@@ -19,10 +19,10 @@
 
 package com.github.clockclap.gunwar.game.gamemode;
 
+import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import com.github.clockclap.gunwar.GunWar;
 
 @GwAPI
 public class GameModeNormal extends GwGameMode implements Shoutable {

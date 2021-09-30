@@ -21,7 +21,10 @@ package com.github.clockclap.gunwar.mysql;
 
 import com.github.clockclap.gunwar.GwPlugin;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Enumeration;
 
 @GwPlugin

@@ -295,19 +295,11 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
             } catch (ClassNotFoundException ignored) { }
         }
         if(f.exists()) {
-            byte[] bytes;
-            try (FileInputStream input = new FileInputStream(f);
-                 ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-                byte[] buf = new byte['?'];
-                int length;
-                while ((length = input.read(buf)) > 0) {
-                    bos.write(buf, 0, length);
-                }
-                bytes = bos.toByteArray();
+            try (FileInputStream input = new FileInputStream(f)) {
+                MapCodec codec = new MapCodec();
+                Object obj = codec.serializer().deserialize(input);
+                fromMap((Map<String, Object>) obj);
             }
-            MapCodec codec = new MapCodec();
-            Object obj = codec.serializer().deserialize(bytes);
-            fromMap((Map<String, Object>) obj);
         }
     }
 }

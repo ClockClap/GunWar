@@ -24,20 +24,20 @@ import com.github.clockclap.gunwar.GwAPI;
 @GwAPI
 public interface GunData extends ItemData {
 
-    public boolean isReloading();
+    boolean isReloading();
 
-    public boolean canFire();
+    boolean canFire();
 
-    public int getAmmo();
+    int getAmmo();
 
-    public void setAmmo(int ammo);
+    void setAmmo(int ammo);
 
-    public void fire(boolean aim);
+    void fire(boolean aim);
 
-    public void cancelFireCooldown();
+    void cancelFireCooldown();
 
-    public void reload();
+    void reload();
 
-    public void cancelReload();
+    void cancelReload();
 
 }

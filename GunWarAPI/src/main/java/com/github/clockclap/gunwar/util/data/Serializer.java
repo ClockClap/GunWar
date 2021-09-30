@@ -21,15 +21,35 @@ package com.github.clockclap.gunwar.util.data;
 
 import com.github.clockclap.gunwar.GwAPI;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 @GwAPI(since = 2)
 public interface Serializer<C> {
 
-    public C getCodec();
+    C getCodec();
 
-    public byte[] serialize(Object o) throws IOException;
+    byte[] serialize(Object o) throws IOException;
 
-    public Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException;
+    Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException;
+
+    default void serialize(Object o, OutputStream output) throws IOException {
+        byte[] b = serialize(o);
+        output.write(b);
+    }
+
+    default Object deserialize(InputStream input) throws IOException, ClassNotFoundException {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buf = new byte['?'];
+            int length;
+            while ((length = input.read(buf)) > 0) {
+                bos.write(buf, 0, length);
+            }
+            byte[] b = bos.toByteArray();
+            return deserialize(b);
+        }
+    }
 
 }

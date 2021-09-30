@@ -24,10 +24,10 @@ import com.github.clockclap.gunwar.GwAPI;
 @GwAPI
 public interface KnifeData extends ItemData {
 
-    public boolean canThrow();
+    boolean canThrow();
 
-    public void throwKnife();
+    void throwKnife();
 
-    public void cancelThrowingCooldown();
+    void cancelThrowingCooldown();
 
 }

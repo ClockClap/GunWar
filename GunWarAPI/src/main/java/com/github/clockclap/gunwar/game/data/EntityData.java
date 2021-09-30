@@ -29,13 +29,13 @@ import java.util.UUID;
 @GwAPI
 public interface EntityData extends CustomData {
 
-    public UUID getUniqueId();
+    UUID getUniqueId();
 
-    public EntityType getType();
+    EntityType getType();
 
-    public Entity getEntity();
+    Entity getEntity();
 
-    public class Detail {
+    class Detail {
         public boolean canSee(LivingEntity from) {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
@@ -45,6 +45,6 @@ public interface EntityData extends CustomData {
         }
     }
 
-    public Detail detail();
+    Detail detail();
 
 }

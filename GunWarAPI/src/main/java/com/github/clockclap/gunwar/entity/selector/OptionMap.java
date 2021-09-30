@@ -22,7 +22,9 @@ package com.github.clockclap.gunwar.entity.selector;
 import com.github.clockclap.gunwar.GwAPI;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @GwAPI
 @Deprecated

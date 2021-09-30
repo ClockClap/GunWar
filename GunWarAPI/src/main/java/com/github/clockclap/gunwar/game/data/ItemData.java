@@ -30,19 +30,19 @@ import java.util.UUID;
 @GwAPI
 public interface ItemData {
 
-    public UUID getUniqueId();
+    UUID getUniqueId();
 
-    public ItemStack getItem();
+    ItemStack getItem();
 
-    public Player getOwner();
+    Player getOwner();
 
-    public String getName();
+    String getName();
 
-    public GwItem getGwItem();
+    GwItem getGwItem();
 
-    public Material getType();
+    Material getType();
 
-    public void setItem(ItemStack item);
+    void setItem(ItemStack item);
 
-    public void setOwner(Player player);
+    void setOwner(Player player);
 }

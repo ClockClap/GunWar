@@ -19,25 +19,25 @@
 
 package com.github.clockclap.gunwar.commands;
 
-import com.github.clockclap.gunwar.GwPlugin;
-import com.google.common.base.Charsets;
 import com.github.clockclap.gunwar.GunWar;
+import com.github.clockclap.gunwar.GunWarCommand;
+import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.mysql.MySQLSettingBuilder;
+import com.github.clockclap.gunwar.util.GunWarPluginConfiguration;
 import com.github.clockclap.gunwar.util.PermissionInfo;
-import org.bukkit.command.Command;
+import com.github.clockclap.gunwar.util.TextReference;
+import com.google.common.base.Charsets;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import com.github.clockclap.gunwar.mysql.MySQLSettingBuilder;
-import com.github.clockclap.gunwar.util.GunWarPluginConfiguration;
-import com.github.clockclap.gunwar.util.TextReference;
 
 import java.io.*;
 import java.util.Arrays;
 
 @GwPlugin
-public class GunWarReloadCommand extends Command {
+public class GunWarReloadCommand extends GunWarCommand {
     public GunWarReloadCommand() {
         super("gunwarreload", TextReference.MISC_DESCRIPTION_COMMAND_GUNWARRELOAD, "Usage: /gunwarreload", Arrays.asList("gwreload"));
     }

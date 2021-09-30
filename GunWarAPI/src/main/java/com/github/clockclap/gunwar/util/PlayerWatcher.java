@@ -22,6 +22,7 @@ package com.github.clockclap.gunwar.util;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.game.GameState;
+import com.github.clockclap.gunwar.game.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
@@ -29,7 +30,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import com.github.clockclap.gunwar.game.data.PlayerData;
 
 import java.util.ArrayList;
 import java.util.List;

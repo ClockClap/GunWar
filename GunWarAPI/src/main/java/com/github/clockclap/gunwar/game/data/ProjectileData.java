@@ -26,8 +26,8 @@ import org.bukkit.projectiles.ProjectileSource;
 @GwAPI
 public interface ProjectileData extends EntityData {
 
-    public Projectile getProjectile();
+    Projectile getProjectile();
 
-    public ProjectileSource getShooter();
+    ProjectileSource getShooter();
 
 }

@@ -17,15 +17,21 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package com.github.clockclap.gunwar.util.data;
+package com.github.clockclap.gunwar;
 
-import com.github.clockclap.gunwar.GwAPI;
+import org.bukkit.command.Command;
 
-@GwAPI(since = 2)
-public interface Decoder<C> {
+import java.util.List;
 
-    C getCodec();
+@GwPlugin
+public abstract class GunWarCommand extends Command {
 
-    byte[] decode(byte[] o);
+    protected GunWarCommand(String name) {
+        super(name);
+    }
+
+    protected GunWarCommand(String name, String description, String usageMessage, List<String> aliases) {
+        super(name, description, usageMessage, aliases);
+    }
 
 }
