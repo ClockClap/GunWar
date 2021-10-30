@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. ClockClap. All rights reserved.
+ * Copyright (c) 2021, ClockClap. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This program is free software; you can redistribute it and/or
@@ -19,11 +19,15 @@
 
 package com.github.clockclap.gunwar;
 
+import com.github.clockclap.gunwar.game.Game;
+import com.github.clockclap.gunwar.util.PermissionInfo;
+import com.github.clockclap.gunwar.util.config.GunWarConfiguration;
 import org.bukkit.command.Command;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
-@GwPlugin
+@GwAPI(since = 2)
 public abstract class GunWarCommand extends Command {
 
     protected GunWarCommand(String name) {
@@ -32,6 +36,30 @@ public abstract class GunWarCommand extends Command {
 
     protected GunWarCommand(String name, String description, String usageMessage, List<String> aliases) {
         super(name, description, usageMessage, aliases);
+    }
+
+    protected GunWarManager getManager() {
+        return GunWar.getManager();
+    }
+
+    protected PermissionInfo testPermission(Player player, int required) {
+        return GunWar.getManager().testPermission(player, required);
+    }
+
+    protected GunWarConfiguration getPluginConfigs() {
+        return GunWar.getPluginConfigs();
+    }
+
+    protected String getPluginVersion() {
+        return GunWar.getPluginVersion();
+    }
+
+    protected int getRequiredPermission(String permission, int def) {
+        return GunWar.getRequiredPermission(permission, def);
+    }
+
+    protected Game getGame() {
+        return GunWar.getGame();
     }
 
 }

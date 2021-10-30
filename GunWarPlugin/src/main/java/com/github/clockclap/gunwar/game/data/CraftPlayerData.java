@@ -56,7 +56,7 @@ import java.util.*;
 
 @GwPlugin
 @SuppressWarnings({ "all" })
-public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
+public class CraftPlayerData extends CraftEntityData implements PlayerData {
 
     private final Player player;
     private PlayerWatcher watcher;
@@ -69,10 +69,11 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     private boolean dead;
     private Location loc;
     private boolean zoom;
+    private boolean general;
     private float zoomLevel;
     private final PlayerData.Detail detail;
 
-    public GunWarPlayerData(Player player) {
+    public CraftPlayerData(Player player) {
         super(player);
         this.player = player;
         this.health = 100;
@@ -83,6 +84,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
         this.moveable = true;
         this.loc = player.getLocation();
         this.dead = false;
+        this.general = false;
         this.zoom = false;
         this.zoomLevel = 0F;
         this.detail = new PlayerData.Detail() {
@@ -249,6 +251,11 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     }
 
     @Override
+    public boolean isGeneral() {
+        return general;
+    }
+
+    @Override
     public boolean isClickable() {
         return clickable;
     }
@@ -270,6 +277,11 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     @Override
     public void setClickable(boolean clickable) {
         this.clickable = clickable;
+    }
+
+    @Override
+    public void setGeneral(boolean general) {
+        this.general = general;
     }
 
     public void setMoveable(boolean moveable) {
@@ -603,7 +615,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     if (block != null) {
                         if (BlockShape.isInBlock(block, px, py, pz)) {
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
-                                    2001, GunWarBlockData.newBlockPosition(block), block.getType().getId(), false);
+                                    2001, CraftBlockData.newBlockPosition(block), block.getType().getId(), false);
                             a(packet);
                             return new HitEntity(null, false, 0,
                                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
@@ -708,7 +720,7 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
                     if (block != null) {
                         if (BlockShape.isInBlock(block, px, py, pz)) {
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
-                                    2001, GunWarBlockData.newBlockPosition(block), block.getType().getId(), false);
+                                    2001, CraftBlockData.newBlockPosition(block), block.getType().getId(), false);
                             a(packet);
                             return new HitEntity(null, false, 0,
                                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
@@ -738,11 +750,11 @@ public class GunWarPlayerData extends GunWarEntityData implements PlayerData {
     public void giveItem(GwItem item) {
         ItemStack i = item.getItem().clone();
         if(item instanceof GwGunItem) {
-            ((GunWarGame) GunWar.getGame()).addItemData(new GunWarGunData((GwGunItem) item, i, getPlayer()));
+            ((GunWarGame) GunWar.getGame()).addItemData(new CraftGunData((GwGunItem) item, i, getPlayer()));
         } else if(item instanceof GwKnifeItem) {
-            ((GunWarGame) GunWar.getGame()).addItemData(new GunWarKnifeData((GwKnifeItem) item, i, getPlayer()));
+            ((GunWarGame) GunWar.getGame()).addItemData(new CraftKnifeData((GwKnifeItem) item, i, getPlayer()));
         } else {
-            ((GunWarGame) GunWar.getGame()).addItemData(new GunWarItemData(item, i, getPlayer()));
+            ((GunWarGame) GunWar.getGame()).addItemData(new CraftItemData(item, i, getPlayer()));
         }
         if (GunWar.getGame().getItemData(i) != null) i = GunWar.getGame().getItemData(i).getItem();
         getPlayer().getInventory().addItem(i);

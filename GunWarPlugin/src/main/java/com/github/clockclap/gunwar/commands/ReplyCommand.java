@@ -21,6 +21,7 @@ package com.github.clockclap.gunwar.commands;
 
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.LoggableDefault;
 import com.github.clockclap.gunwar.util.MessageLog;
 import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.ChatColor;
@@ -32,10 +33,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @GwPlugin
-public class ReplyCommand extends GunWarCommand {
+public class ReplyCommand extends GunWarCommand implements LoggableDefault {
 
     public ReplyCommand() {
         super("reply", "", "Usage: /reply <message>", Arrays.asList("rep", "r"));
+        setPermission("minecraft.command.msg");
     }
 
     @Override

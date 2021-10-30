@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. ClockClap. All rights reserved.
+ * Copyright (c) 2021, ClockClap. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This program is free software; you can redistribute it and/or
@@ -31,7 +31,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @GwAPI(since = 2)
-public final class MapCodec implements Codec<HashMap<Object, Object>> {
+public final class MapCodec implements Codec {
+
+    static byte m = (byte) 0x01;
+
+    @Override
+    public Class<?> getSubject() {
+        return HashMap.class;
+    }
 
     @Override
     public String getName() {
@@ -98,9 +105,9 @@ public final class MapCodec implements Codec<HashMap<Object, Object>> {
     @Override
     public Serializer<?> serializer() {
         final MapCodec codec = this;
-        return new Serializer<Object>() {
+        return new Serializer<MapCodec>() {
             @Override
-            public Object getCodec() {
+            public MapCodec getCodec() {
                 return codec;
             }
 
@@ -109,7 +116,7 @@ public final class MapCodec implements Codec<HashMap<Object, Object>> {
                 if(o instanceof Map) {
                     @SuppressWarnings({ "unchecked" })
                     Map<Object, Object> map = (Map<Object, Object>) o;
-                    byte[] r = new byte[16];
+                    byte[] r = Serializer.newBytesForSerialize(m);
                     int i = 0;
                     for(Map.Entry<Object, Object> entry : map.entrySet()) {
                         byte[] k;
@@ -153,11 +160,13 @@ public final class MapCodec implements Codec<HashMap<Object, Object>> {
 
             @Override
             public Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+                if(Serializer.getCodecIdByBytes(bytes) != m) throw new IllegalArgumentException("different codec");
+                byte[] in = Serializer.removeCodecId(bytes);
                 Map<Object, Object> m = new HashMap<>();
-                byte[] b = new byte[bytes.length];
+                byte[] b = new byte[in.length];
                 int j = 0;
-                for(int i = 0; i < bytes.length; i++) {
-                    if(bytes[i] == (byte)129) {
+                for(int i = 0; i < in.length; i++) {
+                    if(in[i] == (byte)129) {
                         byte[] k = new byte[b.length];
                         byte[] v = new byte[b.length];
                         int jj = 0;
@@ -185,10 +194,10 @@ public final class MapCodec implements Codec<HashMap<Object, Object>> {
                             ov = ois.readObject();
                         }
                         m.put(ok, ov);
-                        b = new byte[bytes.length];
+                        b = new byte[in.length];
                         j = i + 1;
                     } else {
-                        b[i - j] = bytes[i];
+                        b[i - j] = in[i];
                     }
                 }
                 return m;

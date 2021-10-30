@@ -20,65 +20,40 @@
 package com.github.clockclap.gunwar.game.data;
 
 import com.github.clockclap.gunwar.GwPlugin;
-import com.github.clockclap.gunwar.item.GwItem;
+import net.minecraft.server.v1_12_R1.BlockPosition;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.UUID;
+import org.bukkit.block.Block;
 
 @GwPlugin
-public class GunWarItemData implements ItemData {
+public class CraftBlockData implements BlockData {
 
-    private UUID uniqueId;
-    private ItemStack item;
-    private GwItem gwitem;
-    private Player owner;
+    private final Block block;
 
-    public GunWarItemData(GwItem gwitem, ItemStack item, Player owner) {
-        this.uniqueId = UUID.randomUUID();
-        this.gwitem = gwitem;
-        this.item = item;
-        this.owner = owner;
+    public CraftBlockData(Block block) {
+        this.block = block;
     }
 
     @Override
-    public UUID getUniqueId() {
-        return uniqueId;
+    public Location getLocation() {
+        return block.getLocation();
     }
 
     @Override
-    public ItemStack getItem() {
-        return item;
-    }
-
-    @Override
-    public Player getOwner() {
-        return owner;
-    }
-
-    @Override
-    public String getName() {
-        return gwitem.getName();
-    }
-
-    @Override
-    public GwItem getGwItem() {
-        return gwitem;
+    public Block getBlock() {
+        return block;
     }
 
     @Override
     public Material getType() {
-        return item.getType();
+        return block.getType();
     }
 
-    @Override
-    public void setItem(ItemStack item) {
-        this.item = item;
+    public BlockPosition getPosition() {
+        return new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
     }
 
-    @Override
-    public void setOwner(Player player) {
-        this.owner = player;
+    public static BlockPosition newBlockPosition(Block block) {
+        return new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
     }
 }

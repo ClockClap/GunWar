@@ -17,22 +17,8 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package com.github.clockclap.gunwar.util;
-
-import com.github.clockclap.gunwar.GwAPI;
+package com.github.clockclap.gunwar;
 
 @GwAPI(since = 2)
-public final class GunWarValidate {
-
-    private static final String DEFAULT_IS_ILLEGAL_DISTANCE = "The validated distance is illegal";
-
-    public static double distance(double distance) {
-        return distance(distance, DEFAULT_IS_ILLEGAL_DISTANCE);
-    }
-
-    public static double distance(double distance, String message) {
-        if(distance < 0) throw new IllegalArgumentException(message);
-        return distance;
-    }
-
+public interface LoggableDefault {
 }

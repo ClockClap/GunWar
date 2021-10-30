@@ -22,6 +22,7 @@ package com.github.clockclap.gunwar.commands;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.LoggableDefault;
 import com.github.clockclap.gunwar.util.GwUUID;
 import com.github.clockclap.gunwar.util.PermissionInfo;
 import com.github.clockclap.gunwar.util.TextReference;
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.UUID;
 
 @GwPlugin
-public class GWDebugCommand extends GunWarCommand {
+public class GWDebugCommand extends GunWarCommand implements LoggableDefault {
 
     public GWDebugCommand() {
         super("gwdebug", TextReference.MISC_DESCRIPTION_COMMAND_GWDEBUG, "Usage: /gwdebug <args...>", new ArrayList<>());
@@ -43,12 +44,12 @@ public class GWDebugCommand extends GunWarCommand {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        FileConfiguration conf = GunWar.getConfig().getConfig();
+        FileConfiguration conf = getPluginConfigs().getConfig();
         if(conf.getBoolean("debug", false)) {
-            int required = GunWar.getConfig().getPermissionSetting().getInt("commands.gwdebug", 1);
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                PermissionInfo info = GunWar.getManager().testPermission(p, required);
+                int required = getRequiredPermission("commands.gwdebug", 1);
+                PermissionInfo info = testPermission(p, required);
                 if (!info.isPassed()) {
                     p.sendMessage(TextReference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                     return true;
@@ -57,11 +58,11 @@ public class GWDebugCommand extends GunWarCommand {
             if(args.length >= 1) {
                 if(args[0].equalsIgnoreCase("GETVAL")) {
                     if(args[1].equalsIgnoreCase("configMap") && args.length >= 3) {
-                        sender.sendMessage(TextReference.CHAT_PREFIX + " Debug [GETVAL]: configMap(" + args[2] + ") = " + GunWar.getConfig().getDetailConfig().get(args[2], ""));
+                        sender.sendMessage(TextReference.CHAT_PREFIX + " Debug [GETVAL]: configMap(" + args[2] + ") = " + GunWar.getPluginConfigs().getDetailConfig().get(args[2], ""));
                         return true;
                     }
                     if(args[1].equalsIgnoreCase("attrMap") && args.length >= 4) {
-                        sender.sendMessage(TextReference.CHAT_PREFIX + " Debug [GETVAL]: attrMap(" + args[2] + ") = " + GunWar.getConfig().getDetailConfig().getAttribute(args[2], args[3]));
+                        sender.sendMessage(TextReference.CHAT_PREFIX + " Debug [GETVAL]: attrMap(" + args[2] + ") = " + GunWar.getPluginConfigs().getDetailConfig().getAttribute(args[2], args[3]));
                         return true;
                     }
                 }
@@ -79,8 +80,8 @@ public class GWDebugCommand extends GunWarCommand {
                     if(sender instanceof Player) {
                         Player p = (Player) sender;
                         p.sendMessage(TextReference.CHAT_PREFIX + " Your UUID is " + p.getUniqueId().toString() + ".");
-                        if(GwUUID.match(p.getUniqueId(), UUID.fromString("4b7aeaa5-f198-4547-b05c-d78282e0d495")) ||
-                                GwUUID.match(p.getUniqueId(), UUID.fromString("e7899741-cbea-4a11-aa6c-a67a8342e72d"))) {
+                        if(p.getUniqueId().equals(UUID.fromString("4b7aeaa5-f198-4547-b05c-d78282e0d495")) ||
+                                p.getUniqueId().equals(UUID.fromString("e7899741-cbea-4a11-aa6c-a67a8342e72d"))) {
                             p.sendMessage(TextReference.CHAT_PREFIX + " You are a developer of GunWar plugin.");
                         }
                     } else {

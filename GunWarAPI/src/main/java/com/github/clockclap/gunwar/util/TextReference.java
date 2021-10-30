@@ -21,6 +21,7 @@ package com.github.clockclap.gunwar.util;
 
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
+import com.github.clockclap.gunwar.util.config.XmlConfiguration;
 import com.github.clockclap.gunwar.util.japanize.Japanizer;
 import com.github.clockclap.gunwar.util.map.StringMap;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -33,7 +34,7 @@ import java.io.UnsupportedEncodingException;
 @GwAPI
 public final class TextReference {
 
-    private static final StringMap lang = GunWar.getConfig().getLang();
+    private static final StringMap lang = GunWar.getPluginConfigs().getLang();
 
     public static final String CHAT_PREFIX = format("chat.prefix", "&2[銃撃戦]&7");
 
@@ -133,7 +134,7 @@ public final class TextReference {
     }
 
     public static String chat(ChatColor prefixColor, String prefix, String playerName, String message) {
-        XmlConfiguration conf = GunWar.getConfig().getDetailConfig();
+        XmlConfiguration conf = GunWar.getPluginConfigs().getDetailConfig();
         String format = conf.getString("config.chat.format", "%{color}7%p%{color}8: %{color}r%m");
         String japanizeFormat = conf.getString("config.chat.japanize_format", "%m %{color}7%j");
         String prefixFormat = conf.getString("config.chat.prefix_format", "%{color}8[%c%t%{color}8] %c%p");
@@ -160,7 +161,7 @@ public final class TextReference {
     }
 
     public static String privateChat(String from, String to, String message) {
-        XmlConfiguration conf = GunWar.getConfig().getDetailConfig();
+        XmlConfiguration conf = GunWar.getPluginConfigs().getDetailConfig();
         String format = conf.getString("config.chat.private_format", "%{color7}[%p -> %t]%{color}r %m");
         String japanizeFormat = conf.getString("config.chat.japanize_format", "%m %{color}7%j");
         String japanizeCanceller = conf.getString("config.chat.japanize.japanize_canceller", "#");

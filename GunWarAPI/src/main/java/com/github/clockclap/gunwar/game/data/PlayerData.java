@@ -48,6 +48,8 @@ public interface PlayerData extends EntityData {
 
     boolean isSpectator();
 
+    boolean isGeneral();
+
     boolean isClickable();
 
     boolean isDead();
@@ -57,6 +59,8 @@ public interface PlayerData extends EntityData {
     void setZoom(boolean zoom, float zoomLevel);
 
     void setDead(boolean dead);
+
+    void setGeneral(boolean general);
 
     void setClickable(boolean clickable);
 

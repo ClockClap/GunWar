@@ -21,7 +21,7 @@ package com.github.clockclap.gunwar.game;
 
 import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.game.data.ItemData;
-import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
+import com.github.clockclap.gunwar.game.data.PermanentPlayerData;
 import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.game.gamemode.GwGameMode;
 import org.bukkit.Location;
@@ -44,7 +44,7 @@ public interface Game {
 
     PlayerData getPlayerData(Player player);
 
-    PermanentlyPlayerData getPermanentlyPlayerData(UUID uniqueId);
+    PermanentPlayerData getPermanentPlayerData(UUID uniqueId);
 
     Collection<PlayerData> getOnlinePlayerData();
 

@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @GwAPI
-public interface PermanentlyPlayerData {
+public interface PermanentPlayerData {
 
     UUID getUniqueId();
 

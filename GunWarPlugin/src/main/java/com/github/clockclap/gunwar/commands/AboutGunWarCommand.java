@@ -19,9 +19,9 @@
 
 package com.github.clockclap.gunwar.commands;
 
-import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.LoggableDefault;
 import com.github.clockclap.gunwar.util.GwReference;
 import com.github.clockclap.gunwar.util.PermissionInfo;
 import com.github.clockclap.gunwar.util.TextReference;
@@ -32,23 +32,23 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 
 @GwPlugin
-public class AboutGunWarCommand extends GunWarCommand {
+public class AboutGunWarCommand extends GunWarCommand implements LoggableDefault {
     public AboutGunWarCommand() {
         super("aboutgunwar", GwReference.COMMAND_AGW_DESCRIPTION, "Usage: /aboutgunwar", Arrays.asList("aboutgw", "agw"));
     }
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        int required = GunWar.getConfig().getPermissionSetting().getInt("commands.aboutgunwar", 0);
         if(sender instanceof Player) {
             Player p = (Player) sender;
-            PermissionInfo info = GunWar.getManager().testPermission(p, required);
+            int required = getRequiredPermission("commands.aboutgunwar", 0);
+            PermissionInfo info = testPermission(p, required);
             if(!info.isPassed()) {
                 p.sendMessage(TextReference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                 return true;
             }
         }
-        sender.sendMessage(ChatColor.DARK_GREEN + "=-=-=- ななみ銃撃戦 v" + GunWar.getPlugin().getDescription().getVersion() + " -=-=-=\n" +
+        sender.sendMessage(ChatColor.DARK_GREEN + "=-=-=- ななみ銃撃戦 v" + getPluginVersion() + " -=-=-=\n" +
                 ChatColor.GRAY + "説明: " + ChatColor.RESET + "...\n" +
                 ChatColor.GRAY + "作者: " + ChatColor.RESET + "ClockClap");
         return true;

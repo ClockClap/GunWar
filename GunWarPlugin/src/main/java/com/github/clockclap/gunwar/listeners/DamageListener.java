@@ -23,7 +23,7 @@ import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.game.data.GunData;
 import com.github.clockclap.gunwar.game.data.ItemData;
-import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
+import com.github.clockclap.gunwar.game.data.PermanentPlayerData;
 import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.game.gamemode.GwGameModes;
 import com.github.clockclap.gunwar.item.GwGunItem;
@@ -52,9 +52,9 @@ public class DamageListener implements Listener {
         if(e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
             e.setDamage(0);
             PlayerData vdata = GunWar.getGame().getPlayerData((Player) e.getEntity());
-            PermanentlyPlayerData vdata_ = GunWar.getGame().getPermanentlyPlayerData(e.getEntity().getUniqueId());
+            PermanentPlayerData vdata_ = GunWar.getGame().getPermanentPlayerData(e.getEntity().getUniqueId());
             PlayerData ddata = GunWar.getGame().getPlayerData((Player) e.getDamager());
-            PermanentlyPlayerData ddata_ = GunWar.getGame().getPermanentlyPlayerData(e.getDamager().getUniqueId());
+            PermanentPlayerData ddata_ = GunWar.getGame().getPermanentPlayerData(e.getDamager().getUniqueId());
             if(!vdata.isSpectator() && !ddata.isSpectator()) {
                 if(GunWar.getGame().getGameMode() == GwGameModes.ZOMBIE_ESCAPE) {
                     if (ddata.getTeam() == 1 && vdata.getTeam() == 0) {
@@ -90,7 +90,7 @@ public class DamageListener implements Listener {
             if(event.getDamager() instanceof Player) {
                 PlayerData ddata = GunWar.getGame().getPlayerData((Player) event.getDamager());
                 if(!ddata.isSpectator()) {
-                    PermanentlyPlayerData ddata_ = GunWar.getGame().getPermanentlyPlayerData(event.getDamager().getUniqueId());
+                    PermanentPlayerData ddata_ = GunWar.getGame().getPermanentPlayerData(event.getDamager().getUniqueId());
                     if (ddata_ != null) {
                         ItemData i = GunWar.getGame().getItemData(((Player) event.getDamager()).getInventory().getItemInMainHand());
                         if (i instanceof GunData) {

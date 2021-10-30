@@ -23,7 +23,7 @@ import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.event.GwAchievementEarnEvent;
 import com.github.clockclap.gunwar.event.GwAchievementTakeEvent;
-import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
+import com.github.clockclap.gunwar.game.data.PermanentPlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -71,7 +71,7 @@ public abstract class GwAchievementBase implements GwAchievement {
             GwAchievementEarnEvent e = new GwAchievementEarnEvent(player, this);
             Bukkit.getPluginManager().callEvent(e);
             if(!e.isCancelled()) {
-                PermanentlyPlayerData data = GunWar.getGame().getPermanentlyPlayerData(player.getUniqueId());
+                PermanentPlayerData data = GunWar.getGame().getPermanentPlayerData(player.getUniqueId());
                 data.getAchievements().add(this);
                 Bukkit.broadcast(e.getEarnMessageComponent());
             }
@@ -84,7 +84,7 @@ public abstract class GwAchievementBase implements GwAchievement {
             GwAchievementTakeEvent e = new GwAchievementTakeEvent(player, this);
             Bukkit.getPluginManager().callEvent(e);
             if(!e.isCancelled()) {
-                PermanentlyPlayerData data = GunWar.getGame().getPermanentlyPlayerData(player.getUniqueId());
+                PermanentPlayerData data = GunWar.getGame().getPermanentPlayerData(player.getUniqueId());
                 data.getAchievements().remove(this);
                 player.sendMessage(e.getTakeMessageComponent());
             }

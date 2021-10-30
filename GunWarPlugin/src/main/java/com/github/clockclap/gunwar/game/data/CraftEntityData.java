@@ -34,14 +34,14 @@ import org.bukkit.util.Vector;
 import java.util.UUID;
 
 @GwPlugin
-public class GunWarEntityData implements EntityData {
+public class CraftEntityData implements EntityData {
 
     private final UUID uniqueId;
     private final Entity entity;
     private final EntityType type;
     private final Detail detail;
 
-    public GunWarEntityData(Entity entity) {
+    public CraftEntityData(Entity entity) {
         this.uniqueId = entity.getUniqueId();
         this.entity = entity;
         this.type = entity.getType();

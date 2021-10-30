@@ -23,9 +23,9 @@ import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarPlugin;
 import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.game.GunWarGame;
-import com.github.clockclap.gunwar.game.data.GunWarPermanentlyPlayerData;
-import com.github.clockclap.gunwar.game.data.GunWarPlayerData;
-import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
+import com.github.clockclap.gunwar.game.data.CraftPermanentPlayerData;
+import com.github.clockclap.gunwar.game.data.CraftPlayerData;
+import com.github.clockclap.gunwar.game.data.PermanentPlayerData;
 import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.mysql.GwMySQLDataPath;
 import com.github.clockclap.gunwar.util.PlayerWatcher;
@@ -49,7 +49,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPreLogin(AsyncPlayerPreLoginEvent e) {
         try {
-            GunWarPermanentlyPlayerData permanentlyPlayerData = new GunWarPermanentlyPlayerData(e.getUniqueId());
+            CraftPermanentPlayerData permanentlyPlayerData = new CraftPermanentPlayerData(e.getUniqueId());
             File f = permanentlyPlayerData.getDefaultDataFile();
             if (!f.exists()) {
                 permanentlyPlayerData.save(f);
@@ -65,7 +65,7 @@ public class PlayerListener implements Listener {
                     ChatColor.GRAY + TextReference.MISC_SOLUTION + ": " + ChatColor.WHITE + TextReference.MISC_PLEASE_REPORT.replaceAll("%CHANNEL%", ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE) + "\n" +
                     "\n" +
                     ChatColor.WHITE + TextReference.MISC_MORE + "\n" +
-                    ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/nbRUAmmypS"));
+                    ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getPluginConfigs().getConfig().getString("discord", "https://discord.gg/nbRUAmmypS"));
             ex.printStackTrace();
         }
     }
@@ -74,13 +74,13 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if(p.hasPlayedBefore()) {
-            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_join.raw") ? "" : TextReference.CHAT_PREFIX + " ") +
+            e.setJoinMessage((GunWar.getPluginConfigs().getLang().getBoolean("chat.player_join.raw") ? "" : TextReference.CHAT_PREFIX + " ") +
                     TextReference.CHAT_PLAYER_JOIN.replaceAll("%PLAYER%", p.getName()));
         } else {
-            e.setJoinMessage((GunWar.getConfig().getLang().getBoolean("chat.player_first_join.raw") ? "" : TextReference.CHAT_PREFIX + " ") +
+            e.setJoinMessage((GunWar.getPluginConfigs().getLang().getBoolean("chat.player_first_join.raw") ? "" : TextReference.CHAT_PREFIX + " ") +
                     TextReference.CHAT_PLAYER_FIRST_JOIN.replaceAll("%PLAYER%", p.getName()));
         }
-        GunWarPlayerData data = new GunWarPlayerData(p);
+        CraftPlayerData data = new CraftPlayerData(p);
         PlayerWatcher watcher = new PlayerWatcher(GunWar.getPlugin(), data);
         watcher.startWatch();
         watcher.startWatch10Ticks();
@@ -97,7 +97,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        e.setQuitMessage((GunWar.getConfig().getLang().getBoolean("chat.player_quit.raw") ? "" : TextReference.CHAT_PREFIX + " ") +
+        e.setQuitMessage((GunWar.getPluginConfigs().getLang().getBoolean("chat.player_quit.raw") ? "" : TextReference.CHAT_PREFIX + " ") +
                 TextReference.CHAT_PLAYER_QUIT.replaceAll("%PLAYER%", e.getPlayer().getName()));
         PlayerData data = GunWar.getGame().getPlayerData(e.getPlayer());
         if(data != null) {
@@ -107,7 +107,7 @@ public class PlayerListener implements Listener {
             watcher.stopWatch10Ticks();
             ((GunWarGame) GunWar.getGame()).removePlayerData(data.getUniqueId());
         }
-        PermanentlyPlayerData data_ = GunWar.getGame().getPermanentlyPlayerData(e.getPlayer().getUniqueId());
+        PermanentPlayerData data_ = GunWar.getGame().getPermanentPlayerData(e.getPlayer().getUniqueId());
         if(data_ != null) {
             try {
                 data_.save(data_.getDefaultDataFile());

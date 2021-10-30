@@ -38,7 +38,7 @@ public class GameModeNormal extends GwGameMode implements Shoutable {
         setName("NORMAL");
         setDisplayName(ChatColor.GREEN + "Normal");
         this.mode = Mode.SOLO;
-        setGameTime(GunWar.getConfig().getConfig().getInt("normal.game-time-solo"));
+        setGameTime(GunWar.getPluginConfigs().getConfig().getInt("normal.game-time-solo"));
         getTeamNames().put(0, "RED");
         getTeamColors().put(0, ChatColor.RED);
         getTeamNames().put(1, "BLUE");
@@ -62,9 +62,9 @@ public class GameModeNormal extends GwGameMode implements Shoutable {
     public void setMode(Mode mode) {
         this.mode = mode;
         if(mode == Mode.SOLO) {
-            setGameTime(GunWar.getConfig().getConfig().getInt("normal.game-time-solo"));
+            setGameTime(GunWar.getPluginConfigs().getConfig().getInt("normal.game-time-solo"));
         } else if(mode == Mode.TEAM) {
-            setGameTime(GunWar.getConfig().getConfig().getInt("normal.game-time-team"));
+            setGameTime(GunWar.getPluginConfigs().getConfig().getInt("normal.game-time-team"));
         }
     }
 }

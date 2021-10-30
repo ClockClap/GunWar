@@ -22,6 +22,7 @@ package com.github.clockclap.gunwar.commands;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.LoggableDefault;
 import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.item.GwItem;
 import com.github.clockclap.gunwar.item.GwItems;
@@ -37,7 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @GwPlugin
-public class GunWarItemCommand extends GunWarCommand {
+public class GunWarItemCommand extends GunWarCommand implements LoggableDefault {
 
     public GunWarItemCommand() {
         super("gunwaritem", TextReference.MISC_DESCRIPTION_COMMAND_GUNWARITEM, "Usage: /gunwaritem <player> <item>", Arrays.asList("gwitem", "gwi"));
@@ -45,10 +46,10 @@ public class GunWarItemCommand extends GunWarCommand {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        int required = GunWar.getConfig().getPermissionSetting().getInt("commands.gunwaritem", 1);
         if(sender instanceof Player) {
             Player p = (Player) sender;
-            PermissionInfo info = GunWar.getManager().testPermission(p, required);
+            int required = getRequiredPermission("commands.gunwaritem", 1);
+            PermissionInfo info = testPermission(p, required);
             if(!info.isPassed()) {
                 p.sendMessage(TextReference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                 return true;
@@ -60,7 +61,7 @@ public class GunWarItemCommand extends GunWarCommand {
                 sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_UNKNOWN_PLAYER);
                 return true;
             }
-            PlayerData data = GunWar.getGame().getPlayerData(p);
+            PlayerData data = GunWar.getPlayerData(p);
             for (GwItem i : GwItems.getRegisteredItems()) {
                 if (i.getName().equalsIgnoreCase(args[1])) {
                     int amount = 1;
@@ -74,7 +75,6 @@ public class GunWarItemCommand extends GunWarCommand {
                             amount = am;
                         } catch(NumberFormatException e) {
                             sender.sendMessage(TextReference.CHAT_PREFIX + " " + ChatColor.GRAY + getUsage());
-                            e.printStackTrace();
                             return true;
                         }
                     }

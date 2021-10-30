@@ -82,12 +82,12 @@ public class PlayerWatcher {
                     List<String> lines = new ArrayList<>();
                     lines.add("");
                     lines.add(TextReference.SIDEBAR_GAMESTATE + ": " + TextReference.SIDEBAR_GAMESTATE_WAITING);
-                    if(GunWar.getConfig().getConfig().getBoolean("game.auto-start", false)) {
+                    if(GunWar.getPluginConfigs().getConfig().getBoolean("game.auto-start", false)) {
                         lines.add(TextReference.SIDEBAR_WAITING_PLAYER
                                 .replaceAll("%PLAYERS%",
                                         (Math.max(
                                                 0,
-                                                GunWar.getConfig().getConfig().getInt("required-players", 10)
+                                                GunWar.getPluginConfigs().getConfig().getInt("required-players", 10)
                                                 - Bukkit.getOnlinePlayers().size())
                                         )
                                                 + ""));

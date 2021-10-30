@@ -27,7 +27,7 @@ import com.github.clockclap.gunwar.item.GwGunItem;
 import com.github.clockclap.gunwar.item.GwItem;
 import com.github.clockclap.gunwar.mysql.GwMySQL;
 import com.github.clockclap.gunwar.mysql.GwMySQLDataPath;
-import com.github.clockclap.gunwar.util.GunWarPluginConfiguration;
+import com.github.clockclap.gunwar.util.config.GunWarPluginConfiguration;
 import com.github.clockclap.gunwar.util.data.codecs.MapCodec;
 
 import java.io.*;
@@ -35,7 +35,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @GwPlugin
-public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Serializable {
+public class CraftPermanentPlayerData implements PermanentPlayerData, Serializable {
 
     private final UUID uniqueId;
     private File dataFile;
@@ -48,7 +48,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
     private int deathCount;
     private int infectedCount;
 
-    public GunWarPermanentlyPlayerData(UUID uniqueId) {
+    public CraftPermanentPlayerData(UUID uniqueId) {
         this.uniqueId = uniqueId;
         this.coins = 0;
         this.items = new ArrayList<>();
@@ -58,7 +58,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
         this.killCount = new HashMap<>();
         this.deathCount = 0;
         this.infectedCount = 0;
-        this.dataFile = new File(((GunWarPluginConfiguration) GunWar.getConfig()).getDataFolder().getPath() + "/players/" + uniqueId);
+        this.dataFile = new File(((GunWarPluginConfiguration) GunWar.getPluginConfigs()).getDataFolder().getPath() + "/players/" + uniqueId);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
                 GwMySQL.updatePlayerData(getUniqueId(), f.getPath());
             }
             GwMySQLDataPath.insert(getUniqueId(), f.getPath());
-            File f_ = new File(GunWarPlugin.getPluginConfig().getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
+            File f_ = new File(GunWarPlugin.getPluginConfigs().getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
             if(!f_.exists()) {
                 f_.createNewFile();
             }
@@ -199,10 +199,10 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
                 oos.flush();
             }
         } catch (SQLException ex) {
-            File f_ = new File(GunWarPlugin.getPluginConfig().getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
+            File f_ = new File(GunWarPlugin.getPluginConfigs().getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
             if(!f_.exists()) {
                 f_.createNewFile();
-                GwMySQLDataPath.insert(getUniqueId(), GunWarPlugin.getPluginConfig().getDataFolder().getPath()
+                GwMySQLDataPath.insert(getUniqueId(), GunWarPlugin.getPluginConfigs().getDataFolder().getPath()
                         + "/players/" + getUniqueId().toString());
                 try (FileOutputStream fos = new FileOutputStream(f_);
                     ObjectOutputStream oos = new ObjectOutputStream(fos)) {
@@ -257,7 +257,7 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
                 GwMySQL.updatePlayerData(getUniqueId(), f.getPath());
             }
             GwMySQLDataPath.insert(getUniqueId(), f.getPath());
-            File f_ = new File(GunWarPlugin.getPluginConfig().getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
+            File f_ = new File(GunWarPlugin.getPluginConfigs().getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
             if(!f_.exists()) {
                 f_.createNewFile();
             }
@@ -267,10 +267,10 @@ public class GunWarPermanentlyPlayerData implements PermanentlyPlayerData, Seria
                 oos.flush();
             }
         } catch (SQLException ex) {
-            File f_ = new File(GunWarPlugin.getPluginConfig().getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
+            File f_ = new File(GunWarPlugin.getPluginConfigs().getDataFolder().getPath() + "/cache/" + getUniqueId().toString());
             if(!f_.exists()) {
                 f_.createNewFile();
-                GwMySQLDataPath.insert(getUniqueId(), GunWarPlugin.getPluginConfig().getDataFolder().getPath()
+                GwMySQLDataPath.insert(getUniqueId(), GunWarPlugin.getPluginConfigs().getDataFolder().getPath()
                         + "/players/" + getUniqueId().toString());
                 try (FileOutputStream fos = new FileOutputStream(f_);
                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {

@@ -21,9 +21,9 @@ package com.github.clockclap.gunwar.game;
 
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwPlugin;
-import com.github.clockclap.gunwar.game.data.GunWarPlayerData;
+import com.github.clockclap.gunwar.game.data.CraftPlayerData;
 import com.github.clockclap.gunwar.game.data.ItemData;
-import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
+import com.github.clockclap.gunwar.game.data.PermanentPlayerData;
 import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.game.gamemode.GwGameMode;
 import com.github.clockclap.gunwar.game.gamemode.GwGameModes;
@@ -47,7 +47,7 @@ public class GunWarGame implements Game {
     private final Plugin plugin;
     private GameState state;
     private Map<UUID, PlayerData> dataMap;
-    private Map<UUID, PermanentlyPlayerData> permanentlyPlayerDataMap;
+    private Map<UUID, PermanentPlayerData> permanentlyPlayerDataMap;
     private GwGameMode gameMode;
     private List<ItemData> itemDataList;
     private BossBar bar;
@@ -61,12 +61,12 @@ public class GunWarGame implements Game {
         this.permanentlyPlayerDataMap = new HashMap<>();
         this.gameMode = GwGameModes.NORMAL;
         this.itemDataList = new ArrayList<>();
-        World world = Worlds.getWorld(GunWar.getConfig().getConfig().getString("game.startloc.world", "world"));
-        double x = GunWar.getConfig().getConfig().getDouble("game.startloc.x", 0D);
-        double y = GunWar.getConfig().getConfig().getDouble("game.startloc.y", 0D);
-        double z = GunWar.getConfig().getConfig().getDouble("game.startloc.z", 0D);
+        World world = Worlds.getWorld(GunWar.getPluginConfigs().getConfig().getString("game.startloc.world", "world"));
+        double x = GunWar.getPluginConfigs().getConfig().getDouble("game.startloc.x", 0D);
+        double y = GunWar.getPluginConfigs().getConfig().getDouble("game.startloc.y", 0D);
+        double z = GunWar.getPluginConfigs().getConfig().getDouble("game.startloc.z", 0D);
         this.loc = new Location(world, x, y, z, 0F, 0F);
-        this.startingAt = GunWar.getConfig().getConfig().getInt("game.prepare", 10);
+        this.startingAt = GunWar.getPluginConfigs().getConfig().getInt("game.prepare", 10);
     }
 
     @Override
@@ -98,11 +98,11 @@ public class GunWarGame implements Game {
     }
 
     @Override
-    public PermanentlyPlayerData getPermanentlyPlayerData(UUID uniqueId) {
+    public PermanentPlayerData getPermanentPlayerData(UUID uniqueId) {
         return permanentlyPlayerDataMap.get(uniqueId);
     }
 
-    public void addPermanentlyPlayerData(PermanentlyPlayerData data) {
+    public void addPermanentlyPlayerData(PermanentPlayerData data) {
         permanentlyPlayerDataMap.put(data.getUniqueId(), data);
     }
 
@@ -154,7 +154,7 @@ public class GunWarGame implements Game {
 
     @Override
     public void start(Location loc) {
-        int prepare = GunWar.getConfig().getConfig().getInt("game.prepare", 10);
+        int prepare = GunWar.getPluginConfigs().getConfig().getInt("game.prepare", 10);
         setState(GameState.STARTING);
         getBar().setColor(BarColor.YELLOW);
         new BukkitRunnable() {
@@ -178,7 +178,7 @@ public class GunWarGame implements Game {
             public void run() {
                 setState(GameState.PLAYING);
                 getGameMode().start(loc);
-                startingAt = GunWar.getConfig().getConfig().getInt("game.prepare", 10);
+                startingAt = GunWar.getPluginConfigs().getConfig().getInt("game.prepare", 10);
             }
         }.runTaskLater(GunWar.getPlugin(), prepare);
     }
@@ -191,14 +191,14 @@ public class GunWarGame implements Game {
     @Override
     public void stop() {
         setState(GameState.WAITING);
-        String world = GunWar.getConfig().getConfig().getString("game.default-spawn.world");
-        double x = GunWar.getConfig().getConfig().getDouble("game.default-spawn.x");
-        double y = GunWar.getConfig().getConfig().getDouble("game.default-spawn.y");
-        double z = GunWar.getConfig().getConfig().getDouble("game.default-spawn.z");
+        String world = GunWar.getPluginConfigs().getConfig().getString("game.default-spawn.world");
+        double x = GunWar.getPluginConfigs().getConfig().getDouble("game.default-spawn.x");
+        double y = GunWar.getPluginConfigs().getConfig().getDouble("game.default-spawn.y");
+        double z = GunWar.getPluginConfigs().getConfig().getDouble("game.default-spawn.z");
         World w = Bukkit.getWorld(world);
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(p != null) {
-                GunWarPlayerData data = (GunWarPlayerData) GunWar.getPlayerData(p);
+                CraftPlayerData data = (CraftPlayerData) GunWar.getPlayerData(p);
                 p.teleport(new Location(w, x, y, z));
                 data.setTeam(-1);
                 data.setDead(false);

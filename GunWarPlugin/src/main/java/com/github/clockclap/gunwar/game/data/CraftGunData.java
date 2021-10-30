@@ -22,9 +22,10 @@ package com.github.clockclap.gunwar.game.data;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.entity.HitEntity;
+import com.github.clockclap.gunwar.item.GunReloadingType;
 import com.github.clockclap.gunwar.item.GwGunItem;
-import com.github.clockclap.gunwar.item.GwKnifeItem;
-import org.bukkit.ChatColor;
+import com.github.clockclap.gunwar.util.Angle;
+import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.Particle;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Random;
 
 @GwPlugin
-public class GunWarKnifeData extends GunWarItemData implements KnifeData {
+public class CraftGunData extends CraftItemData implements GunData {
 
     private boolean reloading;
     private boolean canFire;
@@ -46,22 +47,40 @@ public class GunWarKnifeData extends GunWarItemData implements KnifeData {
     private BukkitRunnable fire;
     private BukkitRunnable reload;
 
-    public GunWarKnifeData(GwKnifeItem gwitem, ItemStack item, Player owner) {
+    public CraftGunData(GwGunItem gwitem, ItemStack item, Player owner) {
         super(gwitem, item, owner);
         reloading = false;
         canFire = true;
-        ammo = 1;
+        ammo = gwitem.getAmmo();
         updateName();
     }
 
     @Override
-    public boolean canThrow() {
+    public boolean isReloading() {
+        return reloading;
+    }
+
+    @Override
+    public boolean canFire() {
         return canFire;
     }
 
     @Override
-    public void throwKnife() {
-        if(canFire && ammo > 0) {
+    public int getAmmo() {
+        return ammo;
+    }
+
+    @Override
+    public void setAmmo(int ammo) {
+        this.ammo = Math.max(0, ammo);
+        if(this.ammo <= 0) canFire = false;
+        if(this.ammo > 0) canFire = true;
+    }
+
+    @Override
+    public void fire(boolean aim) {
+        if(canFire && getAmmo() > 0) {
+            canFire = false;
 
             Random random = new Random();
             float accuracy = ((GwGunItem) getGwItem()).getAccuracy();
@@ -69,8 +88,12 @@ public class GunWarKnifeData extends GunWarItemData implements KnifeData {
                 accuracy = ((GwGunItem) getGwItem()).getAccuracyOnSneak();
             }
 
+            double yaw = random.nextDouble() * (32 / accuracy) - (16 / accuracy);
+            double pitch = random.nextDouble() * (32 / accuracy) - (16 / accuracy);
+
             HitEntity hitEntity = GunWar.getGame().getPlayerData(getOwner()).drawParticleLine(
-                    Particle.CRIT, 0, 0, 0.1, 5.2, 0.3, (GwKnifeItem) getGwItem());
+                    Particle.SUSPENDED_DEPTH, yaw, pitch, 0.1, ((GwGunItem) getGwItem()).getRange(),
+                    new Angle(yaw, pitch), 0.25, (GwGunItem) getGwItem(), aim);
             if(hitEntity != null) {
                 double subX = hitEntity.getHitLocation().getX() - hitEntity.getFrom().getX();
                 double subY = hitEntity.getHitLocation().getY() - hitEntity.getFrom().getY();
@@ -87,7 +110,7 @@ public class GunWarKnifeData extends GunWarItemData implements KnifeData {
                         double damage = hitEntity.getDamage();
                         hitEntity.getEntity().damage(damage, getOwner());
                     }
-                    double d = 1 / far;
+                    double d = ((GwGunItem) getGwItem()).getKnockBack() / far;
                     Vector vector = new Vector(subX * d, subY * d, subZ * d);
                     hitEntity.getEntity().setVelocity(vector);
                 }
@@ -99,32 +122,81 @@ public class GunWarKnifeData extends GunWarItemData implements KnifeData {
 
             ((GwGunItem) getGwItem()).onShoot(getOwner());
 
-            ammo--;
+            setAmmo(getAmmo() - 1);
             updateName();
-            if(ammo <= 0) {
-                canFire = false;
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        canFire = true;
-                        ammo++;
-                        updateName();
-                    }
-                }.runTaskLater(GunWar.getPlugin(), 10);
+            if(getAmmo() <= 0) {
+                reload();
                 return;
             }
+            fire = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    canFire = true;
+                }
+            };
+            fire.runTaskLater(GunWar.getPlugin(), ((GwGunItem) getGwItem()).getFire());
         }
     }
 
     @Override
-    public void cancelThrowingCooldown() {
+    public void cancelFireCooldown() {
         if(fire != null && !fire.isCancelled()) fire.cancel();
+    }
+
+    @Override
+    public void reload() {
+        if(!isReloading()) {
+            reloading = true;
+            canFire = false;
+            updateName();
+            if(((GwGunItem) getGwItem()).getReloadingType() == GunReloadingType.SINGLE) {
+                reload = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if(getAmmo() >= ((GwGunItem) getGwItem()).getAmmo()) {
+                            setAmmo(((GwGunItem) getGwItem()).getAmmo());
+                            reloading = false;
+                            canFire = true;
+                            this.cancel();
+                            return;
+                        }
+                        setAmmo(getAmmo() + 1);
+                        updateName();
+                    }
+                };
+                reload.runTaskTimer(GunWar.getPlugin(), 0, ((GwGunItem) getGwItem()).getReload());
+            } else {
+                reload = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        reloading = false;
+                        setAmmo(((GwGunItem) getGwItem()).getAmmo());
+                        updateName();
+                        canFire = true;
+                    }
+                };
+                reload.runTaskLater(GunWar.getPlugin(), ((GwGunItem) getGwItem()).getReload());
+            }
+        }
     }
 
     public void updateName() {
         ItemMeta meta = getItem().getItemMeta();
-        meta.setDisplayName(ChatColor.GRAY + getGwItem().getDisplayName() + " " + (!canFire ? "▫" : "▪") + " " + (!canFire ? ChatColor.DARK_GRAY : ChatColor.GRAY) + "«" + ammo + "»");
+        String s = GunWar.getPluginConfigs().getDetailConfig().getString("item.gun_name_format.general", "%{color}7%i ▪ «%a»");
+        if(reloading) s = GunWar.getPluginConfigs().getDetailConfig().getString("item.gun_name_format.reloading", "%{color}7%i ▫ %{color}8«%a»");
+            s = TextReference.translateAlternateColorCodes("%{color}", s);
+            s = s.replaceAll("%i", getGwItem().getDisplayName()).replaceAll("%a", ammo + "");
+            meta.setDisplayName(s);
         getItem().setItemMeta(meta);
+        if(getOwner().getInventory().getItemInMainHand() != null) {
+            ItemStack hand = getOwner().getInventory().getItemInMainHand();
+            if(hand.getType() != null && hand.getType() == getGwItem().getType() && hand.hasItemMeta() &&
+                    hand.getItemMeta().getLore() != null && hand.getItemMeta().getLore().contains(getGwItem().getId())) {
+                getOwner().getInventory().setItem(getOwner().getInventory().getHeldItemSlot(), getItem());
+                getOwner().updateInventory();
+                return;
+            }
+        }
         List<ItemStack> items = Arrays.asList(getOwner().getInventory().getContents());
         for(ItemStack i : items) {
             if(i == null) {
@@ -133,10 +205,21 @@ public class GunWarKnifeData extends GunWarItemData implements KnifeData {
             if(i.hasItemMeta()) {
                 if(i.getItemMeta().getLore() != null && i.getItemMeta().getLore().contains(getGwItem().getId())); {
                     getOwner().getInventory().setItem(items.indexOf(i), getItem());
+                    break;
                 }
             }
         }
         getOwner().updateInventory();
     }
 
+    @Override
+    public void cancelReload() {
+        if(reload != null && !reload.isCancelled()) {
+            reload.cancel();
+            reloading = false;
+            canFire = true;
+            updateName();
+        }
+
+    }
 }

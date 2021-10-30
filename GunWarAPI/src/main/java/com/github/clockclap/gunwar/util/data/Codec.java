@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. ClockClap. All rights reserved.
+ * Copyright (c) 2021, ClockClap. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This program is free software; you can redistribute it and/or
@@ -20,9 +20,13 @@
 package com.github.clockclap.gunwar.util.data;
 
 import com.github.clockclap.gunwar.GwAPI;
+import com.github.clockclap.gunwar.util.data.codecs.DefaultCodec;
+import com.github.clockclap.gunwar.util.data.codecs.MapCodec;
 
 @GwAPI(since = 2)
-public interface Codec<S> {
+public interface Codec {
+
+    Class<?> getSubject();
 
     String getName();
 
@@ -31,5 +35,15 @@ public interface Codec<S> {
     Decoder<?> decoder();
 
     Serializer<?> serializer();
+
+    static Codec getCodec(byte id) {
+        switch (id) {
+            case (byte) 0x01:
+                return new MapCodec();
+            case (byte) 0x00:
+            default:
+                return new DefaultCodec();
+        }
+    }
 
 }

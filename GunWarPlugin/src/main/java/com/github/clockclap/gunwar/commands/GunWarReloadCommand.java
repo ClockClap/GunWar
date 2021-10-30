@@ -22,8 +22,9 @@ package com.github.clockclap.gunwar.commands;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.LoggableDefault;
 import com.github.clockclap.gunwar.mysql.MySQLSettingBuilder;
-import com.github.clockclap.gunwar.util.GunWarPluginConfiguration;
+import com.github.clockclap.gunwar.util.config.GunWarPluginConfiguration;
 import com.github.clockclap.gunwar.util.PermissionInfo;
 import com.github.clockclap.gunwar.util.TextReference;
 import com.google.common.base.Charsets;
@@ -37,17 +38,17 @@ import java.io.*;
 import java.util.Arrays;
 
 @GwPlugin
-public class GunWarReloadCommand extends GunWarCommand {
+public class GunWarReloadCommand extends GunWarCommand implements LoggableDefault {
     public GunWarReloadCommand() {
         super("gunwarreload", TextReference.MISC_DESCRIPTION_COMMAND_GUNWARRELOAD, "Usage: /gunwarreload", Arrays.asList("gwreload"));
     }
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        int required = GunWar.getConfig().getPermissionSetting().getInt("commands.gunwarreload", 1);
         if(sender instanceof Player) {
             Player p = (Player) sender;
-            PermissionInfo info = GunWar.getManager().testPermission(p, required);
+            int required = getRequiredPermission("commands.gunwarreload", 1);
+            PermissionInfo info = testPermission(p, required);
             if(!info.isPassed()) {
                 p.sendMessage(TextReference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                 return true;
@@ -64,7 +65,7 @@ public class GunWarReloadCommand extends GunWarCommand {
     }
 
     private void reloadConfig() {
-        FileConfiguration newConfig = YamlConfiguration.loadConfiguration(GunWar.getConfig().getConfigFile());
+        FileConfiguration newConfig = YamlConfiguration.loadConfiguration(GunWar.getPluginConfigs().getConfigFile());
 
         final InputStream defConfigStream = GunWar.getPlugin().getResource("config.yml");
         if (defConfigStream == null) {
@@ -73,23 +74,23 @@ public class GunWarReloadCommand extends GunWarCommand {
 
         newConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
         try {
-            GunWar.getConfig().getConfig().load(GunWar.getConfig().getConfigFile());
+            GunWar.getPluginConfigs().getConfig().load(GunWar.getPluginConfigs().getConfigFile());
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }
 
     private void reloadPerm() {
-        String path = GunWar.getConfig().getConfig()
-                .getString("permission-setting", ((GunWarPluginConfiguration) GunWar.getConfig()).getDataFolder() + "/permission/default.yml");
+        String path = GunWar.getPluginConfigs().getConfig()
+                .getString("permission-setting", ((GunWarPluginConfiguration) GunWar.getPluginConfigs()).getDataFolder() + "/permission/default.yml");
         if(path.startsWith(":nanami-network:>")) {
-            if(MySQLSettingBuilder.isEnabled()) GunWar.getConfig().setNanamiNetwork(true);
+            if(MySQLSettingBuilder.isEnabled()) GunWar.getPluginConfigs().setNanamiNetwork(true);
             path = path.substring(17);
         } else {
-            GunWar.getConfig().setNanamiNetwork(false);
+            GunWar.getPluginConfigs().setNanamiNetwork(false);
         }
-        ((GunWarPluginConfiguration) GunWar.getConfig()).setPermissionFile(new File(path));
-        File permissionFile = GunWar.getConfig().getPermissionSettingFile();
+        ((GunWarPluginConfiguration) GunWar.getPluginConfigs()).setPermissionFile(new File(path));
+        File permissionFile = GunWar.getPluginConfigs().getPermissionSettingFile();
         boolean b1 = true;
         if (!permissionFile.exists()) {
             try {
@@ -115,7 +116,7 @@ public class GunWarReloadCommand extends GunWarCommand {
                 e.printStackTrace();
             }
         }
-        FileConfiguration newConfig = YamlConfiguration.loadConfiguration(GunWar.getConfig().getPermissionSettingFile());
+        FileConfiguration newConfig = YamlConfiguration.loadConfiguration(GunWar.getPluginConfigs().getPermissionSettingFile());
 
         final InputStream defConfigStream = GunWar.getPlugin().getResource("permission/default.yml");
         if (defConfigStream == null) {
@@ -124,7 +125,7 @@ public class GunWarReloadCommand extends GunWarCommand {
 
         newConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
         try {
-            GunWar.getConfig().getPermissionSetting().load(GunWar.getConfig().getPermissionSettingFile());
+            GunWar.getPluginConfigs().getPermissionSetting().load(GunWar.getPluginConfigs().getPermissionSettingFile());
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }

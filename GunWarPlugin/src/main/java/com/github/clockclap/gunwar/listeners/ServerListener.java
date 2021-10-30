@@ -22,6 +22,7 @@ package com.github.clockclap.gunwar.listeners;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.LoggableDefault;
 import com.github.clockclap.gunwar.event.GunWarCommandRegisterEvent;
 import com.github.clockclap.gunwar.game.GameState;
 import com.github.clockclap.gunwar.game.data.ItemData;
@@ -47,7 +48,7 @@ public class ServerListener implements Listener {
 
     @EventHandler
     public void onRegisterCommand(GunWarCommandRegisterEvent e) {
-        if(e.getCommand() instanceof GunWarCommand) {
+        if(e.getCommand() instanceof LoggableDefault) {
             if (e.getThrowable() != null) {
                 e.catchThrowable();
                 GunWar.getPlugin().getLogger().info("Failed to register command: /" + e.getCommand().getName());

@@ -24,11 +24,11 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.ProjectileSource;
 
 @GwPlugin
-public class GunWarProjectileData extends GunWarEntityData implements ProjectileData {
+public class CraftProjectileData extends CraftEntityData implements ProjectileData {
 
     private final Projectile projectile;
 
-    public GunWarProjectileData(Projectile projectile) {
+    public CraftProjectileData(Projectile projectile) {
         super(projectile);
         this.projectile = projectile;
     }

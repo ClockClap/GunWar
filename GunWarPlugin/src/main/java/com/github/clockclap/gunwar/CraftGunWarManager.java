@@ -73,7 +73,7 @@ public class CraftGunWarManager implements GunWarManager {
 
     @Override
     public PermissionInfo testPermission(Player player, int required) {
-        if(GunWar.getConfig().isNanamiNetwork()) {
+        if(GunWar.getPluginConfigs().isNanamiNetwork()) {
             try {
                 String requiredRole = getRoleNameById(required);
                 String nowRole = "";

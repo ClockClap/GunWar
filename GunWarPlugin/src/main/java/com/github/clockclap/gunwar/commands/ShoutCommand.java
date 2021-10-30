@@ -22,6 +22,7 @@ package com.github.clockclap.gunwar.commands;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.LoggableDefault;
 import com.github.clockclap.gunwar.game.GameState;
 import com.github.clockclap.gunwar.game.gamemode.Shoutable;
 import com.github.clockclap.gunwar.util.TextReference;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @GwPlugin
-public class ShoutCommand extends GunWarCommand {
+public class ShoutCommand extends GunWarCommand implements LoggableDefault {
 
     public ShoutCommand() {
         super("shout", "", "Usage: /shout <message>", new ArrayList<>());
@@ -43,8 +44,8 @@ public class ShoutCommand extends GunWarCommand {
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if(sender instanceof Player) {
             Player p = (Player) sender;
-            if (GunWar.getGame().getState() == GameState.PLAYING) {
-                if (GunWar.getGame().getGameMode() instanceof Shoutable) {
+            if (getGame().getState() == GameState.PLAYING) {
+                if (getGame().getGameMode() instanceof Shoutable) {
                     if(GunWar.getPlayerData(p).isSpectator()) {
                         sender.sendMessage(TextReference.CHAT_PREFIX + " " + TextReference.CHAT_COMMAND_ERROR_CANT_USE_SPECTATOR);
                         return true;

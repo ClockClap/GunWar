@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2021. ClockClap. All rights reserved.
+ * Copyright (c) 2021, ClockClap. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This program is free software; you can redistribute it and/or

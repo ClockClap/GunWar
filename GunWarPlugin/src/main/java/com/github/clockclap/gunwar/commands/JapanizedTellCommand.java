@@ -21,6 +21,7 @@ package com.github.clockclap.gunwar.commands;
 
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.LoggableDefault;
 import com.github.clockclap.gunwar.util.MessageLog;
 import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.Bukkit;
@@ -34,10 +35,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @GwPlugin
-public class JapanizedTellCommand extends GunWarCommand {
+public class JapanizedTellCommand extends GunWarCommand implements LoggableDefault {
 
     public JapanizedTellCommand() {
         super("tell", "", "Usage: /tell <player> <message>", Arrays.asList("msg", "message", "m", "t", "w"));
+        setPermission("minecraft.command.msg");
     }
 
     @Override

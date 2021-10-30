@@ -21,7 +21,7 @@ package com.github.clockclap.gunwar;
 
 import com.github.clockclap.gunwar.game.Game;
 import com.github.clockclap.gunwar.game.data.PlayerData;
-import com.github.clockclap.gunwar.util.GunWarConfiguration;
+import com.github.clockclap.gunwar.util.config.GunWarConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -46,7 +46,7 @@ public final class GunWar {
         return manager;
     }
 
-    public static GunWarConfiguration getConfig() {
+    public static GunWarConfiguration getPluginConfigs() {
         return config;
     }
 
@@ -55,24 +55,36 @@ public final class GunWar {
     }
 
     public static PlayerData getPlayerData(Player player) {
-        return getGame().getPlayerData(player);
+        return game.getPlayerData(player);
     }
 
     public static PlayerData getPlayerData(UUID id) {
-        return getGame().getPlayerData(Bukkit.getPlayer(id));
+        return game.getPlayerData(Bukkit.getPlayer(id));
     }
 
     @Deprecated
     public static PlayerData getPlayerData(String name) {
-        return getGame().getPlayerData(Bukkit.getPlayer(name));
+        return game.getPlayerData(Bukkit.getPlayer(name));
     }
 
     public static Collection<PlayerData> getOnlinePlayerData() {
-        return getGame().getOnlinePlayerData();
+        return game.getOnlinePlayerData();
     }
 
     public static int getAPIVersion() {
         return apiVer;
+    }
+
+    public static String getPluginVersion() {
+        return plugin.getDescription().getVersion();
+    }
+
+    public static String getPluginName() {
+        return plugin.getName();
+    }
+
+    public static int getRequiredPermission(String permission, int def) {
+        return getPluginConfigs().getPermissionSetting().getInt(permission, def);
     }
 
 }

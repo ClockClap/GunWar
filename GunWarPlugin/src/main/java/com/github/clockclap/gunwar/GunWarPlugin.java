@@ -22,9 +22,9 @@ package com.github.clockclap.gunwar;
 import com.github.clockclap.gunwar.commands.*;
 import com.github.clockclap.gunwar.game.GameState;
 import com.github.clockclap.gunwar.game.GunWarGame;
-import com.github.clockclap.gunwar.game.data.GunWarPermanentlyPlayerData;
-import com.github.clockclap.gunwar.game.data.GunWarPlayerData;
-import com.github.clockclap.gunwar.game.data.PermanentlyPlayerData;
+import com.github.clockclap.gunwar.game.data.CraftPermanentPlayerData;
+import com.github.clockclap.gunwar.game.data.CraftPlayerData;
+import com.github.clockclap.gunwar.game.data.PermanentPlayerData;
 import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.game.gamemode.GwGameModes;
 import com.github.clockclap.gunwar.item.GwItems;
@@ -32,8 +32,7 @@ import com.github.clockclap.gunwar.listeners.DamageListener;
 import com.github.clockclap.gunwar.listeners.ItemListener;
 import com.github.clockclap.gunwar.listeners.PlayerListener;
 import com.github.clockclap.gunwar.listeners.ServerListener;
-import com.github.clockclap.gunwar.mysql.GwMySQLPlayerDataUpdater;
-import com.github.clockclap.gunwar.util.GunWarPluginConfiguration;
+import com.github.clockclap.gunwar.util.config.GunWarPluginConfiguration;
 import com.github.clockclap.gunwar.util.PlayerWatcher;
 import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.Bukkit;
@@ -56,7 +55,6 @@ public final class GunWarPlugin extends JavaPlugin {
     private SimplePluginManager pluginManager;
     private CraftGunWarManager manager;
     private GunWarPluginConfiguration config;
-    public static GwMySQLPlayerDataUpdater updater;
     private GunWarGame game;
     private BukkitRunnable runnable;
 
@@ -72,7 +70,7 @@ public final class GunWarPlugin extends JavaPlugin {
         return plugin.manager;
     }
 
-    public static GunWarPluginConfiguration getPluginConfig() {
+    public static GunWarPluginConfiguration getPluginConfigs() {
         return plugin.config;
     }
 
@@ -96,14 +94,14 @@ public final class GunWarPlugin extends JavaPlugin {
         registerCommands();
         for(Player p : Bukkit.getOnlinePlayers()) {
             try {
-                GunWarPermanentlyPlayerData permanentlyPlayerData = new GunWarPermanentlyPlayerData(p.getUniqueId());
+                CraftPermanentPlayerData permanentlyPlayerData = new CraftPermanentPlayerData(p.getUniqueId());
                 File f = permanentlyPlayerData.getDefaultDataFile();
                 if (!f.exists()) {
                     permanentlyPlayerData.save(f);
                 } else {
                     permanentlyPlayerData.load(f);
                 }
-                ((GunWarGame) GunWar.getGame()).addPermanentlyPlayerData(permanentlyPlayerData);
+                getGame().addPermanentlyPlayerData(permanentlyPlayerData);
             } catch(Throwable ex) {
                 p.kickPlayer("" +
                         ChatColor.DARK_GREEN + "=== " + TextReference.MISC_TITLE + " ===\n" +
@@ -112,10 +110,10 @@ public final class GunWarPlugin extends JavaPlugin {
                         ChatColor.GRAY + TextReference.MISC_SOLUTION + ": " + ChatColor.WHITE + TextReference.MISC_PLEASE_REPORT.replaceAll("%CHANNEL%", ChatColor.BLUE + "#銃撃戦-バグ報告" + ChatColor.WHITE) + "\n" +
                         "\n" +
                         ChatColor.WHITE + TextReference.MISC_MORE + "\n" +
-                        ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getConfig().getConfig().getString("discord", "https://discord.gg/nbRUAmmypS"));
+                        ChatColor.GOLD + "" + ChatColor.UNDERLINE + GunWar.getPluginConfigs().getConfig().getString("discord", "https://discord.gg/nbRUAmmypS"));
                 ex.printStackTrace();
             }
-            GunWarPlayerData data = new GunWarPlayerData(p);
+            CraftPlayerData data = new CraftPlayerData(p);
             PlayerWatcher watcher = new PlayerWatcher(GunWar.getPlugin(), data);
             watcher.startWatch();
             watcher.startWatch10Ticks();
@@ -153,7 +151,7 @@ public final class GunWarPlugin extends JavaPlugin {
             @Override
             public void run() {
                 int currentPlayers = Bukkit.getOnlinePlayers().size();
-                int requiredPlayers = GunWar.getConfig().getConfig().getInt("game.required-players", 10);
+                int requiredPlayers = GunWar.getPluginConfigs().getConfig().getInt("game.required-players", 10);
                 if(GunWar.getGame().getState() == GameState.WAITING && requiredPlayers <= currentPlayers) {
                     GunWar.getGame().start();
                 }
@@ -180,7 +178,7 @@ public final class GunWarPlugin extends JavaPlugin {
                 watcher.stopWatch10Ticks();
                 ((GunWarGame) GunWar.getGame()).removePlayerData(data.getUniqueId());
             }
-            PermanentlyPlayerData data_ = GunWar.getGame().getPermanentlyPlayerData(p.getUniqueId());
+            PermanentPlayerData data_ = GunWar.getGame().getPermanentPlayerData(p.getUniqueId());
             if(data_ != null) {
                 try {
                     data_.save(data_.getDefaultDataFile());

@@ -22,6 +22,7 @@ package com.github.clockclap.gunwar.commands;
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
+import com.github.clockclap.gunwar.LoggableDefault;
 import com.github.clockclap.gunwar.util.PermissionInfo;
 import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.ChatColor;
@@ -31,7 +32,7 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 
 @GwPlugin
-public class GunWarConfigCommand extends GunWarCommand {
+public class GunWarConfigCommand extends GunWarCommand implements LoggableDefault {
 
     public GunWarConfigCommand() {
         super("gunwarconfig");
@@ -42,10 +43,10 @@ public class GunWarConfigCommand extends GunWarCommand {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        int required = GunWar.getConfig().getConfig().getInt("permission.command.gunwarreload", 1);
         if(sender instanceof Player) {
             Player p = (Player) sender;
-            PermissionInfo info = GunWar.getManager().testPermission(p, required);
+            int required = getRequiredPermission("commands.gunwarconfig", 1);
+            PermissionInfo info = testPermission(p, required);
             if(!info.isPassed()) {
                 p.sendMessage(TextReference.getChatCommandPermissionError(info.getRequired(), info.getCurrent()));
                 return true;
@@ -55,10 +56,10 @@ public class GunWarConfigCommand extends GunWarCommand {
             sender.sendMessage("" +
                     ChatColor.DARK_GREEN + "=-=-=-=- 銃撃戦 -=-=-=-=" + "\n" +
                     ChatColor.YELLOW + "自動でゲーム開始: " + ChatColor.GREEN +
-                    (GunWar.getConfig().getConfig().getBoolean("game.auto-start", true) ? "有効" : ChatColor.RED + "無効") + "\n" +
-                    ChatColor.YELLOW + "ゲームモード: " + ChatColor.RED + GunWar.getConfig().getConfig().getString("game.gamemode", "NORMAL") + "\n" +
+                    (getPluginConfigs().getConfig().getBoolean("game.auto-start", true) ? "有効" : ChatColor.RED + "無効") + "\n" +
+                    ChatColor.YELLOW + "ゲームモード: " + ChatColor.RED + getPluginConfigs().getConfig().getString("game.gamemode", "NORMAL") + "\n" +
                     ChatColor.GOLD + "デバッグモード: " + ChatColor.GREEN +
-                    (GunWar.getConfig().getConfig().getBoolean("debug", false) ? "有効" : ChatColor.RED + "無効") + "\n" +
+                    (getPluginConfigs().getConfig().getBoolean("debug", false) ? "有効" : ChatColor.RED + "無効") + "\n" +
                     ChatColor.DARK_GREEN + "=-=-=-=-=-=-=-=-=-=-=-=");
         }
         if(args.length > 1) {

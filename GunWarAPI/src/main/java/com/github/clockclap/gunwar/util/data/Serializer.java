@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. ClockClap. All rights reserved.
+ * Copyright (c) 2021, ClockClap. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 @GwAPI(since = 2)
-public interface Serializer<C> {
+public interface Serializer<C extends Codec> {
 
     C getCodec();
 
@@ -50,6 +50,41 @@ public interface Serializer<C> {
             byte[] b = bos.toByteArray();
             return deserialize(b);
         }
+    }
+
+    static byte getCodecIdByBytes(byte[] bytes) {
+        if(bytes.length >= 4 && bytes[1] == (byte) 0x20 && bytes[2] == (byte) 0x0A && bytes[3] == (byte) 0x3F) {
+            return bytes[0];
+        }
+        return (byte) 0x00;
+    }
+
+    static byte[] removeCodecId(byte[] bytes) {
+        if(bytes.length >= 4 && bytes[1] == (byte) 0x20 && bytes[2] == (byte) 0x0A && bytes[3] == (byte) 0x3F) {
+            byte[] newBytes = new byte[bytes.length - 4];
+            System.arraycopy(bytes, 4, newBytes, 0, newBytes.length);
+            return newBytes;
+        }
+        return bytes;
+    }
+
+    static byte[] newBytesForSerialize(byte codecId) {
+        byte[] r = new byte[16];
+        r[0] = codecId;
+        r[1] = (byte) 0x20;
+        r[2] = (byte) 0x0A;
+        r[3] = (byte) 0x3F;
+        return r;
+    }
+
+    static byte[] newBytesForSerialize(byte codecId, int length) {
+        if(length < 4) throw new IllegalArgumentException("The length is less than 4");
+        byte[] r = new byte[length];
+        r[0] = codecId;
+        r[1] = (byte) 0x20;
+        r[2] = (byte) 0x0A;
+        r[3] = (byte) 0x3F;
+        return r;
     }
 
 }

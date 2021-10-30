@@ -20,40 +20,65 @@
 package com.github.clockclap.gunwar.game.data;
 
 import com.github.clockclap.gunwar.GwPlugin;
-import net.minecraft.server.v1_12_R1.BlockPosition;
-import org.bukkit.Location;
+import com.github.clockclap.gunwar.item.GwItem;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
 
 @GwPlugin
-public class GunWarBlockData implements BlockData {
+public class CraftItemData implements ItemData {
 
-    private final Block block;
+    private UUID uniqueId;
+    private ItemStack item;
+    private GwItem gwitem;
+    private Player owner;
 
-    public GunWarBlockData(Block block) {
-        this.block = block;
+    public CraftItemData(GwItem gwitem, ItemStack item, Player owner) {
+        this.uniqueId = UUID.randomUUID();
+        this.gwitem = gwitem;
+        this.item = item;
+        this.owner = owner;
     }
 
     @Override
-    public Location getLocation() {
-        return block.getLocation();
+    public UUID getUniqueId() {
+        return uniqueId;
     }
 
     @Override
-    public Block getBlock() {
-        return block;
+    public ItemStack getItem() {
+        return item;
+    }
+
+    @Override
+    public Player getOwner() {
+        return owner;
+    }
+
+    @Override
+    public String getName() {
+        return gwitem.getName();
+    }
+
+    @Override
+    public GwItem getGwItem() {
+        return gwitem;
     }
 
     @Override
     public Material getType() {
-        return block.getType();
+        return item.getType();
     }
 
-    public BlockPosition getPosition() {
-        return new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
+    @Override
+    public void setItem(ItemStack item) {
+        this.item = item;
     }
 
-    public static BlockPosition newBlockPosition(Block block) {
-        return new BlockPosition(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
+    @Override
+    public void setOwner(Player player) {
+        this.owner = player;
     }
 }
