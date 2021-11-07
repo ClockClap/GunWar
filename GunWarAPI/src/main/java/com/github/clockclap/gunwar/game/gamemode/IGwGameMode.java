@@ -21,7 +21,6 @@ package com.github.clockclap.gunwar.game.gamemode;
 
 import com.github.clockclap.gunwar.GwAPI;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 
 import java.util.Map;
 

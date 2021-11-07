@@ -19,7 +19,6 @@
 
 package com.github.clockclap.gunwar.commands;
 
-import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.GwPlugin;
 import com.github.clockclap.gunwar.LoggableDefault;

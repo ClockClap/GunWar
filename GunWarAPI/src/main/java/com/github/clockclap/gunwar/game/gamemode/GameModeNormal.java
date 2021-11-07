@@ -23,7 +23,6 @@ import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.game.Game;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;

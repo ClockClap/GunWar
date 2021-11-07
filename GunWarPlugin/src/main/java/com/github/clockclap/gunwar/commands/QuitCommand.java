@@ -19,7 +19,6 @@
 
 package com.github.clockclap.gunwar.commands;
 
-import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.LoggableDefault;
 import com.github.clockclap.gunwar.game.data.PlayerData;

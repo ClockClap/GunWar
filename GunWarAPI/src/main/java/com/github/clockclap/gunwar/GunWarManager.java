@@ -19,16 +19,12 @@
 
 package com.github.clockclap.gunwar;
 
-import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.util.PermissionInfo;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 @GwAPI
 public interface GunWarManager {

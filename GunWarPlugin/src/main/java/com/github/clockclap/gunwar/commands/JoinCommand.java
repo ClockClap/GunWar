@@ -19,21 +19,14 @@
 
 package com.github.clockclap.gunwar.commands;
 
-import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GunWarCommand;
 import com.github.clockclap.gunwar.LoggableDefault;
-import com.github.clockclap.gunwar.game.GameState;
 import com.github.clockclap.gunwar.game.data.PlayerData;
-import com.github.clockclap.gunwar.game.gamemode.Shoutable;
-import com.github.clockclap.gunwar.util.MessageLog;
 import com.github.clockclap.gunwar.util.TextReference;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import javax.xml.soap.Text;
 import java.util.Arrays;
 import java.util.List;
 
