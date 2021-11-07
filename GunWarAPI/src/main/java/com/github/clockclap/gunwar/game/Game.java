@@ -56,9 +56,11 @@ public interface Game {
 
     ItemData getItemData(ItemStack item);
 
+    Collection<Player> getJoinedPlayers();
+
     public void setGameMode(GwGameMode gamemode);
 
-    public void start(Location loc);
+    public void start(Object... args);
 
     public void start();
 
@@ -69,5 +71,11 @@ public interface Game {
     public void setLocation(Location location);
 
     public int getStartingAt();
+
+    void randomizeTeams(Collection<Player> players, int... teams);
+
+    Collection<PlayerData> toPlayerData(Collection<Player> players);
+
+    Collection<PlayerData> calculateGamingPlayers();
 
 }

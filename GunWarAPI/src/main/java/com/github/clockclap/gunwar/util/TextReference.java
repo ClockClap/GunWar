@@ -58,6 +58,10 @@ public final class TextReference {
     public static final String CHAT_PLAYER_FIRST_JOIN = format("chat.player_first_join", "&e%PLAYER%が初めてサーバーに参加しました！");
     public static final String CHAT_PLAYER_JOIN = format("chat.player_join", "%PLAYER%がサーバーに参加しました。");
     public static final String CHAT_PLAYER_QUIT = format("chat.player_quit", "%PLAYER%がサーバーから退出しました。");
+    public static final String CHAT_GAME_PLAYER_JOIN = format("chat.game.player_join", "&3%PLAYER%がゲームに参加しました。");
+    public static final String CHAT_GAME_PLAYER_QUIT = format("chat.game.player_quit", "&6%PLAYER%がゲームへの参加をキャンセルしました。");
+    public static final String CHAT_GAME_ERROR_ALREADY_JOINED = format("chat.game.error.already_joined", "&c既にゲームに参加しています。");
+    public static final String CHAT_GAME_ERROR_NOT_JOINED_YET = format("chat.game.error.not_joined_yet", "&cまだゲームに参加していません。");
 
     public static final String TITLE_MAIN_INFECT = format("ui.title.main.infect", "&2ゾンビに感染してしまった...");
     public static final String TITLE_MAIN_DIED_ZOMBIE = format("ui.title.main.died_zombie", "&2死んでしまった...");

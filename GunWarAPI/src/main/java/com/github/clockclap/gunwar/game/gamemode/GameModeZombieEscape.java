@@ -39,7 +39,7 @@ public class GameModeZombieEscape extends GwGameMode {
     }
 
     @Override
-    public void start(Location loc) {
+    public void start(Object... args) {
 
     }
 

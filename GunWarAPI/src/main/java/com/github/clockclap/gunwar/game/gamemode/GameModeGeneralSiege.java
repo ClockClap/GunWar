@@ -38,7 +38,7 @@ public class GameModeGeneralSiege extends GwGameMode implements Shoutable {
     }
 
     @Override
-    public void start(Location loc) {
+    public void start(Object... args) {
 
     }
 

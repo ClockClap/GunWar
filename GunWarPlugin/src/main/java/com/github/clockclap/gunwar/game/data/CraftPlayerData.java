@@ -31,11 +31,11 @@ import com.github.clockclap.gunwar.item.GwKnifeItem;
 import com.github.clockclap.gunwar.util.*;
 import com.mojang.authlib.GameProfile;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.minecraft.server.v1_12_R1.BlockPosition;
-import net.minecraft.server.v1_12_R1.Packet;
-import net.minecraft.server.v1_12_R1.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_12_R1.*;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.*;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
@@ -370,6 +370,21 @@ public class CraftPlayerData extends CraftEntityData implements PlayerData {
         }
     }
 
+    @Override
+    public void join() {
+        if(!isJoined()) GunWar.getGame().getJoinedPlayers().add(player);
+    }
+
+    @Override
+    public void quit() {
+        if(isJoined()) GunWar.getGame().getJoinedPlayers().remove(player);
+    }
+
+    @Override
+    public boolean isJoined() {
+        return GunWar.getGame().getJoinedPlayers().contains(player);
+    }
+
     private Vector a(Vector onto, Vector u) {
         return u.clone().subtract(b(onto, u));
     }
@@ -617,11 +632,12 @@ public class CraftPlayerData extends CraftEntityData implements PlayerData {
                             PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(
                                     2001, CraftBlockData.newBlockPosition(block), block.getType().getId(), false);
                             a(packet);
+                            PlayerData.sendBlockDamageStatic(block.getLocation(), 4);
                             return new HitEntity(null, false, 0,
                                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
                         } else {
                             if (block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) {
-                                currentDamage /= 1;
+                                currentDamage /= 2;
                                 currentHSDamage /= 2;
                             }
                             if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
@@ -733,6 +749,17 @@ public class CraftPlayerData extends CraftEntityData implements PlayerData {
                     getPlayer().getEyeLocation(), new Location(getPlayer().getWorld(), px, py, pz));
         }
         return null;
+    }
+
+    @Override
+    public void sendBlockDamage(Location loc, int stage) {
+        EntityPlayer handle = ((CraftPlayer) getPlayer()).getHandle();
+        PlayerConnection connection = handle.playerConnection;
+        if (connection != null) {
+            PacketPlayOutBlockBreakAnimation packet = new PacketPlayOutBlockBreakAnimation(
+                    handle.getId(), new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()), stage);
+            connection.sendPacket(packet);
+        }
     }
 
     private void a(Packet<?> packet) {

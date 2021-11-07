@@ -20,6 +20,7 @@
 package com.github.clockclap.gunwar;
 
 import com.github.clockclap.gunwar.event.GunWarCommandRegisterEvent;
+import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.mysql.GwMySQLPlayerData;
 import com.github.clockclap.gunwar.mysql.NanamiServer;
 import com.github.clockclap.gunwar.nanamiserver.permission.NanamiServerRoleData;
@@ -31,6 +32,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @GwPlugin

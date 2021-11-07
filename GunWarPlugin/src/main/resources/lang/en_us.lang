@@ -22,6 +22,10 @@ chat.player_join=%PLAYER%&7 joined the server.
 chat.player_join.raw=false
 chat.player_quit=%PLAYER%&7 left the server.
 chat.player_quit.raw=false
+chat.game.player_join=&3%PLAYER% joined the game.
+chat.game.player_quit=&6%PLAYER% canceled joining the game.
+chat.game.error.already_joined=&cYou have already joined the game.
+chat.game.error.not_joined_yet=&cYou have not joined the game yet.
 
 ui.title.main.infect=&2YOU ARE INFECTED...
 ui.title.main.died_zombie=&2YOU DIED...

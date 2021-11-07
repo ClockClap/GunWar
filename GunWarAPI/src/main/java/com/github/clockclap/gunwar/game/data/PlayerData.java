@@ -19,6 +19,7 @@
 
 package com.github.clockclap.gunwar.game.data;
 
+import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
 import com.github.clockclap.gunwar.entity.HitEntity;
 import com.github.clockclap.gunwar.item.GwGunItem;
@@ -27,10 +28,12 @@ import com.github.clockclap.gunwar.item.GwKnifeItem;
 import com.github.clockclap.gunwar.util.Angle;
 import com.github.clockclap.gunwar.util.PlayerWatcher;
 import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.Map;
 
 @GwAPI
@@ -76,6 +79,12 @@ public interface PlayerData extends EntityData {
 
     void kill();
 
+    void join();
+
+    void quit();
+
+    boolean isJoined();
+
     @Deprecated
     void drawParticleLine(Particle particle, double start, double distance, double separate);
 
@@ -91,6 +100,27 @@ public interface PlayerData extends EntityData {
                                double startZ, double distance, Angle angle, double separate, GwGunItem gun, boolean aim);
 
     HitEntity drawParticleLine(Particle particle, double startX, double startY, double startZ, double distance, double separate, GwKnifeItem gun);
+
+    /**
+     * Sends block's damage.
+     *
+     * @param loc location of target block
+     * @param stage integer 0-9
+     */
+    void sendBlockDamage(Location loc, int stage);
+
+    /**
+     * Sends block's damage.
+     *
+     * @param loc location of target block
+     * @param stage integer 0-9
+     */
+    static void sendBlockDamageStatic(Location loc, int stage) {
+        Collection<PlayerData> playerData = GunWar.getGame().getOnlinePlayerData();
+        for(PlayerData d : playerData) {
+            d.sendBlockDamage(loc, stage);
+        }
+    }
 
     void giveItem(GwItem item);
 

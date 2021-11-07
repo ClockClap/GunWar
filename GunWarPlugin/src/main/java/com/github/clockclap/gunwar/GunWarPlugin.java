@@ -142,6 +142,8 @@ public final class GunWarPlugin extends JavaPlugin {
         manager.registerCommand(plugin.getName() + "-op", new GunWarItemCommand());
         manager.registerCommand(plugin.getName() + "-dev", new GWDebugCommand());
         manager.registerCommand(plugin.getName() + "-game", new ShoutCommand());
+        manager.registerCommand(plugin.getName() + "-game", new JoinCommand());
+        manager.registerCommand(plugin.getName() + "-game", new QuitCommand());
         manager.registerCommand(plugin.getName() + "-chat", new JapanizedTellCommand());
         manager.registerCommand(plugin.getName() + "-chat", new ReplyCommand());
     }

@@ -44,7 +44,7 @@ public interface IGwGameMode {
 
     Map<Integer, ChatColor> getTeamColors();
 
-    void start(Location loc);
+    void start(Object... args);
 
     void stop();
 

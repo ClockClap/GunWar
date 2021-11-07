@@ -21,8 +21,12 @@ package com.github.clockclap.gunwar.game.gamemode;
 
 import com.github.clockclap.gunwar.GunWar;
 import com.github.clockclap.gunwar.GwAPI;
+import com.github.clockclap.gunwar.game.Game;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import java.util.Collection;
 
 @GwAPI
 public class GameModeNormal extends GwGameMode implements Shoutable {
@@ -46,8 +50,11 @@ public class GameModeNormal extends GwGameMode implements Shoutable {
     }
 
     @Override
-    public void start(Location loc) {
-
+    public void start(Object... args) {
+        Game game = GunWar.getGame();
+        int[] teams = new int[]{0, 1};
+        Collection<Player> players = game.getJoinedPlayers();
+        game.randomizeTeams(players, teams);
     }
 
     @Override

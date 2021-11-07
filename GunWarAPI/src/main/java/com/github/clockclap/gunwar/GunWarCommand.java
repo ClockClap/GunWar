@@ -20,12 +20,14 @@
 package com.github.clockclap.gunwar;
 
 import com.github.clockclap.gunwar.game.Game;
+import com.github.clockclap.gunwar.game.data.PlayerData;
 import com.github.clockclap.gunwar.util.PermissionInfo;
 import com.github.clockclap.gunwar.util.config.GunWarConfiguration;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.UUID;
 
 @GwAPI(since = 2)
 public abstract class GunWarCommand extends Command {
@@ -60,6 +62,14 @@ public abstract class GunWarCommand extends Command {
 
     protected Game getGame() {
         return GunWar.getGame();
+    }
+
+    protected PlayerData getPlayerData(Player player) {
+        return GunWar.getPlayerData(player);
+    }
+
+    protected PlayerData getPlayerData(UUID id) {
+        return GunWar.getPlayerData(id);
     }
 
 }

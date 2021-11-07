@@ -33,6 +33,8 @@ game:
     x: 0
     y: 0
     z: 0
+    yaw: 0
+    pitch: 0
   # default starting location
   # (applies these values as the survivors starting location in zombie escape mode or the players starting location in solo mode if the starting location is not specified using "/setloc default <world> <x> <y> <z>"
   # and there are no location specified when the game started with "/startloc" command or if automatically starting mode is enabled)
@@ -41,6 +43,8 @@ game:
     x: 0
     y: 0
     z: 0
+    yaw: 0
+    pitch: 0
   # setting for zombie escape
   zombie-escape:
     # zombie percentage (out of 10)
@@ -55,6 +59,8 @@ game:
       x: 0
       y: 0
       z: 0
+      yaw: 0
+      pitch: 0
     # range of goal
     # (applies these values if the starting location is not specified using "/setstartloc ze-goal <world> <x> <y> <z> <dx> <dy> <dz>"
     # and there are no location specified when the game started with "/startloc" command or if automatically starting mode is enabled)
@@ -83,6 +89,8 @@ game:
       x: 0
       y: 0
       z: 0
+      yaw: 0
+      pitch: 0
     # starting location of blue team
     # (applies these values as the members of blue's team starting and respawning location in team mode
     # if the starting location is not specified using "/setloc blue <world> <x> <y> <z>"
@@ -92,6 +100,8 @@ game:
       x: 0
       y: 0
       z: 0
+      yaw: 0
+      pitch: 0
 
 # setting for database
 mysql:

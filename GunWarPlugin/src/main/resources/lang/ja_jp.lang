@@ -22,6 +22,10 @@ chat.player_join=%PLAYER%&7がサーバーに参加しました。
 chat.player_join.raw=false
 chat.player_quit=%PLAYER%&7がサーバーから退出しました。
 chat.player_quit.raw=false
+chat.game.player_join=&3%PLAYER%がゲームに参加しました。
+chat.game.player_quit=&6%PLAYER%がゲームへの参加をキャンセルしました。
+chat.game.error.already_joined=&c既にゲームに参加しています。
+chat.game.error.not_joined_yet=&cまだゲームに参加していません。
 
 ui.title.main.infect=&2ゾンビに感染してしまった...
 ui.title.main.died_zombie=&2死んでしまった...
